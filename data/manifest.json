@@ -1,6 +1,6 @@
 {
   "schema": "circular-phylogeny-manifest/1",
-  "version": 20,
+  "version": 21,
   "core": "data/core.json",
   "branches": {
     "aves": {

@@ -1,4 +1,4 @@
-系統樹 v43 — クリック・lazy load修正
+系統樹 v44 — 終端表示＋省略一括展開
 
 構成
 index.html
@@ -599,3 +599,16 @@ v43 bug fixes
    - explicit branchKey is used only when that branch exists in the current manifest
    - split-data mode can load a branch even when its root placeholder already exists
    - all_in_one standalone mode still ignores static quick-jump branch keys safely
+
+
+v44
+1. Terminal taxonomy node marker
+   - taxonomy node with no currently visible children gets a thin outer ring
+   - representative species are excluded because they already use the white-circle style
+   - unloaded lazy branch roots are excluded from terminal marking
+
+2. Expand all omissions
+   - header button: 全省略を展開
+   - expands every compressed lineage segment ("… N階層") in the current path
+   - toggles to 省略表示に戻す
+   - protected-rank logic remains unchanged when compression is enabled
