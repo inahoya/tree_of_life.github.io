@@ -1,4 +1,4 @@
-系統樹 v41 — スマホ対応
+系統樹 v42 — スマホ初期表示調整
 
 構成
 index.html
@@ -579,3 +579,9 @@ v41 smartphone
 Recommended mobile loading:
 1. Best: publish the whole package with GitHub Pages; JSON loads automatically.
 2. Offline/local: unzip, open index.html, tap "単一JSON読込（スマホ向け）", choose all_in_one.json.
+
+
+v42 default display
+- fitted view starts at 2x zoom, centered on the same focus point
+- representative species starts in 全部 mode
+- pinch / one-finger pan / desktop wheel behavior unchanged
