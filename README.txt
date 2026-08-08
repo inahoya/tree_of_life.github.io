@@ -1,4 +1,4 @@
-系統樹 v42 — スマホ初期表示調整
+系統樹 v43 — クリック・lazy load修正
 
 構成
 index.html
@@ -585,3 +585,17 @@ v42 default display
 - fitted view starts at 2x zoom, centered on the same focus point
 - representative species starts in 全部 mode
 - pinch / one-finger pan / desktop wheel behavior unchanged
+
+
+v43 bug fixes
+1. Mouse/touch click:
+   - no pointer capture on pointerdown
+   - pointer capture starts only after single-pointer drag threshold (>5px)
+   - pinch captures pointers only after the second pointer appears
+   - normal click/tap therefore reaches each SVG <g> node again
+
+2. Lazy branch roots after quick jump:
+   - removed the incorrect nodes.has(id) == loaded test
+   - explicit branchKey is used only when that branch exists in the current manifest
+   - split-data mode can load a branch even when its root placeholder already exists
+   - all_in_one standalone mode still ignores static quick-jump branch keys safely
