@@ -2,883 +2,837 @@
 <html lang="ja">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>系統樹 v46 — v44互換データエディタ</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>系統樹 v46 — v44復元＋all_in_one自動読込</title>
 <style>
-:root{
-  --bg:#f4f7f8; --panel:#fff; --line:#d4dde3; --ink:#17212b; --muted:#5c6b75;
-  --accent:#344f65; --accent2:#eaf0f4; --warn:#8a5b00; --bad:#9b2d30; --ok:#2f6d4f;
-}
 *{box-sizing:border-box}
-body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--ink)}
-button,input,select,textarea{font:inherit}
-button,.file-label{
-  min-height:38px;padding:7px 10px;border:1px solid #aebbc4;border-radius:8px;background:#fff;color:var(--ink);cursor:pointer
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;background:#f5f7f8;color:#17212b}
+header{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:10px 14px;background:#fff;border-bottom:1px solid #d7dde2}
+header strong{margin-right:6px}
+button,input,select{font:inherit}
+button,.file-label{min-height:42px;padding:8px 12px;border:1px solid #aeb9c2;border-radius:8px;background:#fff;color:#17212b;cursor:pointer}
+button:hover,.file-label:hover{background:#eef2f5}
+button:disabled{opacity:.42;cursor:default}
+#file,#folder{display:none}
+.search-wrap{position:relative;flex:1 1 360px;max-width:650px}
+#search{width:100%;min-height:44px;padding:9px 12px;border:1px solid #9eaab4;border-radius:8px;color:#17212b;background:#fff}
+#results{display:none;position:absolute;left:0;right:0;top:48px;z-index:30;max-height:320px;overflow:auto;background:#fff;border:1px solid #c5ced5;border-radius:8px;box-shadow:0 10px 28px rgba(0,0,0,.14)}
+.result{display:block;width:100%;text-align:left;border:0;border-bottom:1px solid #e7ebee;border-radius:0;background:#fff;padding:10px 11px;cursor:pointer;color:#17212b}
+.result:last-child{border-bottom:0}
+.result:hover,.result:focus{background:#edf2f6}
+.result small{display:block;color:#485864;margin-top:2px}
+#status{font-size:12px;color:#4d5c67}
+.quick-jump{min-height:42px;padding:8px 34px 8px 10px;border:1px solid #aeb9c2;border-radius:8px;background:#fff;color:#17212b;cursor:pointer}
+.lang-switch,.layout-switch,.species-switch{display:inline-flex;border:1px solid #aeb9c2;border-radius:8px;overflow:hidden;background:#fff}
+.lang-switch button,.layout-switch button,.species-switch button{border:0;border-radius:0;min-height:40px;padding:7px 10px;border-right:1px solid #d5dce1;background:#fff}
+.lang-switch button:last-child,.layout-switch button:last-child,.species-switch button:last-child{border-right:0}
+.lang-switch button.active,.layout-switch button.active,.species-switch button.active{background:#344f65;color:#fff;font-weight:800}
+.lang-switch button:not(.active):hover,.layout-switch button:not(.active):hover,.species-switch button:not(.active):hover{background:#eef2f5}
+.tabbar{display:flex;align-items:center;gap:7px;padding:8px 14px;background:#eef2f5;border-bottom:1px solid #d2d9df;overflow-x:auto}
+#tabs{display:flex;gap:6px;align-items:center}
+.tab-item{display:inline-flex;align-items:stretch;border:1px solid #aeb9c2;border-radius:8px;overflow:hidden;background:#f8fafb}
+.tab-item.active{border-color:#344f65;background:#fff;box-shadow:inset 0 -3px 0 #344f65}
+.tab-select,.tab-close{border:0;border-radius:0;background:transparent;min-height:36px}
+.tab-select{padding:6px 12px;font-weight:750}
+.tab-close{padding:6px 9px;color:#53616c;border-left:1px solid #d5dce1}
+.tab-item:not(.active) .tab-select:hover,.tab-close:hover{background:#e7ecef}
+#addTab{min-height:36px;padding:6px 10px;background:#fff}
+main{display:grid;grid-template-columns:minmax(0,1fr) 320px;min-height:760px}
+#stage{background:#fff;min-width:0;overflow:hidden;display:flex;align-items:flex-start;justify-content:center;padding:8px}
+svg{display:block;width:100%;height:auto;aspect-ratio:1/1;max-height:calc(100vw - 360px);min-height:620px;touch-action:none;cursor:grab;user-select:none}
+svg.rows-mode{aspect-ratio:16/9}
+svg.dragging{cursor:grabbing}
+.level-guide{stroke:#d8e0e5;stroke-width:1.2;stroke-dasharray:7 7}
+.level-label{font-size:10px;font-weight:700;fill:#71808a;paint-order:stroke fill;stroke:#fff;stroke-width:3px;stroke-linejoin:round}
+aside{padding:18px;background:#f9fbfc;border-left:1px solid #d8dee4}
+aside h2{font-size:16px;margin:0 0 8px;color:#17212b}
+aside p{font-size:13px;line-height:1.62;color:#44525d}
+#detail{padding:12px;border:1px solid #cfd7dd;border-radius:8px;background:#fff;font-size:13px;line-height:1.65;color:#273640}
+#detail b{color:#17212b}
+#detail a{color:#155e8a;font-weight:650}
+#detail .detail-link{display:inline;min-height:0;padding:0;border:0;background:none;color:#135f8f;font-weight:700;text-decoration:underline;text-underline-offset:2px;cursor:pointer}
+#detail .detail-link:hover{background:none;color:#0b456a}
+.path{margin-top:12px;padding:10px 11px;border:1px solid #d5dde3;border-radius:8px;background:#fff;font-size:12px;line-height:1.7;color:#384954;word-break:break-word}
+.path button{display:inline;min-height:0;padding:0;border:0;background:none;color:#135f8f;font-weight:700;text-decoration:underline;text-underline-offset:2px;cursor:pointer}
+.path button:hover{background:none;color:#0b456a}
+.path .sep{color:#77838c;padding:0 4px}
+.note{padding:10px 11px;border-left:3px solid #6b7d8a;background:#eef3f6;color:#34444f;font-size:12px;line-height:1.55}
+.branch{stroke:#aab6bf;stroke-width:1.35;stroke-opacity:.42}
+.branch.active{stroke:#273f52;stroke-width:3;stroke-opacity:1}
+.branch.species-branch{stroke:#222b31;stroke-width:.85;stroke-opacity:.82;stroke-dasharray:4 3}
+.node{stroke:#fff;stroke-width:3;cursor:pointer}
+.node.species{stroke:#1f2a33;stroke-width:2}
+.node.species.priority2{fill:#eef1f3;stroke:#5b6871;stroke-width:1.65}
+.terminal-ring{fill:none;stroke:#536570;stroke-width:1.5;stroke-opacity:.9;pointer-events:none}
+.expand-toggle.active{background:#536570;color:#fff;font-weight:800}
+.priority2-label{opacity:.86}
+.node.active{stroke:#101820;stroke-width:4}
+.node.species.active{stroke:#101820;stroke-width:4.2}
+.node.target{stroke:#e0ad22;stroke-width:5.5}
+.node.species.target{stroke:#e0ad22;stroke-width:5.5}
+.node-label,.node-rank,.root-label{
+  font-weight:800;text-anchor:middle;dominant-baseline:middle;pointer-events:none;
+  paint-order:stroke fill;stroke-width:3px;stroke-linejoin:round;
 }
-button:hover,.file-label:hover{background:#eef3f6}
-button.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
-button.danger{color:var(--bad);border-color:#d8b6b7}
-button:disabled{opacity:.45;cursor:default}
-input[type=file]{display:none}
-header{
-  position:sticky;top:0;z-index:20;display:flex;gap:7px;align-items:center;flex-wrap:wrap;
-  padding:9px 12px;background:#fff;border-bottom:1px solid var(--line)
+.node-label{font-size:11.5px}
+.species-label{font-size:8.5px}
+.node-rank{font-size:8.5px;font-weight:750;stroke-width:2.5px}
+.species-rank{font-size:6.5px;font-weight:700;stroke-width:2px}
+.root-label{font-size:15px;font-weight:900}
+.collapse{fill:#eef2f4;stroke:#566773;stroke-width:2.2;stroke-dasharray:5 4;cursor:pointer}
+.collapse-group:focus .collapse{stroke:#101820;stroke-width:4}
+@media(hover:hover) and (pointer:fine){.collapse-group:hover .collapse{fill:#e1e8ec}}
+.collapse-main,.collapse-sub{
+  text-anchor:middle;dominant-baseline:middle;paint-order:stroke fill;
+  stroke:#fff;stroke-linejoin:round;fill:#263844;
 }
-header strong{margin-right:4px}
-.status{font-size:12px;color:var(--muted);margin-left:auto}
-.status.dirty{color:var(--warn);font-weight:800}
-.toolbar-group{display:inline-flex;gap:5px;align-items:center}
-main{display:grid;grid-template-columns:320px minmax(480px,1fr) 380px;min-height:calc(100vh - 58px)}
-.panel{background:var(--panel);min-width:0}
-.left{border-right:1px solid var(--line)}
-.center{border-right:1px solid var(--line)}
-.section{padding:13px;border-bottom:1px solid #e4eaee}
-.section h2{font-size:14px;margin:0 0 9px}
-.section h3{font-size:13px;margin:12px 0 6px}
-.small{font-size:12px;color:var(--muted);line-height:1.55}
-.search-row{display:flex;gap:6px}
-.search-row input{flex:1;min-width:0}
-input,select,textarea{
-  width:100%;padding:8px 9px;border:1px solid #b8c3ca;border-radius:7px;background:#fff;color:var(--ink)
+.collapse-main{font-size:15px;font-weight:900;stroke-width:4px}
+.collapse-sub{font-size:9px;font-weight:750;stroke-width:3px}
+@media(max-width:900px){
+  main{grid-template-columns:1fr}
+  aside{border-left:0;border-top:1px solid #d8dee4}
+  #stage{padding:2px}
+  svg{max-height:none;min-height:62vh;width:100%}
 }
-textarea{min-height:74px;resize:vertical}
-#nodeList{height:calc(100vh - 292px);overflow:auto;padding:0 7px 12px}
-.node-row{
-  display:block;width:100%;text-align:left;padding:8px 9px;margin:3px 0;border:1px solid transparent;
-  border-radius:7px;background:transparent;cursor:pointer
-}
-.node-row:hover{background:#eef3f6}
-.node-row.active{background:#e4edf3;border-color:#9eb2c1}
-.node-row .name{font-weight:750}
-.node-row .meta{font-size:11px;color:var(--muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.badge{display:inline-block;font-size:10px;padding:1px 5px;border-radius:9px;background:#edf1f3;color:#50606b;margin-left:4px}
-.badge.warn{background:#fff2cf;color:#795300}
-.badge.species{background:#f2f2f2;color:#4c5960}
-.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px 12px}
-.field.full{grid-column:1/-1}
-.field label{display:block;font-size:11px;font-weight:800;color:#52616b;margin:0 0 3px}
-.actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
-.notice{padding:9px 10px;border-left:3px solid #6b7d8a;background:#eef3f6;font-size:12px;line-height:1.55}
-.notice.warn{border-left-color:#b37a14;background:#fff7e6}
-.notice.bad{border-left-color:#a53d42;background:#fff0f0}
-#breadcrumbs{display:flex;gap:4px;flex-wrap:wrap}
-.crumb{border:0;background:none;padding:0;min-height:0;color:#145f8d;text-decoration:underline;cursor:pointer}
-#children{display:flex;gap:5px;flex-wrap:wrap;max-height:170px;overflow:auto}
-.child{font-size:11px;min-height:28px;padding:4px 7px}
-#previewWrap{overflow:auto;background:#fbfcfd;border:1px solid var(--line);border-radius:8px}
-#preview{display:block;width:100%;min-width:680px;height:460px}
-.preview-line{stroke:#a8b5bd;stroke-width:2}
-.preview-node{cursor:pointer}
-.preview-node circle{stroke:#fff;stroke-width:3}
-.preview-node.selected circle{stroke:#d6a21b;stroke-width:5}
-.preview-label{font-size:11px;font-weight:750;text-anchor:middle;stroke:none;paint-order:normal;pointer-events:none}
-.kpi{display:grid;grid-template-columns:1fr 1fr;gap:7px}
-.kpi div{padding:8px;border:1px solid var(--line);border-radius:7px;background:#fafcfd}
-.kpi b{display:block;font-size:18px}
-#validation{font-size:12px;line-height:1.55;max-height:250px;overflow:auto}
-.ok{color:var(--ok)} .badtext{color:var(--bad)} .warntext{color:var(--warn)}
-#unresolvedList{max-height:200px;overflow:auto}
-.unresolved-item{display:flex;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid #edf0f2}
-.unresolved-item button{border:0;background:none;color:#145f8d;text-decoration:underline;padding:0;min-height:0;text-align:left}
-dialog{border:0;border-radius:12px;box-shadow:0 18px 60px rgba(0,0,0,.25);max-width:620px;width:calc(100vw - 28px)}
-dialog::backdrop{background:rgba(20,30,38,.35)}
-dialog h2{font-size:17px;margin-top:0}
-dialog .row{display:grid;grid-template-columns:1fr 1fr;gap:9px}
-dialog .footer{display:flex;gap:7px;justify-content:flex-end;margin-top:14px}
-@media(max-width:1100px){
-  main{grid-template-columns:300px 1fr}
-  .right{grid-column:1/-1;border-top:1px solid var(--line)}
-  #nodeList{height:520px}
-}
-@media(max-width:720px){
-  header{position:static}
-  .status{width:100%;margin-left:0}
-  main{display:block}
-  .left,.center{border-right:0;border-bottom:1px solid var(--line)}
-  #nodeList{height:360px}
-  .form-grid{grid-template-columns:1fr}
-  .field.full{grid-column:auto}
-  .section{padding:11px}
-  button,.file-label{min-height:42px}
+@media(max-width:520px){
+  header{gap:5px;padding:7px 8px}
+  button,.file-label,.quick-jump{min-height:38px;padding:6px 9px;font-size:13px}
+  .search-wrap{flex-basis:100%;max-width:none}
+  .tabbar{padding:6px 8px}
+  aside{padding:13px}
 }
 </style>
 </head>
 <body>
 <header>
-  <strong>系統樹 v46</strong>
-  <label class="file-label" for="loadAll">all_in_one読込</label>
-  <input id="loadAll" type="file" accept=".json,application/json">
-  <button id="reloadAllInOne">all_in_one再読込</button>
-  <label class="file-label" for="loadTaxonomy">分類JSON読込</label>
-  <input id="loadTaxonomy" type="file" accept=".json,application/json">
-  <label class="file-label" for="loadSpecies">代表種JSON追加</label>
-  <input id="loadSpecies" type="file" accept=".json,application/json">
-  <label class="file-label" for="loadNames">和名辞書適用</label>
-  <input id="loadNames" type="file" accept=".json,application/json">
-  <button id="addJapanBirds100">日本鳥100種サンプル</button>
-  <button id="saveBrowser">ブラウザ保存</button>
-  <button id="restoreBrowser">ブラウザ保存を復元</button>
-  <span id="status" class="status">データ未読込</span>
+  <strong>系統樹 v46 — v44復元＋all_in_one自動読込</strong>
+  <button id="home" type="button">LIFEへ</button>
+  <button id="back" type="button">← 戻る</button>
+  <button id="expandOmissions" class="expand-toggle" type="button" aria-pressed="false">全省略を展開</button>
+  <label class="file-label" for="folder">データフォルダ選択</label>
+  <input id="folder" type="file" webkitdirectory multiple>
+  <label class="file-label" for="file">単一JSON読込（ローカル用）</label>
+  <input id="file" type="file" accept=".json,application/json">
+  <button id="reload" type="button">all_in_one再読込</button>
+
+  <div class="search-wrap">
+    <input id="search" autocomplete="off" placeholder="検索: カラス属 / Corvus / 鳥綱 / Aves">
+    <div id="results"></div>
+  </div>
+
+  <select id="quickJump" class="quick-jump" aria-label="主要グループへ">
+    <option value="">主要グループへ…</option>
+    <option value="bacteria">真正細菌</option>
+    <option value="archaea">古細菌</option>
+    <option value="asgardarchaeota">アスガルド古細菌</option>
+    <option value="eukaryota">真核生物</option>
+    <option value="fungi">菌界</option>
+    <option value="discoba">Discoba</option>
+    <option value="euglenozoa">ユーグレノゾア</option>
+    <option value="cryptista">Cryptista</option>
+    <option value="haptista">Haptista</option>
+    <option value="rhodophyta">紅色植物</option>
+    <option value="xenacoelomorpha">珍無腸動物</option>
+    <option value="tardigrada">クマムシ</option>
+    <option value="metamonada">メタモナダ</option>
+    <option value="amoebozoa">アメーボゾア</option>
+    <option value="choanoflagellatea">襟鞭毛虫類</option>
+    <option value="stramenopiles">ストラメノパイル</option>
+    <option value="alveolata">アルベオラータ</option>
+    <option value="sar">SAR</option>
+    <option value="animalia">動物界</option>
+    <option value="arthropoda">節足動物門</option>
+    <option value="chelicerata">鋏角類</option>
+    <option value="myriapoda">多足類</option>
+    <option value="pancrustacea">汎甲殻類</option>
+    <option value="insecta">昆虫綱</option>
+    <option value="vertebrata">脊椎動物</option>
+    <option value="aves">鳥綱</option>
+    <option value="mammalia">哺乳綱</option>
+    <option value="amphibia">両生綱</option>
+    <option value="sauropsida">竜弓類</option>
+    <option value="mollusca">軟体動物門</option>
+    <option value="echinodermata">棘皮動物門</option>
+    <option value="cnidaria">刺胞動物門</option>
+    <option value="embryophyta">陸上植物</option>
+  </select>
+
+  <div class="layout-switch" aria-label="配置">
+    <button id="layoutRadial" type="button">円形</button>
+    <button id="layoutRows" type="button">横一列</button>
+  </div>
+  <div class="lang-switch" aria-label="表示言語">
+    <button id="langJa" type="button">日本語</button>
+    <button id="langEn" type="button">English</button>
+    <button id="langLatin" type="button">Latin</button>
+  </div>
+  <div class="species-switch" aria-label="代表種表示">
+    <button id="speciesImportant" type="button">代表種: 重要</button>
+    <button id="speciesAll" type="button">全部</button>
+    <button id="speciesOff" type="button">OFF</button>
+  </div>
+  <span id="status">all_in_one.json 読込待ち</span>
 </header>
 
+<nav class="tabbar" aria-label="比較タブ">
+  <div id="tabs"></div>
+  <button id="addTab" type="button">＋ 比較タブ</button>
+</nav>
+
 <main>
-  <aside class="panel left">
-    <div class="section">
-      <h2>ノードを探す</h2>
-      <div class="search-row">
-        <input id="search" placeholder="和名 / 英名 / 学名 / id">
-        <select id="rankFilter" style="max-width:105px">
-          <option value="">全階級</option>
-          <option value="species">種</option>
-          <option value="genus">属</option>
-          <option value="family">科</option>
-          <option value="order">目</option>
-          <option value="class">綱</option>
-          <option value="phylum">門</option>
-          <option value="kingdom">界</option>
-          <option value="clade">clade</option>
-        </select>
-      </div>
-      <label class="small" style="display:block;margin-top:7px">
-        <input id="onlyNoJa" type="checkbox" style="width:auto"> 和名未入力だけ
-      </label>
-      <div id="listSummary" class="small" style="margin-top:5px"></div>
-    </div>
-    <div id="nodeList"></div>
-  </aside>
+<section id="stage">
+  <svg id="tree" viewBox="-500 -500 1000 1000" preserveAspectRatio="xMidYMid meet"
+       role="img" aria-label="主要階級を省略しない円形系統樹"></svg>
+</section>
 
-  <section class="panel center">
-    <div class="section">
-      <h2>選択ノード</h2>
-      <div id="emptyEditor" class="notice">起動時に同じ階層の <b>all_in_one.json</b> を自動読込します。自動読込できない場合だけ上の「all_in_one読込」を使ってください。</div>
-      <div id="editor" hidden>
-        <div class="form-grid">
-          <div class="field"><label>ID</label><input id="fId"></div>
-          <div class="field"><label>階級 rank</label>
-            <select id="fRank">
-              <option value="root">root</option><option value="domain">domain</option><option value="kingdom">kingdom</option>
-              <option value="phylum">phylum</option><option value="subphylum">subphylum</option><option value="class">class</option>
-              <option value="order">order</option><option value="family">family</option><option value="genus">genus</option>
-              <option value="species">species</option><option value="clade">clade</option><option value="other">other</option>
-            </select>
-          </div>
-          <div class="field"><label>和名 ja</label><input id="fJa" placeholder="空欄可"></div>
-          <div class="field"><label>英名 en</label><input id="fEn" placeholder="空欄可"></div>
-          <div class="field"><label>学名 latin</label><input id="fLatin" placeholder="speciesではcanonical keyとして扱う"></div>
-          <div class="field"><label>親 parent</label><select id="fParent"></select></div>
-          <div class="field"><label>色 color</label><input id="fColor" placeholder="#687b89"></div>
-          <div class="field"><label>代表種 priority</label>
-            <select id="fPriority"><option value="">なし</option><option value="1">1（重要）</option><option value="2">2（補助）</option></select>
-          </div>
-          <div class="field full"><label>Wikipedia / 参考URL</label><input id="fWiki"></div>
-          <div class="field full"><label>メモ note</label><textarea id="fNote"></textarea></div>
-        </div>
-        <div class="actions">
-          <button id="apply" class="primary">変更を反映</button>
-          <button id="addChild">＋ 子分類群</button>
-          <button id="addSpecies">＋ 代表種</button>
-          <button id="duplicate">複製</button>
-          <button id="deleteLeaf" class="danger">葉ノード削除</button>
-        </div>
-        <div id="editMessage" class="small" style="margin-top:7px"></div>
-      </div>
-    </div>
+<aside>
+  <h2>選択中</h2>
+  <div id="detail"></div>
 
-    <div class="section">
-      <h2>系統位置</h2>
-      <div id="breadcrumbs" class="small">—</div>
-      <h3>子ノード</h3>
-      <div id="children" class="small">—</div>
-    </div>
+  <h2 style="margin-top:18px">全経路</h2>
+  <div id="path" class="path"></div>
 
-    <div class="section">
-      <h2>局所プレビュー</h2>
-      <div class="notice">編集用プレビューなので、巨大な全系統樹は描画しません。親・兄弟・子を確認するための軽量表示です。</div>
-      <div id="previewWrap" style="margin-top:8px"><svg id="preview" viewBox="0 0 900 460"></svg></div>
-    </div>
-  </section>
+  <h2 style="margin-top:18px">検索</h2>
+  <div class="note">ひらがな・カタカナ・半角カナは同一視して検索します。</div>
 
-  <aside class="panel right">
-    <div class="section">
-      <h2>データ概要</h2>
-      <div class="kpi">
-        <div><span class="small">全ノード</span><b id="kNodes">0</b></div>
-        <div><span class="small">代表種</span><b id="kSpecies">0</b></div>
-        <div><span class="small">和名なし種</span><b id="kNoJa">0</b></div>
-        <div><span class="small">未接続</span><b id="kUnreachable">0</b></div>
-      </div>
-    </div>
+  <h2 style="margin-top:18px">v46のデータ読込</h2>
+  <div class="note">
+    GitHub Pagesでは起動時に同じ階層の all_in_one.json を自動読込します。
+    v44の閲覧機能は維持し、分割ロードを公開時の必須経路から外しました。
+    ローカルの file:// ではブラウザ制限があるため「単一JSON読込」を使えます。
+  </div>
 
-    <div class="section">
-      <h2>検証</h2>
-      <button id="validateBtn">全体を検証</button>
-      <div id="validation" style="margin-top:8px">—</div>
-    </div>
+  <h2 style="margin-top:18px">代表種</h2>
+  <div class="note">
+    priority 1 を「重要」、priority 1+2 を「全部」、または「OFF」で表示します。
+    初期状態は v44 と同じ「全部」です。priority 2 は薄い灰色で区別します。
+  </div>
 
-    <div class="section">
-      <h2>和名未解決</h2>
-      <div class="small">和名をAI検索しなくても進められるよう、空欄を正式に許容します。学名があればデータとして有効です。</div>
-      <div id="unresolvedList" style="margin-top:7px"></div>
-    </div>
+  <h2 style="margin-top:18px">表示記号</h2>
+  <div class="note">
+    下に表示項目がない分類ノードは、丸の外側に細いリングを付けて終端であることを示します。
+    「全省略を展開」で現在の経路の省略階層を一括展開し、もう一度押すと省略表示へ戻します。
+  </div>
 
-    <div class="section">
-      <h2>書き出し</h2>
-      <div class="actions">
-        <button id="exportAll" class="primary">all_in_one.json</button>
-        <button id="exportTaxonomy">taxonomy.json</button>
-        <button id="exportSpecies">representative_species.json</button>
-        <button id="exportNames">names_ja.json</button>
-      </div>
-      <div class="small" style="margin-top:7px">
-        普段は3分割で編集し、GitHub Pages公開版は起動時に all_in_one.json を自動読込します。編集後は all_in_one_v46.json を書き出し、GitHub上で all_in_one.json に置き換えてください。<br>「日本鳥100種サンプル」は和名空欄・priority 2で追加され、100種規模の動作確認に使えます。
-      </div>
-    </div>
+  <h2 style="margin-top:18px">スマホで使う</h2>
+  <div class="note">
+    タップ／クリックでノード選択、1本指ドラッグで移動、2本指ピンチで拡大・縮小できます。
+    GitHub Pagesでは all_in_one.json を自動読込します。
+  </div>
 
-    <div class="section">
-      <h2>事故防止</h2>
-      <div class="notice warn">
-        ID変更・親変更は自動で参照を書き換えます。削除は葉ノードだけに制限しています。
-        「全体を検証」で循環参照・多重親・未定義child・root未到達を確認できます。
-      </div>
-    </div>
-  </aside>
+  <h2 style="margin-top:18px">比較タブ</h2>
+  <div class="note">
+    最大2タブ。2つ目は現在の表示を複製して開き、各タブで別の分類群へ移動できます。
+  </div>
+
+  <h2 style="margin-top:18px">省略規則</h2>
+  <div class="note">
+    界・門・綱・目・科・属は必ず表示します。それ以外の階層が連続した部分だけ「…」に圧縮します。
+    選択ノードとその直上の親も保持します。
+  </div>
+</aside>
 </main>
-
-<dialog id="addDialog">
-  <h2 id="dialogTitle">ノード追加</h2>
-  <div class="row">
-    <div class="field"><label>ID</label><input id="aId"></div>
-    <div class="field"><label>rank</label><select id="aRank"></select></div>
-    <div class="field"><label>和名</label><input id="aJa"></div>
-    <div class="field"><label>英名</label><input id="aEn"></div>
-    <div class="field"><label>学名</label><input id="aLatin"></div>
-    <div class="field"><label>priority</label><select id="aPriority"><option value="">なし</option><option value="1">1</option><option value="2">2</option></select></div>
-  </div>
-  <div class="field" style="margin-top:9px"><label>親</label><input id="aParent" readonly></div>
-  <div class="footer">
-    <button id="cancelAdd">キャンセル</button>
-    <button id="confirmAdd" class="primary">追加</button>
-  </div>
-</dialog>
 
 <script>
 (()=>{
 "use strict";
 
-const $ = id => document.getElementById(id);
-const els = Object.fromEntries([
-  "loadAll","reloadAllInOne","loadTaxonomy","loadSpecies","loadNames","addJapanBirds100","saveBrowser","restoreBrowser","status","search","rankFilter","onlyNoJa",
-  "listSummary","nodeList","emptyEditor","editor","fId","fRank","fJa","fEn","fLatin","fParent","fColor","fPriority","fWiki","fNote",
-  "apply","addChild","addSpecies","duplicate","deleteLeaf","editMessage","breadcrumbs","children","preview","kNodes","kSpecies","kNoJa",
-  "kUnreachable","validateBtn","validation","unresolvedList","exportAll","exportTaxonomy","exportSpecies","exportNames","addDialog","dialogTitle",
-  "aId","aRank","aJa","aEn","aLatin","aPriority","aParent","cancelAdd","confirmAdd"
-].map(id=>[id,$(id)]));
+const $=id=>document.getElementById(id);
+const homeBtn=$("home"),backBtn=$("back"),expandBtn=$("expandOmissions"),folderInput=$("folder"),fileInput=$("file"),
+      reloadBtn=$("reload"),searchInput=$("search"),resultsBox=$("results"),quickJump=$("quickJump"),
+      layoutRadialBtn=$("layoutRadial"),layoutRowsBtn=$("layoutRows"),
+      langJaBtn=$("langJa"),langEnBtn=$("langEn"),langLatinBtn=$("langLatin"),
+      speciesImportantBtn=$("speciesImportant"),speciesAllBtn=$("speciesAll"),speciesOffBtn=$("speciesOff"),
+      statusEl=$("status"),tabsEl=$("tabs"),addTabBtn=$("addTab"),svg=$("tree"),
+      detailEl=$("detail"),pathEl=$("path");
 
-let state = {
-  root:null,
-  nodes:new Map(),
-  order:[],
-  version:46,
-  sourceSchema:"circular-phylogeny-standalone/1",
-  selectedId:null,
-  dirty:false,
-  sourceName:"",
-  validation:null
-};
+let data={root:null};
+let nodes=new Map();
+let parentById=new Map();
+let displayLanguage="ja";
+let layoutMode="rows";
+let representativeSpeciesMode="all";
+let expandAllOmissions=false;
 
-const JAPAN_BIRD_SAMPLE_100=[{"id":"rep_cygnus_columbianus","ja":"","en":"Tundra Swan","latin":"Cygnus columbianus","rank":"species","parent":"family_anatidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_branta_bernicla","ja":"","en":"Brant Goose","latin":"Branta bernicla","rank":"species","parent":"family_anatidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_branta_hutchinsii","ja":"","en":"Cackling Goose","latin":"Branta hutchinsii","rank":"species","parent":"family_anatidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_anser_fabalis","ja":"","en":"Taiga Bean Goose","latin":"Anser fabalis","rank":"species","parent":"family_anatidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_coturnix_japonica","ja":"","en":"Japanese Quail","latin":"Coturnix japonica","rank":"species","parent":"family_phasianidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_syrmaticus_soemmerringii","ja":"","en":"Copper Pheasant","latin":"Syrmaticus soemmerringii","rank":"species","parent":"family_phasianidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_tetrastes_bonasia","ja":"","en":"Hazel Grouse","latin":"Tetrastes bonasia","rank":"species","parent":"family_phasianidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_lagopus_muta","ja":"","en":"Rock Ptarmigan","latin":"Lagopus muta","rank":"species","parent":"family_phasianidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_tachybaptus_ruficollis","ja":"","en":"Little Grebe","latin":"Tachybaptus ruficollis","rank":"species","parent":"family_podicipedidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_podiceps_grisegena","ja":"","en":"Red-necked Grebe","latin":"Podiceps grisegena","rank":"species","parent":"family_podicipedidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_podiceps_cristatus","ja":"","en":"Great Crested Grebe","latin":"Podiceps cristatus","rank":"species","parent":"family_podicipedidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_podiceps_nigricollis","ja":"","en":"Black-necked Grebe","latin":"Podiceps nigricollis","rank":"species","parent":"family_podicipedidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_streptopelia_decaocto","ja":"","en":"Eurasian Collared Dove","latin":"Streptopelia decaocto","rank":"species","parent":"family_columbidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_treron_sieboldii","ja":"","en":"White-bellied Green Pigeon","latin":"Treron sieboldii","rank":"species","parent":"family_columbidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_treron_formosae","ja":"","en":"Whistling Green Pigeon","latin":"Treron formosae","rank":"species","parent":"family_columbidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_chalcophaps_indica","ja":"","en":"Common Emerald Dove","latin":"Chalcophaps indica","rank":"species","parent":"family_columbidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_caprimulgus_jotaka","ja":"","en":"Grey Nightjar","latin":"Caprimulgus jotaka","rank":"species","parent":"family_caprimulgidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_hirundapus_caudacutus","ja":"","en":"White-throated Needletail","latin":"Hirundapus caudacutus","rank":"species","parent":"family_apodidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_apus_nipalensis","ja":"","en":"House Swift","latin":"Apus nipalensis","rank":"species","parent":"family_apodidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_hierococcyx_hyperythrus","ja":"","en":"Northern Hawk-Cuckoo","latin":"Hierococcyx hyperythrus","rank":"species","parent":"family_cuculidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_cuculus_optatus","ja":"","en":"Oriental Cuckoo","latin":"Cuculus optatus","rank":"species","parent":"family_cuculidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_rallina_eurizonoides","ja":"","en":"Slaty-legged Crake","latin":"Rallina eurizonoides","rank":"species","parent":"family_rallidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_rallus_indicus","ja":"","en":"Brown-cheeked Rail","latin":"Rallus indicus","rank":"species","parent":"family_rallidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_zapornia_fusca","ja":"","en":"Ruddy-breasted Crake","latin":"Zapornia fusca","rank":"species","parent":"family_rallidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_amaurornis_phoenicurus","ja":"","en":"White-breasted Waterhen","latin":"Amaurornis phoenicurus","rank":"species","parent":"family_rallidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_antigone_vipio","ja":"","en":"White-naped Crane","latin":"Antigone vipio","rank":"species","parent":"family_gruidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_grus_grus","ja":"","en":"Common Crane","latin":"Grus grus","rank":"species","parent":"family_gruidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_grus_monacha","ja":"","en":"Hooded Crane","latin":"Grus monacha","rank":"species","parent":"family_gruidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_gavia_stellata","ja":"","en":"Red-throated Loon","latin":"Gavia stellata","rank":"species","parent":"family_gaviidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_gavia_arctica","ja":"","en":"Black-throated Loon","latin":"Gavia arctica","rank":"species","parent":"family_gaviidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_gavia_pacifica","ja":"","en":"Pacific Loon","latin":"Gavia pacifica","rank":"species","parent":"family_gaviidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_phoebastria_immutabilis","ja":"","en":"Laysan Albatross","latin":"Phoebastria immutabilis","rank":"species","parent":"family_diomedeidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_phoebastria_nigripes","ja":"","en":"Black-footed Albatross","latin":"Phoebastria nigripes","rank":"species","parent":"family_diomedeidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_phoebastria_albatrus","ja":"","en":"Short-tailed Albatross","latin":"Phoebastria albatrus","rank":"species","parent":"family_diomedeidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_hydrobates_matsudairae","ja":"","en":"Matsudaira's Storm Petrel","latin":"Hydrobates matsudairae","rank":"species","parent":"family_hydrobatidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_hydrobates_leucorhous","ja":"","en":"Leach's Storm Petrel","latin":"Hydrobates leucorhous","rank":"species","parent":"family_hydrobatidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_hydrobates_monorhis","ja":"","en":"Swinhoe's Storm Petrel","latin":"Hydrobates monorhis","rank":"species","parent":"family_hydrobatidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_ardenna_pacifica","ja":"","en":"Wedge-tailed Shearwater","latin":"Ardenna pacifica","rank":"species","parent":"family_procellariidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_ardenna_tenuirostris","ja":"","en":"Short-tailed Shearwater","latin":"Ardenna tenuirostris","rank":"species","parent":"family_procellariidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_ardenna_grisea","ja":"","en":"Sooty Shearwater","latin":"Ardenna grisea","rank":"species","parent":"family_procellariidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_calonectris_leucomelas","ja":"","en":"Streaked Shearwater","latin":"Calonectris leucomelas","rank":"species","parent":"family_procellariidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_ciconia_boyciana","ja":"","en":"Oriental Stork","latin":"Ciconia boyciana","rank":"species","parent":"family_ciconiidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_botaurus_stellaris","ja":"","en":"Eurasian Bittern","latin":"Botaurus stellaris","rank":"species","parent":"family_ardeidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_gorsachius_goisagi","ja":"","en":"Japanese Night Heron","latin":"Gorsachius goisagi","rank":"species","parent":"family_ardeidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_butorides_striata","ja":"","en":"Striated Heron","latin":"Butorides striata","rank":"species","parent":"family_ardeidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_ardeola_bacchus","ja":"","en":"Chinese Pond Heron","latin":"Ardeola bacchus","rank":"species","parent":"family_ardeidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_platalea_leucorodia","ja":"","en":"Eurasian Spoonbill","latin":"Platalea leucorodia","rank":"species","parent":"family_threskiornithidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_platalea_minor","ja":"","en":"Black-faced Spoonbill","latin":"Platalea minor","rank":"species","parent":"family_threskiornithidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_nipponia_nippon","ja":"","en":"Crested Ibis","latin":"Nipponia nippon","rank":"species","parent":"family_threskiornithidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_sula_sula","ja":"","en":"Red-footed Booby","latin":"Sula sula","rank":"species","parent":"family_sulidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_sula_leucogaster","ja":"","en":"Brown Booby","latin":"Sula leucogaster","rank":"species","parent":"family_sulidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_sula_dactylatra","ja":"","en":"Masked Booby","latin":"Sula dactylatra","rank":"species","parent":"family_sulidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_urile_pelagicus","ja":"","en":"Pelagic Cormorant","latin":"Urile pelagicus","rank":"species","parent":"family_phalacrocoracidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_urile_urile","ja":"","en":"Red-faced Cormorant","latin":"Urile urile","rank":"species","parent":"family_phalacrocoracidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_phalacrocorax_capillatus","ja":"","en":"Japanese Cormorant","latin":"Phalacrocorax capillatus","rank":"species","parent":"family_phalacrocoracidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_pluvialis_squatarola","ja":"","en":"Grey Plover","latin":"Pluvialis squatarola","rank":"species","parent":"family_charadriidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_pluvialis_fulva","ja":"","en":"Pacific Golden Plover","latin":"Pluvialis fulva","rank":"species","parent":"family_charadriidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_anarhynchus_alexandrinus","ja":"","en":"Kentish Plover","latin":"Anarhynchus alexandrinus","rank":"species","parent":"family_charadriidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_vanellus_cinereus","ja":"","en":"Grey-headed Lapwing","latin":"Vanellus cinereus","rank":"species","parent":"family_charadriidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_rostratula_benghalensis","ja":"","en":"Greater Painted-snipe","latin":"Rostratula benghalensis","rank":"species","parent":"family_rostratulidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_numenius_phaeopus","ja":"","en":"Eurasian Whimbrel","latin":"Numenius phaeopus","rank":"species","parent":"family_scolopacidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_numenius_madagascariensis","ja":"","en":"Far Eastern Curlew","latin":"Numenius madagascariensis","rank":"species","parent":"family_scolopacidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_limosa_lapponica","ja":"","en":"Bar-tailed Godwit","latin":"Limosa lapponica","rank":"species","parent":"family_scolopacidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_arenaria_interpres","ja":"","en":"Ruddy Turnstone","latin":"Arenaria interpres","rank":"species","parent":"family_scolopacidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_pandion_haliaetus","ja":"","en":"Osprey","latin":"Pandion haliaetus","rank":"species","parent":"family_pandionidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_pernis_ptilorhynchus","ja":"","en":"Crested Honey Buzzard","latin":"Pernis ptilorhynchus","rank":"species","parent":"family_accipitridae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_spilornis_cheela","ja":"","en":"Crested Serpent Eagle","latin":"Spilornis cheela","rank":"species","parent":"family_accipitridae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_nisaetus_nipalensis","ja":"","en":"Mountain Hawk-Eagle","latin":"Nisaetus nipalensis","rank":"species","parent":"family_accipitridae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_circus_spilonotus","ja":"","en":"Eastern Marsh Harrier","latin":"Circus spilonotus","rank":"species","parent":"family_accipitridae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_ninox_japonica","ja":"","en":"Northern Boobook","latin":"Ninox japonica","rank":"species","parent":"family_strigidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_otus_sunia","ja":"","en":"Oriental Scops Owl","latin":"Otus sunia","rank":"species","parent":"family_strigidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_otus_elegans","ja":"","en":"Ryukyu Scops Owl","latin":"Otus elegans","rank":"species","parent":"family_strigidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_asio_flammeus","ja":"","en":"Short-eared Owl","latin":"Asio flammeus","rank":"species","parent":"family_strigidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_jynx_torquilla","ja":"","en":"Eurasian Wryneck","latin":"Jynx torquilla","rank":"species","parent":"family_picidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_dryocopus_martius","ja":"","en":"Black Woodpecker","latin":"Dryocopus martius","rank":"species","parent":"family_picidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_dendrocopos_leucotos","ja":"","en":"White-backed Woodpecker","latin":"Dendrocopos leucotos","rank":"species","parent":"family_picidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_dendrocopos_major","ja":"","en":"Great Spotted Woodpecker","latin":"Dendrocopos major","rank":"species","parent":"family_picidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_pitta_nympha","ja":"","en":"Fairy Pitta","latin":"Pitta nympha","rank":"species","parent":"family_pittidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_pericrocotus_divaricatus","ja":"","en":"Ashy Minivet","latin":"Pericrocotus divaricatus","rank":"species","parent":"family_campephagidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_pericrocotus_tegimae","ja":"","en":"Ryukyu Minivet","latin":"Pericrocotus tegimae","rank":"species","parent":"family_campephagidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_oriolus_chinensis","ja":"","en":"Black-naped Oriole","latin":"Oriolus chinensis","rank":"species","parent":"family_oriolidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_lanius_tigrinus","ja":"","en":"Tiger Shrike","latin":"Lanius tigrinus","rank":"species","parent":"family_laniidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_lanius_bucephalus","ja":"","en":"Bull-headed Shrike","latin":"Lanius bucephalus","rank":"species","parent":"family_laniidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_lanius_cristatus","ja":"","en":"Brown Shrike","latin":"Lanius cristatus","rank":"species","parent":"family_laniidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_garrulus_glandarius","ja":"","en":"Eurasian Jay","latin":"Garrulus glandarius","rank":"species","parent":"family_corvidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_garrulus_lidthi","ja":"","en":"Lidth's Jay","latin":"Garrulus lidthi","rank":"species","parent":"family_corvidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_pica_serica","ja":"","en":"Oriental Magpie","latin":"Pica serica","rank":"species","parent":"family_corvidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_nucifraga_caryocatactes","ja":"","en":"Northern Nutcracker","latin":"Nucifraga caryocatactes","rank":"species","parent":"family_corvidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_terpsiphone_atrocaudata","ja":"","en":"Black Paradise Flycatcher","latin":"Terpsiphone atrocaudata","rank":"species","parent":"family_monarchidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_prunella_collaris","ja":"","en":"Alpine Accentor","latin":"Prunella collaris","rank":"species","parent":"family_prunellidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_prunella_rubida","ja":"","en":"Japanese Accentor","latin":"Prunella rubida","rank":"species","parent":"family_prunellidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_passer_cinnamomeus","ja":"","en":"Russet Sparrow","latin":"Passer cinnamomeus","rank":"species","parent":"family_passeridae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_anthus_hodgsoni","ja":"","en":"Olive-backed Pipit","latin":"Anthus hodgsoni","rank":"species","parent":"family_motacillidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_anthus_cervinus","ja":"","en":"Red-throated Pipit","latin":"Anthus cervinus","rank":"species","parent":"family_motacillidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_anthus_rubescens","ja":"","en":"American Pipit","latin":"Anthus rubescens","rank":"species","parent":"family_motacillidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_motacilla_cinerea","ja":"","en":"Grey Wagtail","latin":"Motacilla cinerea","rank":"species","parent":"family_motacillidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_fringilla_montifringilla","ja":"","en":"Brambling","latin":"Fringilla montifringilla","rank":"species","parent":"family_fringillidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_eophona_migratoria","ja":"","en":"Chinese Grosbeak","latin":"Eophona migratoria","rank":"species","parent":"family_fringillidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_pyrrhula_pyrrhula","ja":"","en":"Eurasian Bullfinch","latin":"Pyrrhula pyrrhula","rank":"species","parent":"family_fringillidae","branch":"aves","priority":2,"color":"#FFFFFF"},{"id":"rep_acanthis_flammea","ja":"","en":"Redpoll","latin":"Acanthis flammea","rank":"species","parent":"family_fringillidae","branch":"aves","priority":2,"color":"#FFFFFF"}];
+let tabs=[{id:1,targetId:null,search:""}];
+let activeTabIndex=0;
+let nextTabId=2;
+let path=[];
+let targetId=null;
 
-function clone(v){ return structuredClone ? structuredClone(v) : JSON.parse(JSON.stringify(v)); }
-function norm(v){ return String(v??"").normalize("NFKC").toLowerCase().trim(); }
-function displayName(n){ return n?.ja || n?.latin || n?.en || n?.id || "—"; }
-function isSpecies(n){ return n?.rank==="species"; }
-function slug(s){
-  return norm(s).replace(/[^a-z0-9]+/g,"_").replace(/^_+|_+$/g,"").slice(0,80) || "node";
+const KEEP_RANKS=new Set(["domain","kingdom","phylum","class","order","family","genus","ドメイン","界","門","綱","目","科","属"]);
+const NODE_R=28, SPECIES_R=18;
+const ROW_STEP=104, ROW_GAP=86;
+const RADIAL_FIRST=95, RADIAL_STEP=100;
+const PREVIEW_OFFSET=43, PREVIEW_GAP=38;
+const NS="http://www.w3.org/2000/svg";
+
+let baseViewBox={x:-500,y:-500,w:1000,h:1000};
+let currentViewBox={...baseViewBox};
+let pointerMap=new Map();
+let panStart=null;
+let pinchStart=null;
+let suppressClickUntil=0;
+
+function cloneVB(v){return{x:v.x,y:v.y,w:v.w,h:v.h}}
+function setViewBox(v){
+  currentViewBox={...v};
+  svg.setAttribute("viewBox",`${v.x} ${v.y} ${v.w} ${v.h}`);
 }
-function uniqueId(base){
-  let id=base, i=2;
-  while(state.nodes.has(id)) id=`${base}_${i++}`;
-  return id;
+function resetView(v=baseViewBox){baseViewBox={...v};setViewBox(v)}
+function norm(s){return String(s??"").normalize("NFKC")}
+function normalizeSearchText(value){
+  return norm(value)
+    .replace(/[\u30A1-\u30F6]/g,ch=>String.fromCharCode(ch.charCodeAt(0)-0x60))
+    .toLowerCase().replace(/\s+/g," ").trim();
 }
-function setDirty(v=true){
-  state.dirty=v;
-  els.status.classList.toggle("dirty",v);
-  updateStatus();
+function displayName(n){
+  if(!n)return "";
+  if(displayLanguage==="en")return n.en||n.latin||n.ja||n.id;
+  if(displayLanguage==="latin")return n.latin||n.en||n.ja||n.id;
+  return n.ja||n.latin||n.en||n.id;
 }
-function updateStatus(extra=""){
-  if(!state.root){
-    els.status.textContent="データ未読込";
-    return;
+function rankLabel(rank){
+  const map={root:"根",domain:"ドメイン",kingdom:"界",phylum:"門",subphylum:"亜門",class:"綱",order:"目",family:"科",genus:"属",species:"種",clade:"クレード"};
+  return map[rank]||rank||"";
+}
+function hexRgb(hex){
+  const m=/^#([0-9a-f]{6})$/i.exec(hex||"");
+  if(!m)return[100,115,125];
+  const n=parseInt(m[1],16);return[n>>16,(n>>8)&255,n&255];
+}
+function contrastText(hex){
+  const [r,g,b]=hexRgb(hex).map(v=>{v/=255;return v<=.04045?v/12.92:Math.pow((v+.055)/1.055,2.4)});
+  return .2126*r+.7152*g+.0722*b>.42?"#101820":"#ffffff";
+}
+function outlineFor(textColor){return textColor==="#ffffff"?"#18232c":"#ffffff"}
+function svgEl(tag,attrs={}){
+  const e=document.createElementNS(NS,tag);
+  for(const[k,v]of Object.entries(attrs))if(v!==undefined&&v!==null)e.setAttribute(k,String(v));
+  return e;
+}
+function splitLabel(text,max=12){
+  text=String(text||"");
+  if(text.length<=max)return[text];
+  const useWords=text.includes(" ");
+  const words=useWords?text.split(/\s+/):[...text];
+  const lines=[];let line="";
+  for(const w of words){
+    const candidate=useWords?(line?line+" "+w:w):(line+w);
+    if(candidate.length>max&&line){lines.push(line);line=w}else line=candidate;
   }
-  const dirty=state.dirty?"未書出し変更あり":"変更なし";
-  els.status.textContent=`${state.sourceName||"dataset"} / ${state.nodes.size.toLocaleString()} nodes / ${dirty}${extra?` / ${extra}`:""}`;
+  if(line)lines.push(line);
+  return lines.slice(0,3);
 }
-
-function normalizePayload(payload){
-  if(!payload || !Array.isArray(payload.nodes)) throw new Error("nodes 配列がありません");
-  if(!payload.root) throw new Error("root がありません");
-  const map=new Map();
-  const order=[];
-  for(const raw of payload.nodes){
-    if(!raw || !raw.id) throw new Error("id のないノードがあります");
-    if(map.has(raw.id)) throw new Error(`id重複: ${raw.id}`);
-    const n={...raw};
-    n.children=Array.isArray(n.children)?[...n.children]:[];
-    map.set(n.id,n); order.push(n.id);
+function appendText(g,n,x,y,textColor){
+  const species=n.rank==="species";
+  const lines=splitLabel(displayName(n),species?14:12);
+  const total=(lines.length-1)*10;
+  lines.forEach((line,i)=>{
+    const t=svgEl("text",{
+      x,y:y-total/2+i*10,
+      class:(species?"node-label species-label":"node-label")+(species&&Number(n.priority)===2?" priority2-label":""),
+      fill:textColor,stroke:outlineFor(textColor)
+    });
+    t.textContent=line;g.appendChild(t);
+  });
+  if(n.rank&&n.rank!=="root"){
+    const r=svgEl("text",{
+      x,y:y+(species?SPECIES_R+9:NODE_R+11),
+      class:species?"node-rank species-rank":"node-rank",
+      fill:textColor,stroke:outlineFor(textColor)
+    });
+    r.textContent=rankLabel(n.rank);g.appendChild(r);
   }
-  return {map,order};
 }
-function loadPayload(payload,name="dataset"){
-  const {map,order}=normalizePayload(payload);
-  state.root=payload.root;
-  state.nodes=map;
-  state.order=order;
-  state.version=payload.version||46;
-  state.sourceSchema=payload.schema||"circular-phylogeny-standalone/1";
-  state.sourceName=name;
-  state.selectedId=state.nodes.has(state.root)?state.root:(order[0]||null);
-  state.dirty=false;
-  state.validation=null;
-  renderAll();
+function validatePayload(p){
+  if(!p||!Array.isArray(p.nodes))throw new Error("nodes が必要です");
+  if(!p.root)throw new Error("root が必要です");
+  const seen=new Set();
+  for(const n of p.nodes){
+    if(!n.id)throw new Error("id のないノードがあります");
+    if(seen.has(n.id))throw new Error("id重複: "+n.id);
+    seen.add(n.id);
+    if(!Array.isArray(n.children))n.children=[];
+  }
 }
-
-async function autoLoadAllInOne({silent=false, cacheBust=false}={}){
-  const url = cacheBust ? `all_in_one.json?v=${Date.now()}` : "all_in_one.json";
-  try{
-    els.status.textContent="all_in_one.json を自動読込中…";
-    const res=await fetch(url,{cache:cacheBust?"no-store":"default"});
-    if(!res.ok) throw new Error(`HTTP ${res.status}`);
-    const payload=await res.json();
-    loadPayload(payload,"all_in_one.json");
-    updateStatus("自動読込");
-    return true;
-  }catch(err){
-    if(!silent){
-      console.warn("all_in_one.json auto-load failed:",err);
-      els.status.textContent="all_in_one.json 自動読込失敗 — 手動読込を使用してください";
-      els.status.classList.add("dirty");
+function rebuildParentMap(){
+  const m=new Map();
+  for(const n of nodes.values()){
+    for(const c of n.children||[]){
+      if(!nodes.has(c))continue;
+      if(!m.has(c))m.set(c,n.id);
     }
-    return false;
   }
+  parentById=m;
 }
-
-
-function buildParentInfo(){
-  const parent=new Map(), multi=new Map(), missing=[];
-  for(const n of state.nodes.values()){
-    for(const cid of n.children||[]){
-      if(!state.nodes.has(cid)){ missing.push([n.id,cid]); continue; }
-      if(parent.has(cid)){
-        if(!multi.has(cid)) multi.set(cid,[parent.get(cid)]);
-        multi.get(cid).push(n.id);
-      }else parent.set(cid,n.id);
-    }
-  }
-  return {parent,multi,missing};
+function loadPayload(p,label="all_in_one.json"){
+  validatePayload(p);
+  nodes=new Map(p.nodes.map(n=>[n.id,{...n,children:[...(n.children||[])]}]));
+  data={root:p.root};
+  rebuildParentMap();
+  targetId=nodes.has(data.root)?data.root:[...nodes.keys()][0]||null;
+  path=targetId?pathTo(targetId):[];
+  tabs=[{id:1,targetId,search:""}];
+  activeTabIndex=0;nextTabId=2;
+  searchInput.value="";
+  updateStatus(`${label} / ${nodes.size.toLocaleString()} nodes`);
+  setViewDefaults();
+  render();
 }
-function ancestorPath(id,parentInfo=buildParentInfo()){
-  const out=[], seen=new Set();
-  let cur=id;
-  while(cur && state.nodes.has(cur) && !seen.has(cur)){
-    out.push(cur); seen.add(cur); cur=parentInfo.parent.get(cur);
-  }
+function updateStatus(t){statusEl.textContent=t}
+function pathTo(id){
+  if(!id||!nodes.has(id))return[];
+  const out=[],seen=new Set();let cur=id;
+  while(cur&&nodes.has(cur)&&!seen.has(cur)){out.push(cur);seen.add(cur);cur=parentById.get(cur)}
   return out.reverse();
 }
-function descendantsOf(id){
-  const out=new Set();
-  const stack=[id];
-  while(stack.length){
-    const x=stack.pop();
-    const n=state.nodes.get(x);
-    if(!n) continue;
-    for(const c of n.children||[]){
-      if(!out.has(c)){ out.add(c); stack.push(c); }
+function currentTab(){return tabs[activeTabIndex]}
+function syncActiveState(){
+  const t=currentTab();if(!t)return;
+  t.targetId=targetId;t.search=searchInput.value;
+}
+function restoreTab(){
+  const t=currentTab();if(!t)return;
+  targetId=t.targetId&&nodes.has(t.targetId)?t.targetId:data.root;
+  path=pathTo(targetId);
+  searchInput.value=t.search||"";
+}
+function renderTabs(){
+  tabsEl.replaceChildren();
+  tabs.forEach((t,i)=>{
+    const wrap=document.createElement("div");
+    wrap.className="tab-item"+(i===activeTabIndex?" active":"");
+    const b=document.createElement("button");
+    b.className="tab-select";b.type="button";
+    b.textContent=displayName(nodes.get(t.targetId))||`タブ${i+1}`;
+    b.addEventListener("click",()=>switchTab(i));
+    wrap.appendChild(b);
+    if(tabs.length>1){
+      const c=document.createElement("button");
+      c.className="tab-close";c.type="button";c.textContent="×";
+      c.addEventListener("click",e=>{e.stopPropagation();closeTab(i)});
+      wrap.appendChild(c);
     }
+    tabsEl.appendChild(wrap);
+  });
+  addTabBtn.disabled=tabs.length>=2;
+}
+function switchTab(i){
+  if(!tabs[i]||i===activeTabIndex)return;
+  syncActiveState();activeTabIndex=i;restoreTab();render();
+}
+function addComparisonTab(){
+  if(tabs.length>=2)return;
+  syncActiveState();
+  const b=currentTab();
+  tabs.push({id:nextTabId++,targetId:b.targetId,search:b.search||""});
+  activeTabIndex=tabs.length-1;restoreTab();render();
+}
+function closeTab(i){
+  if(tabs.length<=1)return;
+  syncActiveState();tabs.splice(i,1);
+  if(activeTabIndex>=tabs.length)activeTabIndex=tabs.length-1;
+  restoreTab();render();
+}
+function representativeSpeciesVisible(n){
+  if(!n||n.rank!=="species")return true;
+  if(representativeSpeciesMode==="off")return false;
+  if(representativeSpeciesMode==="all")return true;
+  return (Number(n.priority)||1)<=1;
+}
+function childrenOf(id){
+  const n=nodes.get(id);if(!n)return[];
+  return (n.children||[]).filter(cid=>{
+    const c=nodes.get(cid);return c&&representativeSpeciesVisible(c);
+  });
+}
+function speciesChildrenOf(id){
+  const n=nodes.get(id);if(!n||representativeSpeciesMode==="off")return[];
+  return (n.children||[]).filter(cid=>{
+    const c=nodes.get(cid);return c&&c.rank==="species"&&representativeSpeciesVisible(c);
+  });
+}
+function isKeepRank(id){return KEEP_RANKS.has(nodes.get(id)?.rank)}
+function isTerminalDisplayNode(id){
+  const n=nodes.get(id);
+  if(!n||n.rank==="species")return false;
+  return childrenOf(id).length===0;
+}
+function navigateTo(id){
+  if(!nodes.has(id))return;
+  targetId=id;path=pathTo(id);syncActiveState();render();
+}
+function setTarget(id){navigateTo(id)}
+
+function buildDisplayLevels(){
+  const selectedIds=path.slice(1);
+  const levels=[],hidden=[];
+  function flush(){
+    if(hidden.length)levels.push({type:"collapse",hiddenIds:hidden.splice(0)});
+  }
+  selectedIds.forEach((id,index)=>{
+    const isLast=index===selectedIds.length-1;
+    const isParent=index===selectedIds.length-2;
+    const preserve=expandAllOmissions||isKeepRank(id)||isLast||isParent||index===0;
+    if(preserve){
+      flush();
+      levels.push({type:"children",parentId:parentById.get(id),selectedId:id});
+    }else hidden.push(id);
+  });
+  flush();
+  const current=path[path.length-1];
+  if(current&&childrenOf(current).length)levels.push({type:"children",parentId:current,selectedId:null});
+  return levels;
+}
+
+function makeRowsLayout(levels){
+  const rows=[];let anchor={x:0,y:0,angle:90};let y=ROW_STEP;
+  for(const level of levels){
+    if(level.type==="collapse"){
+      const sp={x:anchor.x,y,angle:90};
+      rows.push({...level,nodes:[{id:"__collapse__",...sp}],selectedPos:sp,parentPos:{...anchor}});
+      anchor=sp;y+=ROW_STEP;continue;
+    }
+    const ids=childrenOf(level.parentId);
+    if(!ids.length)continue;
+    const selIndex=level.selectedId?ids.indexOf(level.selectedId):-1;
+    const centerIndex=selIndex>=0?selIndex:(ids.length-1)/2;
+    const rowNodes=ids.map((id,i)=>({id,x:anchor.x+(i-centerIndex)*ROW_GAP,y,angle:90}));
+    const selectedPos=level.selectedId?rowNodes.find(x=>x.id===level.selectedId):{x:anchor.x,y,angle:90};
+    rows.push({...level,nodes:rowNodes,selectedPos:selectedPos||{x:anchor.x,y,angle:90},parentPos:{...anchor}});
+    if(selectedPos)anchor=selectedPos;
+    y+=ROW_STEP;
+  }
+  return rows;
+}
+function polar(r,a){const rad=a*Math.PI/180;return{x:r*Math.cos(rad),y:r*Math.sin(rad)}}
+function makeRadialLayout(levels){
+  const rows=[];let anchor={x:0,y:0,angle:90};let r=0;
+  for(const level of levels){
+    r+=r?RADIAL_STEP:RADIAL_FIRST;
+    if(level.type==="collapse"){
+      const p=polar(r,anchor.angle);
+      const sp={...p,angle:anchor.angle};
+      rows.push({...level,nodes:[{id:"__collapse__",...sp}],selectedPos:sp,parentPos:{...anchor},radius:r});
+      anchor=sp;continue;
+    }
+    const ids=childrenOf(level.parentId);
+    if(!ids.length)continue;
+    const sel=level.selectedId?ids.indexOf(level.selectedId):-1;
+    const gap=Math.min(34,Math.max(12,210/Math.max(1,ids.length-1)));
+    const center=sel>=0?sel:(ids.length-1)/2;
+    const rowNodes=ids.map((id,i)=>{
+      const angle=anchor.angle+(i-center)*gap;
+      return{id,angle,...polar(r,angle)};
+    });
+    const selectedPos=level.selectedId?rowNodes.find(x=>x.id===level.selectedId):{...polar(r,anchor.angle),angle:anchor.angle};
+    rows.push({...level,nodes:rowNodes,selectedPos:selectedPos||anchor,parentPos:{...anchor},radius:r});
+    if(selectedPos)anchor=selectedPos;
+  }
+  return rows;
+}
+function buildPreviewRows(layout){
+  const out=[];
+  for(const row of layout){
+    if(row.type==="collapse"||row.selectedId!==null)continue;
+    const items=[];
+    if(layoutMode==="rows"){
+      for(const parentItem of row.nodes){
+        if(nodes.get(parentItem.id)?.rank==="species")continue;
+        const sids=speciesChildrenOf(parentItem.id);
+        const start=parentItem.x-((sids.length-1)*PREVIEW_GAP)/2;
+        sids.forEach((sid,i)=>items.push({id:sid,parentId:parentItem.id,x:start+i*PREVIEW_GAP,y:parentItem.y+PREVIEW_OFFSET}));
+      }
+    }else{
+      for(const parentItem of row.nodes){
+        if(nodes.get(parentItem.id)?.rank==="species")continue;
+        const sids=speciesChildrenOf(parentItem.id), rr=(row.radius||0)+58;
+        const start=(parentItem.angle||90)-((sids.length-1)*8)/2;
+        sids.forEach((sid,i)=>{const angle=start+i*8;items.push({id:sid,parentId:parentItem.id,angle,...polar(rr,angle)})});
+      }
+    }
+    if(items.length)out.push({items});
   }
   return out;
 }
+function findPos(layout,id){
+  if(id===data.root)return{x:0,y:0,angle:90};
+  for(const row of layout){const hit=row.nodes.find(x=>x.id===id);if(hit)return hit}
+  return null;
+}
+function extentOf(layout,previews){
+  const pts=[{x:0,y:0}];
+  layout.forEach(r=>pts.push(...r.nodes));
+  previews.forEach(p=>pts.push(...p.items));
+  const minX=Math.min(...pts.map(p=>p.x))-100,maxX=Math.max(...pts.map(p=>p.x))+100;
+  const minY=Math.min(...pts.map(p=>p.y))-100,maxY=Math.max(...pts.map(p=>p.y))+100;
+  return{x:minX,y:minY,w:Math.max(700,maxX-minX),h:Math.max(500,maxY-minY)};
+}
+function focusBox(layout,previews){
+  const ext=extentOf(layout,previews);
+  if(layoutMode==="radial")return ext;
+  const pos=findPos(layout,targetId)||{x:0,y:0};
+  const w=Math.max(900,Math.min(1400,ext.w));
+  const h=Math.max(620,Math.min(900,ext.h));
+  return{x:pos.x-w/2,y:Math.max(ext.y,pos.y-h*.48),w,h};
+}
+function renderGraph(){
+  svg.replaceChildren();
+  if(!data.root||!nodes.size)return;
+  const levels=buildDisplayLevels();
+  const layout=layoutMode==="rows"?makeRowsLayout(levels):makeRadialLayout(levels);
+  const previews=buildPreviewRows(layout);
 
-function validateDataset(){
-  const errors=[], warnings=[];
-  if(!state.root || !state.nodes.has(state.root)) errors.push(`root が存在しません: ${state.root||"(none)"}`);
-  const {parent,multi,missing}=buildParentInfo();
-  for(const [p,c] of missing) errors.push(`未定義 child: ${p} -> ${c}`);
-  for(const [id,ps] of multi) errors.push(`親が複数: ${id} <- ${ps.join(", ")}`);
-  if(parent.has(state.root)) errors.push("root が子ノードになっています");
-
-  const visiting=new Set(), visited=new Set();
-  const cycles=[];
-  function dfs(id,path){
-    if(visiting.has(id)){ cycles.push([...path,id].join(" -> ")); return; }
-    if(visited.has(id)||!state.nodes.has(id)) return;
-    visiting.add(id);
-    const n=state.nodes.get(id);
-    for(const c of n.children||[]) dfs(c,[...path,id]);
-    visiting.delete(id); visited.add(id);
+  const root=nodes.get(data.root);
+  if(root){
+    const g=svgEl("g",{tabindex:"0",role:"button","aria-label":`${displayName(root)}を選択`});
+    g.appendChild(svgEl("circle",{cx:0,cy:0,r:NODE_R+3,fill:root.color||"#263746",class:"node"+(targetId===root.id?" target":"")}));
+    appendText(g,root,0,0,contrastText(root.color||"#263746"));
+    g.addEventListener("click",()=>navigateTo(root.id));svg.appendChild(g);
   }
-  if(state.root && state.nodes.has(state.root)) dfs(state.root,[]);
-  if(cycles.length) errors.push(`循環参照: ${cycles[0]}`);
-  const unreachable=[...state.nodes.keys()].filter(id=>!visited.has(id));
-  if(unreachable.length) warnings.push(`rootから未到達 ${unreachable.length}件: ${unreachable.slice(0,8).join(", ")}`);
 
-  const latinSeen=new Map();
-  for(const n of state.nodes.values()){
-    if(isSpecies(n)){
-      if((n.children||[]).length) errors.push(`speciesに子があります: ${n.id}`);
-      if(!n.latin) warnings.push(`学名なしspecies: ${n.id}`);
-      if(n.latin){
-        const key=norm(n.latin);
-        if(latinSeen.has(key)) warnings.push(`species学名重複: ${n.latin} (${latinSeen.get(key)}, ${n.id})`);
-        else latinSeen.set(key,n.id);
-      }
-      if(n.priority!=null && n.priority!=="" && ![1,2,"1","2"].includes(n.priority)) warnings.push(`priorityが1/2以外: ${n.id}`);
+  for(const row of layout){
+    if(row.type==="collapse"){
+      const item=row.nodes[0];
+      const returnId=row.hiddenIds[row.hiddenIds.length-1];
+      svg.insertBefore(svgEl("line",{x1:row.parentPos.x,y1:row.parentPos.y,x2:item.x,y2:item.y,class:"branch active"}),svg.firstChild);
+      const g=svgEl("g",{class:"collapse-group",tabindex:"0",role:"button"});
+      g.appendChild(svgEl("circle",{cx:item.x,cy:item.y,r:NODE_R,class:"collapse"}));
+      const m=svgEl("text",{x:item.x,y:item.y-5,class:"collapse-main"});m.textContent="…";g.appendChild(m);
+      const s=svgEl("text",{x:item.x,y:item.y+14,class:"collapse-sub"});s.textContent=`${row.hiddenIds.length}階層`;g.appendChild(s);
+      const act=()=>{if(performance.now()<suppressClickUntil)return;setTarget(returnId)};
+      g.addEventListener("click",act);g.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();act()}});
+      svg.appendChild(g);continue;
+    }
+
+    for(const item of row.nodes){
+      const n=nodes.get(item.id);if(!n)continue;
+      const active=item.id===row.selectedId,target=item.id===targetId;
+      svg.insertBefore(svgEl("line",{x1:row.parentPos.x,y1:row.parentPos.y,x2:item.x,y2:item.y,class:"branch"+(active?" active":"")+(n.rank==="species"?" species-branch":"")}),svg.firstChild);
+      const fill=n.color||"#687b89",tc=contrastText(fill);
+      const g=svgEl("g",{tabindex:"0",role:"button","aria-label":`${displayName(n)||n.id}を選択`});
+      if(isTerminalDisplayNode(item.id))g.appendChild(svgEl("circle",{cx:item.x,cy:item.y,r:NODE_R+4,class:"terminal-ring"}));
+      g.appendChild(svgEl("circle",{
+        cx:item.x,cy:item.y,r:n.rank==="species"?SPECIES_R:NODE_R,fill,
+        class:"node"+(n.rank==="species"?" species":"")+(n.rank==="species"&&Number(n.priority)===2?" priority2":"")+(active?" active":"")+(target?" target":"")
+      }));
+      appendText(g,n,item.x,item.y,tc);
+      const act=()=>{if(performance.now()<suppressClickUntil)return;navigateTo(item.id)};
+      g.addEventListener("click",act);g.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();act()}});
+      svg.appendChild(g);
     }
   }
-  state.validation={errors,warnings,unreachable};
-  renderValidation();
-  updateKpis();
-  return state.validation;
-}
 
-function updateKpis(){
-  const all=[...state.nodes.values()];
-  const species=all.filter(isSpecies);
-  const noJa=species.filter(n=>!String(n.ja||"").trim());
-  els.kNodes.textContent=all.length.toLocaleString();
-  els.kSpecies.textContent=species.length.toLocaleString();
-  els.kNoJa.textContent=noJa.length.toLocaleString();
-  const unr=state.validation?.unreachable?.length ?? computeUnreachableCount();
-  els.kUnreachable.textContent=unr.toLocaleString();
-}
-function computeUnreachableCount(){
-  if(!state.root || !state.nodes.has(state.root)) return state.nodes.size;
-  const seen=new Set(), stack=[state.root];
-  while(stack.length){
-    const id=stack.pop();
-    if(seen.has(id)||!state.nodes.has(id)) continue;
-    seen.add(id);
-    for(const c of state.nodes.get(id).children||[]) stack.push(c);
+  for(const prow of previews){
+    for(const item of prow.items){
+      const parent=findPos(layout,item.parentId);if(!parent)continue;
+      svg.insertBefore(svgEl("line",{x1:parent.x,y1:parent.y,x2:item.x,y2:item.y,class:"branch species-branch"}),svg.firstChild);
+      const n=nodes.get(item.id);if(!n)continue;
+      const fill=n.color||"#ffffff",tc=contrastText(fill);
+      const g=svgEl("g",{tabindex:"0",role:"button","aria-label":`${displayName(n)||n.id}を選択`});
+      g.appendChild(svgEl("circle",{cx:item.x,cy:item.y,r:SPECIES_R,fill,
+        class:"node species"+(Number(n.priority)===2?" priority2":"")+(item.id===targetId?" target":"")}));
+      appendText(g,n,item.x,item.y,tc);
+      const act=()=>{if(performance.now()<suppressClickUntil)return;navigateTo(item.id)};
+      g.addEventListener("click",act);g.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();act()}});
+      svg.appendChild(g);
+    }
   }
-  return state.nodes.size-seen.size;
-}
 
-function renderValidation(){
-  if(!state.validation){ els.validation.textContent="未実行"; return; }
-  const {errors,warnings}=state.validation;
-  els.validation.replaceChildren();
-  const h=document.createElement("div");
-  if(!errors.length && !warnings.length){
-    h.className="ok"; h.innerHTML="<b>OK</b> — 構造上の問題は見つかりませんでした。";
-    els.validation.appendChild(h); return;
-  }
-  if(errors.length){
-    const t=document.createElement("div"); t.className="badtext"; t.innerHTML=`<b>エラー ${errors.length}</b>`; els.validation.appendChild(t);
-    for(const x of errors.slice(0,30)){ const d=document.createElement("div"); d.textContent="• "+x; els.validation.appendChild(d); }
-  }
-  if(warnings.length){
-    const t=document.createElement("div"); t.className="warntext"; t.style.marginTop="7px"; t.innerHTML=`<b>警告 ${warnings.length}</b>`; els.validation.appendChild(t);
-    for(const x of warnings.slice(0,30)){ const d=document.createElement("div"); d.textContent="• "+x; els.validation.appendChild(d); }
-  }
+  resetView(focusBox(layout,previews));
 }
-
-function renderList(){
-  const q=norm(els.search.value), rf=els.rankFilter.value, onlyNoJa=els.onlyNoJa.checked;
-  let items=state.order.map(id=>state.nodes.get(id)).filter(Boolean);
-  if(q) items=items.filter(n=>[n.id,n.ja,n.en,n.latin,n.rank].some(v=>norm(v).includes(q)));
-  if(rf) items=items.filter(n=>n.rank===rf);
-  if(onlyNoJa) items=items.filter(n=>!String(n.ja||"").trim());
-  const total=items.length, shown=items.slice(0,700);
-  els.listSummary.textContent=`${total.toLocaleString()}件${total>shown.length?`（先頭${shown.length}件表示）`:""}`;
-  els.nodeList.replaceChildren();
-  const frag=document.createDocumentFragment();
-  for(const n of shown){
-    const b=document.createElement("button");
-    b.type="button"; b.className="node-row"+(n.id===state.selectedId?" active":"");
-    const nm=document.createElement("div"); nm.className="name"; nm.textContent=displayName(n);
-    if(isSpecies(n)){ const sp=document.createElement("span"); sp.className="badge species"; sp.textContent="species"; nm.appendChild(sp); }
-    if(!String(n.ja||"").trim()){ const w=document.createElement("span"); w.className="badge warn"; w.textContent="和名なし"; nm.appendChild(w); }
-    const meta=document.createElement("div"); meta.className="meta"; meta.textContent=[n.latin,n.en,n.rank,n.id].filter(Boolean).join(" · ");
-    b.append(nm,meta);
-    b.addEventListener("click",()=>selectNode(n.id));
-    frag.appendChild(b);
-  }
-  els.nodeList.appendChild(frag);
-}
-
-function fillParentSelect(selectedId){
-  const current=state.nodes.get(selectedId);
-  const {parent}=buildParentInfo();
-  const currentParent=parent.get(selectedId)||"";
-  const forbidden=descendantsOf(selectedId); forbidden.add(selectedId);
-  const options=state.order.map(id=>state.nodes.get(id)).filter(n=>n && !forbidden.has(n.id) && !isSpecies(n));
-  els.fParent.replaceChildren();
-  if(selectedId===state.root){
-    const o=document.createElement("option"); o.value=""; o.textContent="（root）"; els.fParent.appendChild(o); els.fParent.disabled=true; return;
-  }
-  els.fParent.disabled=false;
-  const none=document.createElement("option"); none.value=""; none.textContent="（親なし）"; els.fParent.appendChild(none);
-  for(const n of options){
-    const o=document.createElement("option"); o.value=n.id; o.textContent=`${displayName(n)} [${n.id}]`; els.fParent.appendChild(o);
-  }
-  els.fParent.value=currentParent;
-}
-function fillEditor(){
-  const n=state.nodes.get(state.selectedId);
-  if(!n){ els.emptyEditor.hidden=false; els.editor.hidden=true; return; }
-  els.emptyEditor.hidden=true; els.editor.hidden=false;
-  els.fId.value=n.id; els.fRank.value=Array.from(els.fRank.options).some(o=>o.value===n.rank)?n.rank:"other";
-  els.fJa.value=n.ja||""; els.fEn.value=n.en||""; els.fLatin.value=n.latin||""; els.fColor.value=n.color||"";
-  els.fPriority.value=n.priority==null?"":String(n.priority); els.fWiki.value=n.wiki||""; els.fNote.value=n.note||"";
-  fillParentSelect(n.id);
-  els.deleteLeaf.disabled=(n.children||[]).length>0 || n.id===state.root;
-  els.editMessage.textContent="";
-}
-function renderRelations(){
-  if(!state.selectedId||!state.nodes.has(state.selectedId)){
-    els.breadcrumbs.textContent="—"; els.children.textContent="—"; return;
-  }
-  const pi=buildParentInfo();
-  const path=ancestorPath(state.selectedId,pi);
-  els.breadcrumbs.replaceChildren();
+function renderPath(){
+  pathEl.replaceChildren();
   path.forEach((id,i)=>{
-    if(i){ const s=document.createElement("span"); s.textContent="›"; els.breadcrumbs.appendChild(s); }
-    const b=document.createElement("button"); b.className="crumb"; b.textContent=displayName(state.nodes.get(id));
-    b.addEventListener("click",()=>selectNode(id)); els.breadcrumbs.appendChild(b);
-  });
-  const n=state.nodes.get(state.selectedId);
-  els.children.replaceChildren();
-  if(!(n.children||[]).length){ els.children.textContent="—"; }
-  else for(const cid of n.children){
-    const c=state.nodes.get(cid); if(!c) continue;
-    const b=document.createElement("button"); b.className="child"; b.textContent=displayName(c);
-    b.addEventListener("click",()=>selectNode(cid)); els.children.appendChild(b);
-  }
-}
-function esc(s){return String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
-function contrast(hex){
-  const m=/^#([0-9a-f]{6})$/i.exec(hex||""); if(!m) return "#17212b";
-  const x=parseInt(m[1],16), r=x>>16,g=(x>>8)&255,b=x&255;
-  return (0.2126*r+0.7152*g+0.0722*b)>155?"#17212b":"#fff";
-}
-function svgNode(n,x,y,selected=false){
-  const g=document.createElementNS("http://www.w3.org/2000/svg","g"); g.setAttribute("class","preview-node"+(selected?" selected":""));
-  const c=document.createElementNS(g.namespaceURI,"circle"); c.setAttribute("cx",x); c.setAttribute("cy",y); c.setAttribute("r",isSpecies(n)?22:28); c.setAttribute("fill",n.color||"#71818c");
-  const t=document.createElementNS(g.namespaceURI,"text"); t.setAttribute("x",x); t.setAttribute("y",y+4); t.setAttribute("class","preview-label"); t.setAttribute("fill",contrast(n.color||"#71818c"));
-  let label=displayName(n); if(label.length>13) label=label.slice(0,12)+"…"; t.textContent=label;
-  g.append(c,t); g.addEventListener("click",()=>selectNode(n.id)); return g;
-}
-function line(x1,y1,x2,y2){
-  const l=document.createElementNS("http://www.w3.org/2000/svg","line"); for(const [k,v] of Object.entries({x1,y1,x2,y2})) l.setAttribute(k,v); l.setAttribute("class","preview-line"); return l;
-}
-function renderPreview(){
-  const svg=els.preview; svg.replaceChildren();
-  const n=state.nodes.get(state.selectedId); if(!n) return;
-  const {parent}=buildParentInfo();
-  const pid=parent.get(n.id), p=pid?state.nodes.get(pid):null;
-  let siblings=p?(p.children||[]).map(id=>state.nodes.get(id)).filter(Boolean):[n];
-  if(siblings.length>13){
-    const idx=Math.max(0,siblings.findIndex(x=>x.id===n.id));
-    siblings=siblings.slice(Math.max(0,idx-6),Math.max(0,idx-6)+13);
-  }
-  const sx=900/(siblings.length+1);
-  if(p){
-    svg.appendChild(line(450,75,450,185));
-    svg.appendChild(svgNode(p,450,70,false));
-  }
-  siblings.forEach((s,i)=>{
-    const x=sx*(i+1), y=210;
-    if(p) svg.appendChild(line(450,95,x,y-28));
-    svg.appendChild(svgNode(s,x,y,s.id===n.id));
-  });
-  const selectedIndex=siblings.findIndex(s=>s.id===n.id);
-  const selectedX=selectedIndex>=0?sx*(selectedIndex+1):450;
-  let kids=(n.children||[]).map(id=>state.nodes.get(id)).filter(Boolean);
-  if(kids.length>16) kids=kids.slice(0,16);
-  if(kids.length){
-    const kx=900/(kids.length+1);
-    kids.forEach((c,i)=>{
-      const x=kx*(i+1), y=370;
-      svg.appendChild(line(selectedX,238,x,y-28));
-      svg.appendChild(svgNode(c,x,y,false));
-    });
-  }
-  if((n.children||[]).length>kids.length){
-    const t=document.createElementNS(svg.namespaceURI,"text"); t.setAttribute("x",870); t.setAttribute("y",445); t.setAttribute("text-anchor","end"); t.setAttribute("font-size","11"); t.textContent=`+${(n.children||[]).length-kids.length} 子ノード省略`; svg.appendChild(t);
-  }
-}
-
-function renderUnresolved(){
-  const items=[...state.nodes.values()].filter(n=>isSpecies(n)&&!String(n.ja||"").trim());
-  els.unresolvedList.replaceChildren();
-  if(!items.length){ els.unresolvedList.innerHTML='<div class="ok small">和名未入力の代表種はありません。</div>'; return; }
-  const frag=document.createDocumentFragment();
-  for(const n of items.slice(0,120)){
-    const d=document.createElement("div"); d.className="unresolved-item";
-    const b=document.createElement("button"); b.textContent=n.latin||n.id; b.addEventListener("click",()=>selectNode(n.id));
-    const s=document.createElement("span"); s.className="small"; s.textContent=n.en||"";
-    d.append(b,s); frag.appendChild(d);
-  }
-  els.unresolvedList.appendChild(frag);
-  if(items.length>120){ const m=document.createElement("div"); m.className="small"; m.textContent=`ほか ${items.length-120}件`; els.unresolvedList.appendChild(m); }
-}
-
-function renderAll(){
-  updateStatus();
-  renderList(); fillEditor(); renderRelations(); renderPreview(); updateKpis(); renderUnresolved(); renderValidation();
-}
-function selectNode(id){
-  if(!state.nodes.has(id)) return;
-  state.selectedId=id; renderList(); fillEditor(); renderRelations(); renderPreview();
-}
-
-function renameNode(oldId,newId){
-  if(oldId===newId) return;
-  if(!newId) throw new Error("IDは空にできません");
-  if(state.nodes.has(newId)) throw new Error(`ID重複: ${newId}`);
-  const n=state.nodes.get(oldId); state.nodes.delete(oldId); n.id=newId; state.nodes.set(newId,n);
-  state.order=state.order.map(x=>x===oldId?newId:x);
-  for(const p of state.nodes.values()) p.children=(p.children||[]).map(x=>x===oldId?newId:x);
-  if(state.root===oldId) state.root=newId;
-  if(state.selectedId===oldId) state.selectedId=newId;
-}
-function setParent(id,newParentId){
-  if(id===state.root){ if(newParentId) throw new Error("rootに親は設定できません"); return; }
-  const desc=descendantsOf(id);
-  if(newParentId===id || desc.has(newParentId)) throw new Error("自分自身または子孫を親にはできません");
-  for(const n of state.nodes.values()) n.children=(n.children||[]).filter(c=>c!==id);
-  if(newParentId){
-    const p=state.nodes.get(newParentId); if(!p) throw new Error("親が存在しません");
-    if(isSpecies(p)) throw new Error("speciesを親にはできません");
-    p.children.push(id);
-  }
-}
-function applyForm(){
-  const oldId=state.selectedId, n=state.nodes.get(oldId); if(!n) return;
-  const newId=els.fId.value.trim();
-  const newParent=els.fParent.disabled?"":els.fParent.value;
-  try{
-    renameNode(oldId,newId);
-    const nn=state.nodes.get(newId);
-    nn.rank=els.fRank.value==="other"?(nn.rank||"clade"):els.fRank.value;
-    nn.ja=els.fJa.value.trim(); nn.en=els.fEn.value.trim(); nn.latin=els.fLatin.value.trim();
-    nn.color=els.fColor.value.trim()||undefined; nn.wiki=els.fWiki.value.trim(); nn.note=els.fNote.value.trim();
-    if(els.fPriority.value) nn.priority=Number(els.fPriority.value); else delete nn.priority;
-    if(isSpecies(nn)) nn.children=[];
-    setParent(newId,newParent);
-    setDirty(true); state.validation=null; renderAll();
-    els.editMessage.textContent="反映しました。";
-  }catch(err){
-    els.editMessage.className="small badtext"; els.editMessage.textContent="エラー: "+err.message;
-  }
-}
-
-function prepAdd(kind, baseNode=state.nodes.get(state.selectedId)){
-  if(!baseNode) return;
-  const ranks=[...els.fRank.options].map(o=>({value:o.value,text:o.textContent})).filter(x=>x.value!=="root"&&x.value!=="other");
-  els.aRank.replaceChildren();
-  ranks.forEach(x=>{const o=document.createElement("option");o.value=x.value;o.textContent=x.text;els.aRank.appendChild(o)});
-  const species=kind==="species";
-  els.dialogTitle.textContent=species?"代表種を追加":"子分類群を追加";
-  els.aRank.value=species?"species":"clade";
-  els.aPriority.value=species?"2":"";
-  els.aJa.value=""; els.aEn.value=""; els.aLatin.value="";
-  els.aParent.value=baseNode.id;
-  els.aId.value=uniqueId(species?"rep_new_species":"new_node");
-  els.addDialog.dataset.kind=kind;
-  els.addDialog.showModal();
-}
-function confirmAdd(){
-  const parentId=els.aParent.value, p=state.nodes.get(parentId); if(!p) return;
-  const id=els.aId.value.trim();
-  if(!id || state.nodes.has(id)){ alert("IDが空、または重複しています"); return; }
-  const n={
-    id, ja:els.aJa.value.trim(), en:els.aEn.value.trim(), latin:els.aLatin.value.trim(),
-    rank:els.aRank.value, children:[], color:els.aRank.value==="species"?"#FFFFFF":"#71818c"
-  };
-  if(els.aPriority.value) n.priority=Number(els.aPriority.value);
-  state.nodes.set(id,n); state.order.push(id); p.children=p.children||[]; p.children.push(id);
-  state.selectedId=id; setDirty(true); state.validation=null; els.addDialog.close(); renderAll();
-}
-function duplicateSelected(){
-  const n=state.nodes.get(state.selectedId); if(!n) return;
-  const {parent}=buildParentInfo(); const pid=parent.get(n.id);
-  const copy=clone(n); copy.id=uniqueId(n.id+"_copy"); copy.children=[];
-  state.nodes.set(copy.id,copy); state.order.push(copy.id);
-  if(pid){ const p=state.nodes.get(pid); const at=p.children.indexOf(n.id); p.children.splice(at+1,0,copy.id); }
-  state.selectedId=copy.id; setDirty(true); state.validation=null; renderAll();
-}
-function deleteLeaf(){
-  const n=state.nodes.get(state.selectedId); if(!n || (n.children||[]).length || n.id===state.root) return;
-  if(!confirm(`${displayName(n)} (${n.id}) を削除しますか？`)) return;
-  const {parent}=buildParentInfo(); const pid=parent.get(n.id);
-  if(pid){ const p=state.nodes.get(pid); p.children=p.children.filter(c=>c!==n.id); }
-  state.nodes.delete(n.id); state.order=state.order.filter(x=>x!==n.id); state.selectedId=pid||state.root;
-  setDirty(true); state.validation=null; renderAll();
-}
-
-function downloadJson(filename,obj){
-  const blob=new Blob([JSON.stringify(obj,null,2)+"\n"],{type:"application/json"});
-  const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=filename; document.body.appendChild(a); a.click();
-  setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1000);
-}
-function allPayload(){
-  return {
-    schema:"circular-phylogeny-standalone/1",
-    version:46,
-    root:state.root,
-    note:"Generated by v46. Compatible with v44-style standalone loading.",
-    nodes:state.order.map(id=>state.nodes.get(id)).filter(Boolean).map(n=>clone(n))
-  };
-}
-function taxonomyPayload(){
-  const speciesIds=new Set([...state.nodes.values()].filter(isSpecies).map(n=>n.id));
-  const nodes=state.order.map(id=>state.nodes.get(id)).filter(n=>n&&!speciesIds.has(n.id)).map(n=>{
-    const x=clone(n); x.children=(x.children||[]).filter(c=>!speciesIds.has(c)); delete x.priority; return x;
-  });
-  return {
-    schema:"circular-phylogeny-taxonomy/1", version:46, root:state.root,
-    note:"Taxonomy only. Representative species are stored separately.", nodes
-  };
-}
-function speciesPayload(){
-  const {parent}=buildParentInfo();
-  const species=state.order.map(id=>state.nodes.get(id)).filter(isSpecies).map(n=>({
-    id:n.id, ja:n.ja||"", en:n.en||"", latin:n.latin||"", rank:"species",
-    parent:parent.get(n.id)||"", priority:n.priority||2, wiki:n.wiki||"", color:n.color||"#FFFFFF",
-    ...(n.note?{note:n.note}:{})
-  }));
-  return {
-    schema:"circular-phylogeny-representative-species/1",version:46,created:new Date().toISOString().slice(0,10),
-    description:"Representative species separated from taxonomy data. Japanese common names may be blank.",
-    policy:{
-      scientific_name_key:"latin is the canonical key for species-name dictionaries",
-      japanese_name:"ja may be blank when no confirmed Japanese name is available",
-      priority:"1 = important/core, 2 = secondary/detail"
-    },
-    counts:{total:species.length,priority1:species.filter(x=>x.priority===1).length,priority2:species.filter(x=>x.priority===2).length},
-    species
-  };
-}
-function namesPayload(){
-  const names={};
-  [...state.nodes.values()].filter(isSpecies).filter(n=>n.latin&&n.ja).sort((a,b)=>a.latin.localeCompare(b.latin)).forEach(n=>names[n.latin]=n.ja);
-  return {
-    schema:"circular-phylogeny-ja-names/1",version:1,
-    key:"scientificName",note:"Exact scientific-name dictionary. Missing entries are allowed; do not invent Japanese names.",
-    names
-  };
-}
-
-async function readJsonFile(file){ return JSON.parse(await file.text()); }
-async function loadAllFile(file){
-  try{ loadPayload(await readJsonFile(file),file.name); }
-  catch(err){ alert("読込エラー: "+err.message); }
-}
-async function loadTaxonomyFile(file){
-  try{
-    const p=await readJsonFile(file); loadPayload(p,file.name);
-  }catch(err){ alert("分類JSON読込エラー: "+err.message); }
-}
-
-function mergeSpeciesEntries(arr,label="species"){
-  if(!state.root){ alert("先に分類JSONまたはall_in_oneを読み込んでください"); return {added:0,skipped:0}; }
-  let added=0, skipped=0, missingParents=new Set();
-  for(const e of arr){
-    if(!e.id || state.nodes.has(e.id)){ skipped++; continue; }
-    if(!state.nodes.has(e.parent)){ skipped++; if(e.parent) missingParents.add(e.parent); continue; }
-    const n={
-      id:e.id, ja:e.ja||"", en:e.en||"", latin:e.latin||"", rank:"species", children:[],
-      color:e.color||"#FFFFFF", priority:e.priority||2
-    };
-    if(e.wiki)n.wiki=e.wiki;
-    if(e.note)n.note=e.note;
-    state.nodes.set(n.id,n);
-    state.order.push(n.id);
-    state.nodes.get(e.parent).children.push(n.id);
-    added++;
-  }
-  if(added){
-    setDirty(true);
-    state.validation=null;
-    renderAll();
-  }
-  const missingText=missingParents.size?` / 親なし ${missingParents.size}科`:"";
-  updateStatus(`${label}: +${added}, skip ${skipped}${missingText}`);
-  return {added,skipped,missingParents:[...missingParents]};
-}
-function addJapanBirds100Sample(){
-  const result=mergeSpeciesEntries(JAPAN_BIRD_SAMPLE_100,"日本鳥100種");
-  if(result.missingParents.length){
-    alert(`追加できない種がありました。\n現在のデータに次の科ノードがありません:\n${result.missingParents.join("\n")}`);
-  }
-}
-
-async function addSpeciesFile(file){
-  if(!state.root){ alert("先に分類JSONまたはall_in_oneを読み込んでください"); return; }
-  try{
-    const p=await readJsonFile(file), arr=Array.isArray(p.species)?p.species:[];
-    mergeSpeciesEntries(arr,"代表種JSON");
-  }catch(err){ alert("代表種JSON読込エラー: "+err.message); }
-}
-async function applyNamesFile(file){
-  if(!state.root){ alert("先にデータを読み込んでください"); return; }
-  try{
-    const p=await readJsonFile(file), names=p.names||p;
-    let applied=0;
-    for(const n of state.nodes.values()){
-      if(isSpecies(n)&&n.latin&&Object.prototype.hasOwnProperty.call(names,n.latin)){
-        n.ja=names[n.latin]||""; applied++;
-      }
-    }
-    setDirty(true); renderAll(); updateStatus(`和名 ${applied}件適用`);
-  }catch(err){ alert("和名辞書読込エラー: "+err.message); }
-}
-
-function openDB(){
-  return new Promise((resolve,reject)=>{
-    const req=indexedDB.open("phylogeny-v45-editor",1);
-    req.onupgradeneeded=()=>req.result.createObjectStore("snapshots");
-    req.onsuccess=()=>resolve(req.result); req.onerror=()=>reject(req.error);
+    if(i){const s=document.createElement("span");s.className="sep";s.textContent="›";pathEl.appendChild(s)}
+    const b=document.createElement("button");b.textContent=displayName(nodes.get(id));b.addEventListener("click",()=>navigateTo(id));pathEl.appendChild(b);
   });
 }
-async function saveBrowser(){
-  if(!state.root) return;
-  try{
-    const db=await openDB(), tx=db.transaction("snapshots","readwrite");
-    tx.objectStore("snapshots").put(allPayload(),"latest");
-    await new Promise((res,rej)=>{tx.oncomplete=res;tx.onerror=()=>rej(tx.error)});
-    updateStatus("ブラウザ保存済み");
-  }catch(err){ alert("ブラウザ保存エラー: "+err.message); }
+function showDetail(id){
+  const n=nodes.get(id);detailEl.replaceChildren();
+  if(!n){detailEl.textContent="—";return}
+  const add=(label,value)=>{
+    if(!value)return;
+    const d=document.createElement("div"),b=document.createElement("b");b.textContent=label+"：";d.append(b,document.createTextNode(value));detailEl.appendChild(d);
+  };
+  add("名称",displayName(n));add("日本語",n.ja);add("English",n.en);add("Latin",n.latin);add("階級",rankLabel(n.rank));
+  if(n.priority)add("priority",String(n.priority));
+  if(n.note){const p=document.createElement("p");p.textContent=n.note;detailEl.appendChild(p)}
+  if(n.wiki){
+    const a=document.createElement("a");a.href=n.wiki;a.target="_blank";a.rel="noopener";a.textContent="参考リンク";detailEl.appendChild(a);
+  }
 }
-async function restoreBrowser(){
-  try{
-    const db=await openDB(), tx=db.transaction("snapshots","readonly"), req=tx.objectStore("snapshots").get("latest");
-    const p=await new Promise((res,rej)=>{req.onsuccess=()=>res(req.result);req.onerror=()=>rej(req.error)});
-    if(!p){ alert("保存データがありません"); return; }
-    loadPayload(p,"browser snapshot");
-  }catch(err){ alert("復元エラー: "+err.message); }
+function render(){
+  if(!nodes.size){
+    svg.replaceChildren();detailEl.textContent="データ未読込";pathEl.textContent="—";renderTabs();return
+  }
+  path=pathTo(targetId||data.root);
+  expandBtn.classList.toggle("active",expandAllOmissions);
+  expandBtn.setAttribute("aria-pressed",String(expandAllOmissions));
+  expandBtn.textContent=expandAllOmissions?"省略表示に戻す":"全省略を展開";
+
+  layoutRowsBtn.classList.toggle("active",layoutMode==="rows");
+  layoutRadialBtn.classList.toggle("active",layoutMode==="radial");
+  layoutRowsBtn.setAttribute("aria-pressed",String(layoutMode==="rows"));
+  layoutRadialBtn.setAttribute("aria-pressed",String(layoutMode==="radial"));
+  svg.classList.toggle("rows-mode",layoutMode==="rows");
+
+  langJaBtn.classList.toggle("active",displayLanguage==="ja");
+  langEnBtn.classList.toggle("active",displayLanguage==="en");
+  langLatinBtn.classList.toggle("active",displayLanguage==="latin");
+
+  speciesImportantBtn.classList.toggle("active",representativeSpeciesMode==="important");
+  speciesAllBtn.classList.toggle("active",representativeSpeciesMode==="all");
+  speciesOffBtn.classList.toggle("active",representativeSpeciesMode==="off");
+
+  renderGraph();renderPath();showDetail(targetId||data.root);syncActiveState();renderTabs();
+  backBtn.disabled=path.length<=1;
+}
+function setViewDefaults(){
+  displayLanguage="ja";layoutMode="rows";representativeSpeciesMode="all";expandAllOmissions=false;
+}
+function setDisplayLanguage(x){displayLanguage=x;render()}
+function setLayoutMode(x){layoutMode=x==="radial"?"radial":"rows";render()}
+function setSpeciesMode(x){representativeSpeciesMode=x;render()}
+
+function score(n,q){
+  const s=normalizeSearchText(q),vals=[n.id,n.ja,n.en,n.latin,n.rank].map(normalizeSearchText);
+  if(vals.some(v=>v===s))return 0;
+  if(vals.some(v=>v.startsWith(s)))return 1;
+  if(vals.some(v=>v.includes(s)))return 2;
+  return 99;
+}
+function updateResults(){
+  const q=searchInput.value.trim();resultsBox.replaceChildren();
+  if(!q){resultsBox.style.display="none";return}
+  const hits=[...nodes.values()].map(n=>({n,s:score(n,q)})).filter(x=>x.s<99)
+    .sort((a,b)=>a.s-b.s||(a.n.ja||"").localeCompare(b.n.ja||"","ja")).slice(0,20);
+  if(!hits.length){resultsBox.style.display="none";return}
+  hits.forEach(({n})=>{
+    const b=document.createElement("button");b.className="result";b.type="button";b.textContent=displayName(n);
+    const sm=document.createElement("small");sm.textContent=[n.latin,n.en,n.rank,n.id].filter(Boolean).join(" · ");b.appendChild(sm);
+    b.addEventListener("click",()=>{resultsBox.style.display="none";navigateTo(n.id);searchInput.value=displayName(n);syncActiveState()});
+    resultsBox.appendChild(b);
+  });
+  resultsBox.style.display="block";
 }
 
-els.loadAll.addEventListener("change",()=>{const f=els.loadAll.files?.[0];if(f)loadAllFile(f);els.loadAll.value=""});
-els.reloadAllInOne.addEventListener("click",()=>autoLoadAllInOne({cacheBust:true}));
-els.loadTaxonomy.addEventListener("change",()=>{const f=els.loadTaxonomy.files?.[0];if(f)loadTaxonomyFile(f);els.loadTaxonomy.value=""});
-els.loadSpecies.addEventListener("change",()=>{const f=els.loadSpecies.files?.[0];if(f)addSpeciesFile(f);els.loadSpecies.value=""});
-els.loadNames.addEventListener("change",()=>{const f=els.loadNames.files?.[0];if(f)applyNamesFile(f);els.loadNames.value=""});
-els.addJapanBirds100.addEventListener("click",addJapanBirds100Sample);
-els.search.addEventListener("input",renderList); els.rankFilter.addEventListener("change",renderList); els.onlyNoJa.addEventListener("change",renderList);
-els.apply.addEventListener("click",applyForm); els.addChild.addEventListener("click",()=>prepAdd("node"));
-els.addSpecies.addEventListener("click",()=>prepAdd("species")); els.duplicate.addEventListener("click",duplicateSelected); els.deleteLeaf.addEventListener("click",deleteLeaf);
-els.cancelAdd.addEventListener("click",()=>els.addDialog.close()); els.confirmAdd.addEventListener("click",confirmAdd);
-els.validateBtn.addEventListener("click",validateDataset);
-els.exportAll.addEventListener("click",()=>{if(!state.root)return; const v=validateDataset(); if(v.errors.length&&!confirm(`エラーが${v.errors.length}件あります。それでも書き出しますか？`))return; downloadJson("all_in_one_v46.json",allPayload()); setDirty(false);});
-els.exportTaxonomy.addEventListener("click",()=>state.root&&downloadJson("taxonomy_v46.json",taxonomyPayload()));
-els.exportSpecies.addEventListener("click",()=>state.root&&downloadJson("representative_species_v46.json",speciesPayload()));
-els.exportNames.addEventListener("click",()=>state.root&&downloadJson("names_ja.json",namesPayload()));
-els.saveBrowser.addEventListener("click",saveBrowser); els.restoreBrowser.addEventListener("click",restoreBrowser);
-window.addEventListener("beforeunload",e=>{if(state.dirty){e.preventDefault();e.returnValue=""}});
+async function loadAllInOne(cacheBust=false){
+  if(location.protocol==="file:"){
+    updateStatus("ローカルでは「単一JSON読込」を使用してください");
+    return false;
+  }
+  try{
+    updateStatus("all_in_one.json 読込中…");
+    const url=cacheBust?`all_in_one.json?v=${Date.now()}`:"all_in_one.json";
+    const r=await fetch(url,{cache:cacheBust?"no-store":"no-cache"});
+    if(!r.ok)throw new Error(`HTTP ${r.status}`);
+    loadPayload(await r.json(),"all_in_one.json");
+    return true;
+  }catch(e){
+    console.error(e);updateStatus("all_in_one.json 自動読込失敗: "+e.message);return false;
+  }
+}
+async function loadLocalFile(f){
+  try{loadPayload(JSON.parse(await f.text()),f.name)}
+  catch(e){updateStatus("JSONエラー: "+e.message)}
+}
 
-renderAll();
-autoLoadAllInOne();
+fileInput.addEventListener("change",async()=>{const f=fileInput.files?.[0];if(f)await loadLocalFile(f);fileInput.value=""});
+folderInput.addEventListener("change",async()=>{
+  const files=[...(folderInput.files||[])];
+  const f=files.find(x=>/\/all_in_one\.json$/i.test(x.webkitRelativePath||""))||files.find(x=>x.name==="all_in_one.json");
+  if(!f){updateStatus("選択フォルダに all_in_one.json がありません");return}
+  await loadLocalFile(f);folderInput.value="";
+});
+reloadBtn.addEventListener("click",()=>void loadAllInOne(true));
+
+homeBtn.addEventListener("click",()=>data.root&&navigateTo(data.root));
+backBtn.addEventListener("click",()=>{if(path.length>1)navigateTo(path[path.length-2])});
+expandBtn.addEventListener("click",()=>{expandAllOmissions=!expandAllOmissions;render()});
+layoutRowsBtn.addEventListener("click",()=>setLayoutMode("rows"));
+layoutRadialBtn.addEventListener("click",()=>setLayoutMode("radial"));
+langJaBtn.addEventListener("click",()=>setDisplayLanguage("ja"));
+langEnBtn.addEventListener("click",()=>setDisplayLanguage("en"));
+langLatinBtn.addEventListener("click",()=>setDisplayLanguage("latin"));
+speciesImportantBtn.addEventListener("click",()=>setSpeciesMode("important"));
+speciesAllBtn.addEventListener("click",()=>setSpeciesMode("all"));
+speciesOffBtn.addEventListener("click",()=>setSpeciesMode("off"));
+addTabBtn.addEventListener("click",addComparisonTab);
+quickJump.addEventListener("change",()=>{
+  if(quickJump.value&&nodes.has(quickJump.value))navigateTo(quickJump.value);
+  else if(quickJump.value)updateStatus(`ノード未登録: ${quickJump.value}`);
+  quickJump.value="";
+});
+searchInput.addEventListener("input",()=>{syncActiveState();updateResults()});
+searchInput.addEventListener("focus",updateResults);
+document.addEventListener("click",e=>{if(!e.target.closest(".search-wrap"))resultsBox.style.display="none"});
+
+// Wheel zoom
+svg.addEventListener("wheel",e=>{
+  e.preventDefault();
+  const rect=svg.getBoundingClientRect();
+  const px=(e.clientX-rect.left)/rect.width,py=(e.clientY-rect.top)/rect.height;
+  const factor=e.deltaY>0?1.12:.89;
+  const nw=currentViewBox.w*factor,nh=currentViewBox.h*factor;
+  const wx=currentViewBox.x+px*currentViewBox.w,wy=currentViewBox.y+py*currentViewBox.h;
+  setViewBox({x:wx-px*nw,y:wy-py*nh,w:nw,h:nh});
+},{passive:false});
+
+// Pointer pan + pinch zoom
+svg.addEventListener("pointerdown",e=>{
+  svg.setPointerCapture?.(e.pointerId);
+  pointerMap.set(e.pointerId,{x:e.clientX,y:e.clientY});
+  if(pointerMap.size===1){
+    panStart={p:{x:e.clientX,y:e.clientY},vb:cloneVB(currentViewBox)};
+  }else if(pointerMap.size===2){
+    const pts=[...pointerMap.values()];
+    const d=Math.hypot(pts[0].x-pts[1].x,pts[0].y-pts[1].y);
+    const c={x:(pts[0].x+pts[1].x)/2,y:(pts[0].y+pts[1].y)/2};
+    pinchStart={distance:d,center:c,vb:cloneVB(currentViewBox)};
+    panStart=null;
+  }
+  svg.classList.add("dragging");
+});
+svg.addEventListener("pointermove",e=>{
+  if(!pointerMap.has(e.pointerId))return;
+  pointerMap.set(e.pointerId,{x:e.clientX,y:e.clientY});
+  if(pointerMap.size===1&&panStart){
+    const p=[...pointerMap.values()][0],rect=svg.getBoundingClientRect();
+    const dx=(p.x-panStart.p.x)/rect.width*panStart.vb.w;
+    const dy=(p.y-panStart.p.y)/rect.height*panStart.vb.h;
+    if(Math.abs(dx)+Math.abs(dy)>2)suppressClickUntil=performance.now()+120;
+    setViewBox({x:panStart.vb.x-dx,y:panStart.vb.y-dy,w:panStart.vb.w,h:panStart.vb.h});
+  }else if(pointerMap.size===2&&pinchStart){
+    const pts=[...pointerMap.values()];
+    const d=Math.max(1,Math.hypot(pts[0].x-pts[1].x,pts[0].y-pts[1].y));
+    const factor=pinchStart.distance/d;
+    const c={x:(pts[0].x+pts[1].x)/2,y:(pts[0].y+pts[1].y)/2};
+    const rect=svg.getBoundingClientRect();
+    const px=(c.x-rect.left)/rect.width,py=(c.y-rect.top)/rect.height;
+    const nw=pinchStart.vb.w*factor,nh=pinchStart.vb.h*factor;
+    const wx=pinchStart.vb.x+px*pinchStart.vb.w,wy=pinchStart.vb.y+py*pinchStart.vb.h;
+    suppressClickUntil=performance.now()+180;
+    setViewBox({x:wx-px*nw,y:wy-py*nh,w:nw,h:nh});
+  }
+});
+function endPointer(e){
+  pointerMap.delete(e.pointerId);
+  if(pointerMap.size===1){
+    const p=[...pointerMap.values()][0];
+    panStart={p:{x:p.x,y:p.y},vb:cloneVB(currentViewBox)};
+    pinchStart=null;
+  }else if(pointerMap.size===0){
+    panStart=null;pinchStart=null;svg.classList.remove("dragging");
+  }
+}
+svg.addEventListener("pointerup",endPointer);
+svg.addEventListener("pointercancel",endPointer);
+
+setViewDefaults();
+render();
+void loadAllInOne(false);
 })();
 </script>
 </body>
