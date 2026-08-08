@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>系統樹 v46 — v44復元＋all_in_one自動読込</title>
+<title>系統樹 v47 — 操作・表示修正版</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;background:#f5f7f8;color:#17212b}
@@ -105,7 +105,7 @@ aside p{font-size:13px;line-height:1.62;color:#44525d}
 </head>
 <body>
 <header>
-  <strong>系統樹 v46 — v44復元＋all_in_one自動読込</strong>
+  <strong>系統樹 v47 — 操作・表示修正版</strong>
   <button id="home" type="button">LIFEへ</button>
   <button id="back" type="button">← 戻る</button>
   <button id="expandOmissions" class="expand-toggle" type="button" aria-pressed="false">全省略を展開</button>
@@ -116,7 +116,7 @@ aside p{font-size:13px;line-height:1.62;color:#44525d}
   <button id="reload" type="button">all_in_one再読込</button>
 
   <div class="search-wrap">
-    <input id="search" autocomplete="off" placeholder="検索: カラス属 / Corvus / 鳥綱 / Aves">
+    <input id="search" autocomplete="off" placeholder="検索: イヌ科 / Canidae / 哺乳綱 / Mammalia">
     <div id="results"></div>
   </div>
 
@@ -195,7 +195,7 @@ aside p{font-size:13px;line-height:1.62;color:#44525d}
   <h2 style="margin-top:18px">検索</h2>
   <div class="note">ひらがな・カタカナ・半角カナは同一視して検索します。</div>
 
-  <h2 style="margin-top:18px">v46のデータ読込</h2>
+  <h2 style="margin-top:18px">v47のデータ読込</h2>
   <div class="note">
     GitHub Pagesでは起動時に同じ階層の all_in_one.json を自動読込します。
     v44の閲覧機能は維持し、分割ロードを公開時の必須経路から外しました。
@@ -265,6 +265,7 @@ const NODE_R=28, SPECIES_R=18;
 const ROW_STEP=104, ROW_GAP=86;
 const RADIAL_FIRST=95, RADIAL_STEP=100;
 const PREVIEW_OFFSET=43, PREVIEW_GAP=38;
+const INITIAL_ZOOM=2;
 const NS="http://www.w3.org/2000/svg";
 
 let baseViewBox={x:-500,y:-500,w:1000,h:1000};
@@ -293,8 +294,11 @@ function displayName(n){
   return n.ja||n.latin||n.en||n.id;
 }
 function rankLabel(rank){
-  const map={root:"根",domain:"ドメイン",kingdom:"界",phylum:"門",subphylum:"亜門",class:"綱",order:"目",family:"科",genus:"属",species:"種",clade:"クレード"};
-  return map[rank]||rank||"";
+  const canonical={根:"root",ドメイン:"domain",界:"kingdom",門:"phylum",亜門:"subphylum",綱:"class",目:"order",科:"family",属:"genus",種:"species",クレード:"clade"};
+  const normalized=canonical[rank]||rank||"";
+  if(displayLanguage!=="ja")return normalized;
+  const ja={root:"根",domain:"ドメイン",kingdom:"界",phylum:"門",subphylum:"亜門",class:"綱",order:"目",family:"科",genus:"属",species:"種",clade:"クレード"};
+  return ja[normalized]||normalized;
 }
 function hexRgb(hex){
   const m=/^#([0-9a-f]{6})$/i.exec(hex||"");
@@ -577,6 +581,10 @@ function focusBox(layout,previews){
   const h=Math.max(620,Math.min(900,ext.h));
   return{x:pos.x-w/2,y:Math.max(ext.y,pos.y-h*.48),w,h};
 }
+function zoomBox(v,factor=INITIAL_ZOOM){
+  const w=v.w/factor,h=v.h/factor;
+  return{x:v.x+(v.w-w)/2,y:v.y+(v.h-h)/2,w,h};
+}
 function renderGraph(){
   svg.replaceChildren();
   if(!data.root||!nodes.size)return;
@@ -640,7 +648,7 @@ function renderGraph(){
     }
   }
 
-  resetView(focusBox(layout,previews));
+  resetView(zoomBox(focusBox(layout,previews)));
 }
 function renderPath(){
   pathEl.replaceChildren();
@@ -782,6 +790,8 @@ svg.addEventListener("wheel",e=>{
 
 // Pointer pan + pinch zoom
 svg.addEventListener("pointerdown",e=>{
+  if(e.button!==undefined&&e.button!==0)return;
+  if(e.target.closest?.('[role="button"]'))return;
   svg.setPointerCapture?.(e.pointerId);
   pointerMap.set(e.pointerId,{x:e.clientX,y:e.clientY});
   if(pointerMap.size===1){
