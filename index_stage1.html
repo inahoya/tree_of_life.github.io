@@ -1,0 +1,1171 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>円形系統樹 v14 — 分割ロード</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;background:#f5f7f8;color:#17212b}
+header{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:10px 14px;background:#fff;border-bottom:1px solid #d7dde2}
+header strong{margin-right:6px}
+button,input{font:inherit}
+button,.file-label{min-height:42px;padding:8px 12px;border:1px solid #aeb9c2;border-radius:8px;background:#fff;color:#17212b;cursor:pointer}
+button:hover,.file-label:hover{background:#eef2f5}
+button:disabled{opacity:.42;cursor:default}
+#file{display:none}
+.search-wrap{position:relative;flex:1 1 360px;max-width:650px}
+#search{width:100%;min-height:44px;padding:9px 12px;border:1px solid #9eaab4;border-radius:8px;color:#17212b;background:#fff}
+#results{display:none;position:absolute;left:0;right:0;top:48px;z-index:30;max-height:320px;overflow:auto;background:#fff;border:1px solid #c5ced5;border-radius:8px;box-shadow:0 10px 28px rgba(0,0,0,.14)}
+.result{display:block;width:100%;text-align:left;border:0;border-bottom:1px solid #e7ebee;border-radius:0;background:#fff;padding:10px 11px;cursor:pointer;color:#17212b}
+.result:last-child{border-bottom:0}
+.result:hover,.result:focus{background:#edf2f6}
+.result small{display:block;color:#485864;margin-top:2px}
+#status{font-size:12px;color:#4d5c67}
+.lang-switch{display:inline-flex;border:1px solid #aeb9c2;border-radius:8px;overflow:hidden;background:#fff}
+.lang-switch button{border:0;border-radius:0;min-height:40px;padding:7px 10px;border-right:1px solid #d5dce1;background:#fff}
+.lang-switch button:last-child{border-right:0}
+.lang-switch button.active{background:#344f65;color:#fff;font-weight:800}
+.lang-switch button:not(.active):hover{background:#eef2f5}
+.tabbar{display:flex;align-items:center;gap:7px;padding:8px 14px;background:#eef2f5;border-bottom:1px solid #d2d9df;overflow-x:auto}
+#tabs{display:flex;gap:6px;align-items:center}
+.tab-item{display:inline-flex;align-items:stretch;border:1px solid #aeb9c2;border-radius:8px;overflow:hidden;background:#f8fafb}
+.tab-item.active{border-color:#344f65;background:#fff;box-shadow:inset 0 -3px 0 #344f65}
+.tab-select,.tab-close{border:0;border-radius:0;background:transparent;min-height:36px}
+.tab-select{padding:6px 12px;font-weight:750}
+.tab-close{padding:6px 9px;color:#53616c;border-left:1px solid #d5dce1}
+.tab-item:not(.active) .tab-select:hover,.tab-close:hover{background:#e7ecef}
+#addTab{min-height:36px;padding:6px 10px;background:#fff}
+main{display:grid;grid-template-columns:minmax(0,1fr) 320px;min-height:760px}
+#stage{background:#fff;min-width:0;overflow:hidden;display:flex;align-items:flex-start;justify-content:center;padding:8px}
+svg{display:block;width:100%;height:auto;aspect-ratio:1/1;max-height:calc(100vw - 360px);min-height:620px;touch-action:none;cursor:grab;user-select:none}
+svg.dragging{cursor:grabbing}
+aside{padding:18px;background:#f9fbfc;border-left:1px solid #d8dee4}
+aside h2{font-size:16px;margin:0 0 8px;color:#17212b}
+aside p{font-size:13px;line-height:1.62;color:#44525d}
+#detail{padding:12px;border:1px solid #cfd7dd;border-radius:8px;background:#fff;font-size:13px;line-height:1.65;color:#273640}
+#detail b{color:#17212b}
+#detail a{color:#155e8a;font-weight:650}
+#detail .detail-link{display:inline;min-height:0;padding:0;border:0;background:none;color:#135f8f;font-weight:700;text-decoration:underline;text-underline-offset:2px;cursor:pointer}
+#detail .detail-link:hover{background:none;color:#0b456a}
+.path{margin-top:12px;padding:10px 11px;border:1px solid #d5dde3;border-radius:8px;background:#fff;font-size:12px;line-height:1.7;color:#384954;word-break:break-word}
+.path button{display:inline;min-height:0;padding:0;border:0;background:none;color:#135f8f;font-weight:700;text-decoration:underline;text-underline-offset:2px;cursor:pointer}
+.path button:hover{background:none;color:#0b456a}
+.path .sep{color:#77838c;padding:0 4px}
+.note{padding:10px 11px;border-left:3px solid #6b7d8a;background:#eef3f6;color:#34444f;font-size:12px;line-height:1.55}
+.ring{fill:none;stroke:#d6dde2;stroke-width:1.3}
+.branch{stroke:#aab6bf;stroke-width:1.35;stroke-opacity:.42}
+.branch.active{stroke:#273f52;stroke-width:3;stroke-opacity:1}
+.node{stroke:#fff;stroke-width:3;cursor:pointer}
+.node.active{stroke:#101820;stroke-width:4}
+.node.target{stroke:#e0ad22;stroke-width:5.5}
+.node-label,.node-rank,.root-label{
+  font-weight:800;text-anchor:middle;dominant-baseline:middle;pointer-events:none;
+  paint-order:stroke fill;
+  stroke-width:3px;
+  stroke-linejoin:round;
+}
+.node-label{font-size:11.5px}
+.node-rank{font-size:8.5px;font-weight:750;stroke-width:2.5px}
+.root-label{font-size:15px;font-weight:900}
+.collapse{fill:#eef2f4;stroke:#566773;stroke-width:2.2;stroke-dasharray:5 4;cursor:pointer}
+.collapse-group:focus .collapse{stroke:#101820;stroke-width:4}
+@media(hover:hover) and (pointer:fine){.collapse-group:hover .collapse{fill:#e1e8ec}}
+.collapse-main,.collapse-sub{
+  text-anchor:middle;dominant-baseline:middle;paint-order:stroke fill;
+  stroke:#fff;stroke-linejoin:round;fill:#263844;
+}
+.collapse-main{font-size:15px;font-weight:900;stroke-width:4px}
+.collapse-sub{font-size:9px;font-weight:750;stroke-width:3px}
+@media(max-width:900px){
+  main{grid-template-columns:1fr}
+  aside{border-left:0;border-top:1px solid #d8dee4}
+  svg{max-height:none;min-height:520px}
+}
+</style>
+</head>
+<body>
+<header>
+  <strong>円形系統樹 v14 — 分割ロード</strong>
+  <button id="home" type="button">LIFEへ</button>
+  <button id="back" type="button">← 戻る</button>
+  <label class="file-label" for="folder">データフォルダ選択</label>
+  <input id="folder" type="file" webkitdirectory multiple>
+  <label class="file-label" for="file">単一JSON読込</label>
+  <input id="file" type="file" accept=".json,application/json">
+  <div class="search-wrap">
+    <input id="search" autocomplete="off" placeholder="検索: カラス属 / Corvus / 鳥綱 / Aves">
+    <div id="results"></div>
+  </div>
+  <div class="lang-switch" aria-label="表示言語">
+    <button id="langJa" type="button">日本語</button>
+    <button id="langEn" type="button">English</button>
+    <button id="langLatin" type="button">Latin</button>
+  </div>
+  <span id="status">coreのみ読込</span>
+</header>
+<nav class="tabbar" aria-label="比較タブ">
+  <div id="tabs"></div>
+  <button id="addTab" type="button">＋ 比較タブ</button>
+</nav>
+
+<main>
+<section id="stage">
+  <svg id="tree" viewBox="-500 -500 1000 1000" preserveAspectRatio="xMidYMid meet"
+       role="img" aria-label="主要階級を省略しない円形系統樹"></svg>
+</section>
+
+<aside>
+  <h2>選択中</h2>
+  <div id="detail"></div>
+
+  <h2 style="margin-top:18px">全経路</h2>
+  <div id="path" class="path"></div>
+
+  <h2 style="margin-top:18px">分割ロード</h2>
+  <div class="note">
+    起動時は小さな core だけを保持します。外部分岐はクリック時に読み込みます。
+    file:// で開く場合は「データフォルダ選択」で、このパッケージの data フォルダを選んでください。
+  </div>
+
+  <h2 style="margin-top:18px">表示操作</h2>
+  <div class="note">
+    図の上でマウスホイールを回すと拡大・縮小できます。マウスまたはタッチでドラッグすると表示位置を動かせます。深い系統ではリング間隔を保ったまま全体を少し縮小表示します。
+  </div>
+
+  <h2 style="margin-top:18px">ラベル</h2>
+  <div class="note">
+    長い名前も省略せず、複数行に折り返して全文表示します。
+  </div>
+
+  <h2 style="margin-top:18px">配置ルール</h2>
+  <div class="note">
+    12分岐以下かつ約210°以内に収まる場合は、親ノードの近くへ扇状に配置します。
+    それを超える大分岐だけ全周配置へ切り替えます。
+  </div>
+
+  <h2 style="margin-top:18px">比較タブ</h2>
+  <div class="note">
+    最大2タブ。2つ目は現在の表示を複製して開き、各タブで別の分類群へ移動できます。
+  </div>
+
+  <h2 style="margin-top:18px">省略規則</h2>
+  <div class="note">
+    界・門・綱・目・科・属は必ず表示します。クレードなど、それ以外の階層が連続した部分だけ「…」に圧縮します。「…」をクリックすると、省略された中で最も近い祖先へ戻れます。
+  </div>
+</aside>
+</main>
+
+<script>
+(() => {
+const EMBEDDED_CORE={"schema":"circular-phylogeny-core/1","root":"life","nodes":[{"id":"life","ja":"LIFE","en":"Life","latin":"","rank":"root","children":["bacteria","plantae","fungi","animalia"],"wiki":"https://en.wikipedia.org/wiki/Life","color":"#263746"},{"id":"bacteria","ja":"真正細菌","en":"Bacteria","latin":"Bacteria","rank":"domain","children":[],"wiki":"https://en.wikipedia.org/wiki/Bacteria","color":"#6B7E54"},{"id":"plantae","ja":"植物界","en":"Plants","latin":"Plantae","rank":"kingdom","children":[],"wiki":"https://en.wikipedia.org/wiki/Plant","color":"#4D7F5A"},{"id":"fungi","ja":"菌界","en":"Fungi","latin":"Fungi","rank":"kingdom","children":[],"wiki":"https://en.wikipedia.org/wiki/Fungus","color":"#8B6C52"},{"id":"animalia","ja":"動物界","en":"Animals","latin":"Animalia","rank":"kingdom","children":["chordata","arthropoda","mollusca"],"wiki":"https://en.wikipedia.org/wiki/Animal","color":"#59769A"},{"id":"chordata","ja":"脊索動物門","en":"Chordates","latin":"Chordata","rank":"phylum","children":["aves","mammalia","amphibia","reptilia"],"wiki":"https://en.wikipedia.org/wiki/Chordate","color":"#526F8D"},{"id":"arthropoda","ja":"節足動物門","en":"Arthropods","latin":"Arthropoda","rank":"phylum","children":[],"wiki":"https://en.wikipedia.org/wiki/Arthropod","color":"#8A7050"},{"id":"mollusca","ja":"軟体動物門","en":"Molluscs","latin":"Mollusca","rank":"phylum","children":[],"wiki":"https://en.wikipedia.org/wiki/Mollusca","color":"#80667B"},{"id":"aves","ja":"鳥綱","en":"Birds","latin":"Aves","rank":"class","children":[],"branch":"aves","wiki":"https://en.wikipedia.org/wiki/Bird","color":"#447754"},{"id":"mammalia","ja":"哺乳綱","en":"Mammals","latin":"Mammalia","rank":"class","children":[],"wiki":"https://en.wikipedia.org/wiki/Mammal","color":"#836A58"},{"id":"amphibia","ja":"両生綱","en":"Amphibians","latin":"Amphibia","rank":"class","children":[],"wiki":"https://en.wikipedia.org/wiki/Amphibian","color":"#60806B"},{"id":"reptilia","ja":"爬虫類","en":"Reptiles","latin":"Reptilia","rank":"class","children":[],"wiki":"https://en.wikipedia.org/wiki/Reptile","color":"#718054"}]};
+const EMBEDDED_MANIFEST={"schema":"circular-phylogeny-manifest/1","version":1,"core":"data/core.json","branches":{"aves":{"root":"aves","label":"鳥類","file":"data/animalia/aves.json","index":"data/animalia/aves.index.json"}}};
+
+const svg=document.getElementById("tree");
+const search=document.getElementById("search");
+const results=document.getElementById("results");
+const detail=document.getElementById("detail");
+const pathEl=document.getElementById("path");
+const home=document.getElementById("home");
+const back=document.getElementById("back");
+const file=document.getElementById("file");
+const folder=document.getElementById("folder");
+const status=document.getElementById("status");
+const tabsEl=document.getElementById("tabs");
+const addTabButton=document.getElementById("addTab");
+const langJa=document.getElementById("langJa");
+const langEn=document.getElementById("langEn");
+const langLatin=document.getElementById("langLatin");
+
+let data={root:EMBEDDED_CORE.root};
+let manifest=EMBEDDED_MANIFEST;
+let nodes=new Map();
+let parentById=new Map();
+
+let loadedBranches=new Set();
+let branchLoadPromises=new Map();
+let localFiles=[];
+let searchIndexEntries=[];
+let searchIndexesLoaded=false;
+let searchRequestSerial=0;
+
+let tabs=[
+  {id:1,path:[EMBEDDED_CORE.root],targetId:EMBEDDED_CORE.root,search:""}
+];
+let activeTabIndex=0;
+let nextTabId=2;
+let path=[EMBEDDED_CORE.root];
+let targetId=EMBEDDED_CORE.root;
+
+const KEEP_RANKS=new Set(["kingdom","phylum","class","order","family","genus","界","門","綱","目","科","属"]);
+const FIRST_RADIUS=88;
+const NORMAL_STEP=92;
+const MIN_STEP=72;
+const NODE_R=28;
+const LOCAL_FAN_MAX_DEG=210;
+const LOCAL_FAN_MAX_CHILDREN=12;
+const LOCAL_GAP_FACTOR=1.35;
+const VIEW_PADDING=64;
+let baseViewBox={x:-500,y:-500,w:1000,h:1000};
+let currentViewBox={...baseViewBox};
+let displayLanguage="ja";
+
+let dragState=null;
+let suppressClickUntil=0;
+
+
+
+function displayName(node){
+  if(!node)return "";
+  if(displayLanguage==="en") return node.en||node.latin||node.ja||node.id;
+  if(displayLanguage==="latin") return node.latin||node.en||node.ja||node.id;
+  return node.ja||node.latin||node.en||node.id;
+}
+function setDisplayLanguage(lang){
+  displayLanguage=lang;
+  langJa.classList.toggle("active",lang==="ja");
+  langEn.classList.toggle("active",lang==="en");
+  langLatin.classList.toggle("active",lang==="latin");
+  langJa.setAttribute("aria-pressed",String(lang==="ja"));
+  langEn.setAttribute("aria-pressed",String(lang==="en"));
+  langLatin.setAttribute("aria-pressed",String(lang==="latin"));
+  render();
+}
+
+function currentTab(){
+  return tabs[activeTabIndex];
+}
+function syncActiveState(){
+  const tab=currentTab();
+  if(!tab)return;
+  tab.path=[...path];
+  tab.targetId=targetId;
+  tab.search=search.value;
+}
+function tabLabel(tab,index){
+  const n=nodes.get(tab.targetId);
+  return displayName(n)||`タブ${index+1}`;
+}
+function renderTabs(){
+  syncActiveState();
+  tabsEl.replaceChildren();
+  tabs.forEach((tab,index)=>{
+    const item=document.createElement("div");
+    item.className="tab-item"+(index===activeTabIndex?" active":"");
+
+    const select=document.createElement("button");
+    select.type="button";
+    select.className="tab-select";
+    select.textContent=tabLabel(tab,index);
+    select.title=`比較タブ ${index+1}`;
+    select.setAttribute("aria-current",index===activeTabIndex?"page":"false");
+    select.addEventListener("click",()=>switchTab(index));
+    item.appendChild(select);
+
+    if(tabs.length>1){
+      const close=document.createElement("button");
+      close.type="button";
+      close.className="tab-close";
+      close.textContent="×";
+      close.title="このタブを閉じる";
+      close.setAttribute("aria-label",`${tabLabel(tab,index)}タブを閉じる`);
+      close.addEventListener("click",()=>closeTab(index));
+      item.appendChild(close);
+    }
+    tabsEl.appendChild(item);
+  });
+  addTabButton.disabled=tabs.length>=2;
+  addTabButton.title=tabs.length>=2?"比較タブは2つまでです":"現在の表示を複製して比較タブを追加";
+}
+function switchTab(index){
+  if(index===activeTabIndex||!tabs[index])return;
+  syncActiveState();
+  activeTabIndex=index;
+  const tab=currentTab();
+  path=[...tab.path];
+  targetId=tab.targetId;
+  search.value=tab.search||"";
+  results.style.display="none";
+  render();
+}
+function addComparisonTab(){
+  if(tabs.length>=2)return;
+  syncActiveState();
+  const base=currentTab();
+  tabs.push({
+    id:nextTabId++,
+    path:[...base.path],
+    targetId:base.targetId,
+    search:base.search||""
+  });
+  activeTabIndex=tabs.length-1;
+  path=[...currentTab().path];
+  targetId=currentTab().targetId;
+  search.value=currentTab().search||"";
+  results.style.display="none";
+  render();
+}
+function closeTab(index){
+  if(tabs.length<=1)return;
+  syncActiveState();
+  tabs.splice(index,1);
+  if(activeTabIndex===index){
+    activeTabIndex=Math.max(0,index-1);
+  }else if(activeTabIndex>index){
+    activeTabIndex--;
+  }
+  const tab=currentTab();
+  path=[...tab.path];
+  targetId=tab.targetId;
+  search.value=tab.search||"";
+  results.style.display="none";
+  render();
+}
+
+function normalizePath(p){
+  return String(p||"").replaceAll("\\","/").replace(/^\.?\//,"");
+}
+function findLocalFile(path){
+  const wanted=normalizePath(path);
+  return localFiles.find(f=>{
+    const rel=normalizePath(f.webkitRelativePath||f.name);
+    return rel===wanted || rel.endsWith("/"+wanted);
+  })||null;
+}
+async function loadJsonResource(path){
+  const local=findLocalFile(path);
+  if(local)return JSON.parse(await local.text());
+  if(location.protocol!=="file:"){
+    const response=await fetch(path,{cache:"no-cache"});
+    if(!response.ok)throw new Error(`${path}: HTTP ${response.status}`);
+    return await response.json();
+  }
+  throw new Error("外部JSONを読むには「データフォルダ選択」で data フォルダを選択してください");
+}
+function validateNodeList(payload){
+  if(!payload||!Array.isArray(payload.nodes))throw new Error("nodes が必要です");
+  const seen=new Set();
+  for(const n of payload.nodes){
+    if(!n.id)throw new Error("id のないノードがあります");
+    if(seen.has(n.id))throw new Error("同一ファイル内で id が重複しています: "+n.id);
+    seen.add(n.id);
+    if(!Array.isArray(n.children))n.children=[];
+  }
+}
+function rebuildParentMap(){
+  const parents=new Map();
+  for(const n of nodes.values()){
+    if(!Array.isArray(n.children))n.children=[];
+    for(const cid of n.children){
+      if(!nodes.has(cid))throw new Error(`child が未定義です: ${n.id} -> ${cid}`);
+      if(parents.has(cid))throw new Error(`親が複数あります: ${cid}`);
+      parents.set(cid,n.id);
+    }
+  }
+  if(parents.has(data.root))throw new Error("root は子ノードにできません");
+
+  const visiting=new Set(),visited=new Set();
+  function dfs(id){
+    if(visiting.has(id))throw new Error("循環参照があります: "+id);
+    if(visited.has(id))return;
+    visiting.add(id);
+    const n=nodes.get(id);
+    if(!n)throw new Error("参照ノードがありません: "+id);
+    for(const cid of n.children)dfs(cid);
+    visiting.delete(id);
+    visited.add(id);
+  }
+  dfs(data.root);
+  const unreachable=[...nodes.keys()].filter(id=>!visited.has(id));
+  if(unreachable.length)throw new Error("root から到達できないノード: "+unreachable.slice(0,4).join(", "));
+  parentById=parents;
+}
+function resetToCore(payload){
+  validateNodeList(payload);
+  if(!payload.root)throw new Error("core に root が必要です");
+  nodes=new Map(payload.nodes.map(n=>[n.id,n]));
+  data={root:payload.root};
+  loadedBranches=new Set();
+  branchLoadPromises=new Map();
+  searchIndexEntries=[];
+  searchIndexesLoaded=false;
+  rebuildParentMap();
+
+  tabs=[{id:1,path:[data.root],targetId:data.root,search:""}];
+  activeTabIndex=0;
+  nextTabId=2;
+  path=[data.root];
+  targetId=data.root;
+  search.value="";
+}
+function mergeBranch(payload,branchKey){
+  validateNodeList(payload);
+  const meta=manifest.branches?.[branchKey];
+  if(!meta)throw new Error("manifest にない分岐です: "+branchKey);
+  if(payload.root!==meta.root)throw new Error(`branch root 不一致: ${payload.root} / ${meta.root}`);
+
+  for(const n of payload.nodes){
+    if(nodes.has(n.id) && n.id!==payload.root){
+      throw new Error(`分割JSON間で id が重複しています: ${n.id}`);
+    }
+  }
+  for(const n of payload.nodes)nodes.set(n.id,n);
+  rebuildParentMap();
+}
+function updateLoadStatus(message=""){
+  const labels=[...loadedBranches].map(k=>manifest.branches?.[k]?.label||k);
+  const suffix=labels.length?` / 読込分岐: ${labels.join(", ")}`:" / 外部分岐未読込";
+  status.textContent=(message?message+" / ":"")+`${nodes.size.toLocaleString()} nodes${suffix}`;
+}
+async function loadBranch(branchKey){
+  if(loadedBranches.has(branchKey))return;
+  if(branchLoadPromises.has(branchKey))return branchLoadPromises.get(branchKey);
+  const meta=manifest.branches?.[branchKey];
+  if(!meta)throw new Error("分岐が見つかりません: "+branchKey);
+
+  const promise=(async()=>{
+    updateLoadStatus(`${meta.label||branchKey} 読込中…`);
+    const payload=await loadJsonResource(meta.file);
+    mergeBranch(payload,branchKey);
+    loadedBranches.add(branchKey);
+    updateLoadStatus(`${meta.label||branchKey} 読込完了`);
+  })();
+
+  branchLoadPromises.set(branchKey,promise);
+  try{await promise}
+  finally{branchLoadPromises.delete(branchKey)}
+}
+function branchForNode(id){
+  const n=nodes.get(id);
+  if(n?.branch && !loadedBranches.has(n.branch))return n.branch;
+  for(const [key,meta] of Object.entries(manifest.branches||{})){
+    if(meta.root===id && !loadedBranches.has(key))return key;
+  }
+  return null;
+}
+async function navigateTo(id,branchKey=null){
+  try{
+    const key=branchKey||branchForNode(id);
+    if(key)await loadBranch(key);
+    if(!nodes.has(id))throw new Error("ノードが見つかりません: "+id);
+    setTarget(id);
+  }catch(err){
+    updateLoadStatus("読込エラー: "+err.message);
+  }
+}
+async function ensureSearchIndexes(){
+  if(searchIndexesLoaded)return;
+  const entries=[];
+  for(const [branchKey,meta] of Object.entries(manifest.branches||{})){
+    if(!meta.index)continue;
+    const payload=await loadJsonResource(meta.index);
+    for(const entry of payload.entries||[]){
+      entries.push({...entry,branch:entry.branch||branchKey});
+    }
+  }
+  searchIndexEntries=entries;
+  searchIndexesLoaded=true;
+}
+
+function ancestorPath(id){
+  const out=[];
+  let cur=id;
+  while(cur){
+    out.push(cur);
+    cur=parentById.get(cur);
+  }
+  return out.reverse();
+}
+function childrenOf(id){return nodes.get(id)?.children||[]}
+function isKeepRank(id){return KEEP_RANKS.has(String(nodes.get(id)?.rank||"").toLowerCase())}
+
+function svgEl(tag,attrs={}){
+  const e=document.createElementNS("http://www.w3.org/2000/svg",tag);
+  for(const[k,v]of Object.entries(attrs))e.setAttribute(k,v);
+  return e;
+}
+function polar(r,a){
+  const t=a*Math.PI/180;
+  return{x:r*Math.cos(t),y:r*Math.sin(t)};
+}
+function clamp(v,a,b){return Math.max(a,Math.min(b,v))}
+
+function hexRgb(hex){
+  const m=/^#([0-9a-f]{6})$/i.exec(hex||"");
+  if(!m)return[100,115,125];
+  const n=parseInt(m[1],16);
+  return[n>>16,(n>>8)&255,n&255];
+}
+function contrastText(hex){
+  const [r,g,b]=hexRgb(hex).map(v=>{
+    v/=255;
+    return v<=0.04045?v/12.92:Math.pow((v+0.055)/1.055,2.4);
+  });
+  const lum=.2126*r+.7152*g+.0722*b;
+  return lum>.42?"#101820":"#ffffff";
+}
+function outlineFor(textColor){
+  return textColor==="#ffffff"?"#18232c":"#ffffff";
+}
+
+function buildDisplayLevels(){
+  const selectedIds=path.slice(1);
+  const levels=[];
+  let hidden=[];
+
+  function flushHidden(){
+    if(hidden.length){
+      levels.push({type:"collapse",hiddenIds:[...hidden]});
+      hidden=[];
+    }
+  }
+
+  selectedIds.forEach((id,index)=>{
+    const isLast=index===selectedIds.length-1;
+    const preserve=isKeepRank(id)||isLast||index===0;
+    if(preserve){
+      flushHidden();
+      levels.push({
+        type:"children",
+        parentId:parentById.get(id),
+        selectedId:id
+      });
+    }else{
+      hidden.push(id);
+    }
+  });
+  flushHidden();
+
+  const current=path[path.length-1];
+  if(childrenOf(current).length){
+    levels.push({type:"children",parentId:current,selectedId:null});
+  }
+  return levels;
+}
+
+function requiredRadiusForNodeCount(count){
+  if(count<=1)return 0;
+  const minCenterDistance=NODE_R*2+8;
+  const s=Math.sin(Math.PI/count);
+  if(s<=0)return 0;
+  return minCenterDistance/(2*s);
+}
+
+function minimumAngularGap(radius){
+  const minCenterDistance=(NODE_R*2+8)*LOCAL_GAP_FACTOR;
+  if(radius<=minCenterDistance/2)return 180;
+  return 2*Math.asin(
+    Math.min(1,minCenterDistance/(2*radius))
+  )*180/Math.PI;
+}
+
+function compactAngles(ids,selectedId,parentAngle,radius){
+  const count=ids.length;
+  if(!count)return [];
+
+  const gap=Math.max(20,minimumAngularGap(radius));
+  const totalSpan=gap*Math.max(0,count-1);
+
+  // When revisiting an already opened ring, keep the selected child exactly
+  // on the radial line from its parent.  Siblings retain JSON order around it.
+  if(selectedId){
+    const selectedIndex=ids.indexOf(selectedId);
+    if(selectedIndex>=0){
+      return ids.map((_,i)=>parentAngle+(i-selectedIndex)*gap);
+    }
+  }
+
+  // A newly opened ring grows around the point that was clicked rather than
+  // spreading across the whole circumference.
+  const first=parentAngle-totalSpan/2;
+  return ids.map((_,i)=>first+i*gap);
+}
+
+function layoutLevels(levels){
+  const rows=[];
+  let previous={x:0,y:0,angle:-90};
+  let previousRadius=0;
+
+  levels.forEach((level,index)=>{
+    const radialMinimum=index===0
+      ? FIRST_RADIUS
+      : previousRadius+NORMAL_STEP;
+
+    if(level.type==="collapse"){
+      const radius=radialMinimum;
+      const angle=previous.angle;
+      const p=polar(radius,angle);
+      const selectedPos={...p,angle};
+
+      rows.push({
+        ...level,
+        radius,
+        mode:"collapse",
+        nodes:[{id:"__collapse__",...selectedPos}],
+        selectedPos
+      });
+
+      previous=selectedPos;
+      previousRadius=radius;
+      return;
+    }
+
+    const ids=childrenOf(level.parentId);
+
+    // First estimate whether this sibling set fits comfortably in a local
+    // fan at the ordinary radial distance.
+    const localGap=Math.max(20,minimumAngularGap(radialMinimum));
+    const localSpan=localGap*Math.max(0,ids.length-1);
+    const useLocalFan=
+      ids.length<=LOCAL_FAN_MAX_CHILDREN &&
+      localSpan<=LOCAL_FAN_MAX_DEG;
+
+    let radius;
+    let angles;
+    let mode;
+
+    if(useLocalFan){
+      radius=radialMinimum;
+      angles=compactAngles(
+        ids,
+        level.selectedId,
+        previous.angle,
+        radius
+      );
+      mode="fan";
+    }else{
+      // Large sibling sets use the full circumference.  Expand the ring
+      // until adjacent circles no longer overlap.
+      radius=Math.max(
+        radialMinimum,
+        requiredRadiusForNodeCount(ids.length)
+      );
+      const angularStep=ids.length ? 360/ids.length : 360;
+
+      let startAngle=previous.angle-angularStep/2;
+      if(level.selectedId){
+        const selectedIndex=ids.indexOf(level.selectedId);
+        if(selectedIndex>=0){
+          startAngle=previous.angle-angularStep*(selectedIndex+.5);
+        }
+      }
+
+      angles=ids.map((_,i)=>startAngle+angularStep*(i+.5));
+      mode="full";
+    }
+
+    const items=ids.map((id,i)=>({
+      id,
+      angle:angles[i],
+      ...polar(radius,angles[i])
+    }));
+
+    const selected=items.find(x=>x.id===level.selectedId)||null;
+    rows.push({
+      ...level,
+      radius,
+      mode,
+      nodes:items,
+      selectedPos:selected
+    });
+
+    if(selected){
+      previous=selected;
+    }
+    previousRadius=radius;
+  });
+
+  return rows;
+}
+
+
+function setFitViewBox(layout){
+  const outer=layout.length ? layout[layout.length-1].radius : FIRST_RADIUS;
+  const extent=Math.max(500,outer+NODE_R+VIEW_PADDING);
+  baseViewBox={x:-extent,y:-extent,w:extent*2,h:extent*2};
+  currentViewBox={...baseViewBox};
+  applyViewBox();
+}
+function applyViewBox(){
+  svg.setAttribute("viewBox",
+    `${currentViewBox.x} ${currentViewBox.y} ${currentViewBox.w} ${currentViewBox.h}`);
+}
+function zoomAtClientPoint(clientX,clientY,deltaY){
+  const rect=svg.getBoundingClientRect();
+  if(!rect.width||!rect.height)return;
+
+  const px=(clientX-rect.left)/rect.width;
+  const py=(clientY-rect.top)/rect.height;
+  const anchorX=currentViewBox.x+px*currentViewBox.w;
+  const anchorY=currentViewBox.y+py*currentViewBox.h;
+
+  const factor=Math.exp(-deltaY*0.0012);
+  const minW=baseViewBox.w/5;
+  const maxW=baseViewBox.w*1.6;
+  const newW=clamp(currentViewBox.w/factor,minW,maxW);
+  const newH=newW*(baseViewBox.h/baseViewBox.w);
+
+  currentViewBox={
+    x:anchorX-px*newW,
+    y:anchorY-py*newH,
+    w:newW,
+    h:newH
+  };
+  applyViewBox();
+}
+
+
+function panByClientDelta(dx,dy){
+  const rect=svg.getBoundingClientRect();
+  if(!rect.width||!rect.height)return;
+  currentViewBox.x-=dx*(currentViewBox.w/rect.width);
+  currentViewBox.y-=dy*(currentViewBox.h/rect.height);
+  applyViewBox();
+}
+
+function splitLongToken(token,maxChars){
+  const parts=[];
+  let rest=token;
+  while(rest.length>maxChars){
+    parts.push(rest.slice(0,maxChars));
+    rest=rest.slice(maxChars);
+  }
+  if(rest)parts.push(rest);
+  return parts;
+}
+
+function splitLabel(text){
+  const s=String(text||"").trim();
+  if(!s)return[""];
+
+  if(displayLanguage==="ja"){
+    const width=7;
+    const lines=[];
+    for(let i=0;i<s.length;i+=width){
+      lines.push(s.slice(i,i+width));
+    }
+    return lines;
+  }
+
+  const maxChars=13;
+  const words=s.split(/\s+/).filter(Boolean);
+  const lines=[];
+  let current="";
+
+  for(const rawWord of words){
+    const chunks=rawWord.length>maxChars
+      ? splitLongToken(rawWord,maxChars)
+      : [rawWord];
+
+    for(const word of chunks){
+      if(!current){
+        current=word;
+      }else if((current+" "+word).length<=maxChars){
+        current+=" "+word;
+      }else{
+        lines.push(current);
+        current=word;
+      }
+    }
+  }
+  if(current)lines.push(current);
+  return lines.length?lines:[s];
+}
+
+function appendText(g,n,x,y,fill){
+  const stroke=outlineFor(fill);
+  const lines=splitLabel(displayName(n));
+  const lineHeight=13;
+  const rankGap=11;
+  const totalTextHeight=(lines.length-1)*lineHeight;
+  const startY=y-totalTextHeight/2-3;
+
+  lines.forEach((line,index)=>{
+    const t=svgEl("text",{
+      x,
+      y:startY+index*lineHeight,
+      class:"node-label",
+      fill,
+      style:`stroke:${stroke}`
+    });
+    t.textContent=line;
+    g.appendChild(t);
+  });
+
+  const rank=svgEl("text",{
+    x,
+    y:startY+(lines.length-1)*lineHeight+rankGap+8,
+    class:"node-rank",
+    fill,
+    style:`stroke:${stroke}`
+  });
+  rank.textContent=n.rank||"";
+  g.appendChild(rank);
+}
+
+function setTarget(id){
+  targetId=id;
+  path=ancestorPath(id);
+  syncActiveState();
+  render();
+}
+
+function showDetail(id){
+  const n=nodes.get(id);
+  if(!n)return;
+  detail.replaceChildren();
+
+  function plainRow(label,value){
+    const row=document.createElement("div");
+    const b=document.createElement("b");
+    b.textContent=label+": ";
+    row.appendChild(b);
+    row.appendChild(document.createTextNode(value||"—"));
+    detail.appendChild(row);
+  }
+  function nodeLink(nodeId){
+    const n2=nodes.get(nodeId);
+    const b=document.createElement("button");
+    b.type="button";
+    b.className="detail-link";
+    b.textContent=displayName(n2)||nodeId;
+    b.title=`${displayName(n2)||nodeId}へ移動`;
+    b.addEventListener("click",()=>navigateTo(nodeId));
+    return b;
+  }
+
+  plainRow("日本語",n.ja);
+  plainRow("English",n.en);
+  plainRow("Latin",n.latin);
+  plainRow("階層",n.rank);
+  if(n.branch)plainRow("データ",loadedBranches.has(n.branch)?"外部JSON読込済み":"外部JSON（クリック時に読込）");
+
+  const pid=parentById.get(id);
+  const parentRow=document.createElement("div");
+  const parentLabel=document.createElement("b");
+  parentLabel.textContent="親: ";
+  parentRow.appendChild(parentLabel);
+  if(pid) parentRow.appendChild(nodeLink(pid));
+  else parentRow.appendChild(document.createTextNode("—"));
+  detail.appendChild(parentRow);
+
+  const childRow=document.createElement("div");
+  const childLabel=document.createElement("b");
+  childLabel.textContent="子: ";
+  childRow.appendChild(childLabel);
+  const childIds=n.children||[];
+  if(childIds.length){
+    childIds.forEach((cid,index)=>{
+      if(index) childRow.appendChild(document.createTextNode(" / "));
+      childRow.appendChild(nodeLink(cid));
+    });
+  }else{
+    childRow.appendChild(document.createTextNode("—"));
+  }
+  detail.appendChild(childRow);
+
+  if(n.wiki){
+    const row=document.createElement("div");
+    const a=document.createElement("a");
+    a.href=n.wiki;
+    a.target="_blank";
+    a.rel="noopener noreferrer";
+    a.textContent="Wikipediaを開く ↗";
+    row.appendChild(a);
+    detail.appendChild(row);
+  }
+
+  pathEl.replaceChildren();
+  const full=ancestorPath(id);
+  full.forEach((nodeId,index)=>{
+    if(index){
+      const sep=document.createElement("span");
+      sep.className="sep";
+      sep.textContent="›";
+      pathEl.appendChild(sep);
+    }
+    const n2=nodes.get(nodeId);
+    const b=document.createElement("button");
+    b.type="button";
+    b.textContent=displayName(n2)||nodeId;
+    b.title=`${displayName(n2)||nodeId}へ移動`;
+    b.addEventListener("click",()=>navigateTo(nodeId));
+    pathEl.appendChild(b);
+  });
+}
+
+function render(){
+  svg.replaceChildren();
+  if(!path.length)path=[data.root];
+
+  const levels=buildDisplayLevels();
+  const layout=layoutLevels(levels);
+  setFitViewBox(layout);
+
+  for(const row of layout){
+    svg.appendChild(svgEl("circle",{cx:0,cy:0,r:row.radius,class:"ring"}));
+  }
+
+  let previous={x:0,y:0};
+  for(const row of layout){
+    if(row.type==="collapse"){
+      const item=row.nodes[0];
+      svg.appendChild(svgEl("line",{x1:previous.x,y1:previous.y,x2:item.x,y2:item.y,class:"branch active"}));
+      previous=item;
+      continue;
+    }
+    for(const item of row.nodes){
+      svg.appendChild(svgEl("line",{
+        x1:previous.x,y1:previous.y,x2:item.x,y2:item.y,
+        class:"branch"+(item.id===row.selectedId?" active":"")
+      }));
+    }
+    if(row.selectedPos)previous=row.selectedPos;
+  }
+
+  const root=nodes.get(data.root);
+  const rootFill=root.color||"#263746";
+  const rootTextColor=contrastText(rootFill);
+  svg.appendChild(svgEl("circle",{cx:0,cy:0,r:38,fill:rootFill,stroke:"#fff","stroke-width":3}));
+  const rt=svgEl("text",{x:0,y:0,class:"root-label",fill:rootTextColor,style:`stroke:${outlineFor(rootTextColor)}`});
+  rt.textContent=displayName(root)||"LIFE";
+  svg.appendChild(rt);
+
+  for(const row of layout){
+    if(row.type==="collapse"){
+      const item=row.nodes[0];
+      const returnId=row.hiddenIds[row.hiddenIds.length-1];
+      const returnNode=nodes.get(returnId);
+      const g=svgEl("g",{
+        class:"collapse-group",
+        tabindex:"0",
+        role:"button",
+        "aria-label":`${row.hiddenIds.length}階層省略。${displayName(returnNode)||returnId}へ戻る`
+      });
+      const circle=svgEl("circle",{cx:item.x,cy:item.y,r:NODE_R,class:"collapse"});
+      g.appendChild(circle);
+      const title=svgEl("title");
+      title.textContent=`クリックで ${displayName(returnNode)||returnId} へ戻る`;
+      g.appendChild(title);
+      const main=svgEl("text",{x:item.x,y:item.y-5,class:"collapse-main"});
+      main.textContent="…";g.appendChild(main);
+      const sub=svgEl("text",{x:item.x,y:item.y+14,class:"collapse-sub"});
+      sub.textContent=`${row.hiddenIds.length}階層`;g.appendChild(sub);
+
+      const act=()=>{
+        if(performance.now()<suppressClickUntil)return;
+        setTarget(returnId);
+      };
+      g.addEventListener("click",act);
+      g.addEventListener("keydown",e=>{
+        if(e.key==="Enter"||e.key===" "){e.preventDefault();act()}
+      });
+      svg.appendChild(g);
+      continue;
+    }
+
+    for(const item of row.nodes){
+      const n=nodes.get(item.id);
+      const fill=n.color||"#687b89";
+      const textColor=contrastText(fill);
+      const active=item.id===row.selectedId;
+      const target=item.id===targetId;
+      const g=svgEl("g",{tabindex:"0",role:"button","aria-label":`${displayName(n)||n.id}を選択`});
+      g.appendChild(svgEl("circle",{
+        cx:item.x,cy:item.y,r:NODE_R,fill,
+        class:"node"+(active?" active":"")+(target?" target":"")
+      }));
+      appendText(g,n,item.x,item.y,textColor);
+
+      const act=()=>{
+        if(performance.now()<suppressClickUntil)return;
+        navigateTo(item.id);
+      };
+      g.addEventListener("click",act);
+      g.addEventListener("keydown",e=>{
+        if(e.key==="Enter"||e.key===" "){e.preventDefault();act()}
+      });
+      svg.appendChild(g);
+    }
+  }
+
+  back.disabled=path.length<=1;
+  syncActiveState();
+  renderTabs();
+  showDetail(targetId||data.root);
+}
+
+function score(n,q){
+  const s=q.toLowerCase();
+  const vals=[n.id,n.ja,n.en,n.latin,n.rank].map(x=>String(x||"").toLowerCase());
+  if(vals.some(v=>v===s))return 0;
+  if(vals.some(v=>v.startsWith(s)))return 1;
+  if(vals.some(v=>v.includes(s)))return 2;
+  return 99;
+}
+function updateResults(){
+  const q=search.value.trim();
+  results.replaceChildren();
+  if(!q){results.style.display="none";return}
+  const hits=[...nodes.values()]
+    .map(n=>({n,s:score(n,q)}))
+    .filter(x=>x.s<99)
+    .sort((a,b)=>a.s-b.s||(a.n.ja||"").localeCompare(b.n.ja||"","ja"))
+    .slice(0,15);
+  if(!hits.length){results.style.display="none";return}
+  for(const{n}of hits){
+    const b=document.createElement("button");
+    b.type="button";b.className="result";
+    b.textContent=displayName(n);
+    const sm=document.createElement("small");
+    sm.textContent=[n.latin,n.en,n.rank,n.id].filter(Boolean).join(" · ");
+    b.appendChild(sm);
+    b.addEventListener("click",()=>{
+      search.value=displayName(n);
+      results.style.display="none";
+      setTarget(n.id);
+    });
+    results.appendChild(b);
+  }
+  results.style.display="block";
+}
+
+search.addEventListener("input",()=>{
+  syncActiveState();
+  updateResults();
+});
+search.addEventListener("focus",updateResults);
+document.addEventListener("click",e=>{
+  if(!e.target.closest(".search-wrap"))results.style.display="none";
+});
+addTabButton.addEventListener("click",addComparisonTab);
+langJa.addEventListener("click",()=>setDisplayLanguage("ja"));
+langEn.addEventListener("click",()=>setDisplayLanguage("en"));
+langLatin.addEventListener("click",()=>setDisplayLanguage("latin"));
+
+svg.addEventListener("wheel",e=>{
+  e.preventDefault();
+  zoomAtClientPoint(e.clientX,e.clientY,e.deltaY);
+},{passive:false});
+
+svg.addEventListener("pointerdown",e=>{
+  if(e.button!==undefined && e.button!==0)return;
+  dragState={
+    pointerId:e.pointerId,
+    lastX:e.clientX,
+    lastY:e.clientY,
+    startX:e.clientX,
+    startY:e.clientY,
+    moved:false,
+    captured:false
+  };
+});
+
+svg.addEventListener("pointermove",e=>{
+  if(!dragState||dragState.pointerId!==e.pointerId)return;
+
+  const totalDistance=Math.hypot(
+    e.clientX-dragState.startX,
+    e.clientY-dragState.startY
+  );
+
+  // A simple press/click stays a normal SVG click.
+  // Only after a real movement do we turn the gesture into a pan.
+  if(!dragState.moved && totalDistance>5){
+    dragState.moved=true;
+    try{
+      svg.setPointerCapture(e.pointerId);
+      dragState.captured=true;
+    }catch(_){}
+    svg.classList.add("dragging");
+  }
+
+  if(dragState.moved){
+    const dx=e.clientX-dragState.lastX;
+    const dy=e.clientY-dragState.lastY;
+    panByClientDelta(dx,dy);
+  }
+
+  dragState.lastX=e.clientX;
+  dragState.lastY=e.clientY;
+});
+
+function endDrag(e){
+  if(!dragState||dragState.pointerId!==e.pointerId)return;
+  const wasMoved=dragState.moved;
+  const wasCaptured=dragState.captured;
+
+  if(wasCaptured){
+    try{
+      if(svg.hasPointerCapture(e.pointerId)){
+        svg.releasePointerCapture(e.pointerId);
+      }
+    }catch(_){}
+  }
+
+  dragState=null;
+  svg.classList.remove("dragging");
+
+  // Only suppress the synthetic click after an actual drag.
+  if(wasMoved){
+    suppressClickUntil=performance.now()+250;
+  }
+}
+
+svg.addEventListener("pointerup",endDrag);
+svg.addEventListener("pointercancel",endDrag);
+
+home.addEventListener("click",()=>{
+  path=[data.root];
+  targetId=data.root;
+  search.value="";
+  syncActiveState();
+  render();
+});
+back.addEventListener("click",()=>{
+  if(path.length>1){
+    path.pop();
+    targetId=path[path.length-1];
+    syncActiveState();
+    render();
+  }
+});
+
+file.addEventListener("change",async()=>{
+  const f=file.files?.[0];
+  if(!f)return;
+  try{
+    const parsed=JSON.parse(await f.text());
+    validateAndIndex(parsed);
+    data=parsed;
+    tabs=[{id:1,path:[data.root],targetId:data.root,search:""}];
+    activeTabIndex=0;
+    nextTabId=2;
+    path=[data.root];
+    targetId=data.root;
+    search.value="";
+    status.textContent="読込済み: "+f.name;
+    render();
+  }catch(err){
+    status.textContent="JSONエラー: "+err.message;
+  }finally{
+    file.value="";
+  }
+});
+
+validateAndIndex(data);
+tabs=[{id:1,path:[data.root],targetId:data.root,search:""}];
+activeTabIndex=0;
+nextTabId=2;
+path=[data.root];
+targetId=data.root;
+displayLanguage="ja";
+langJa.classList.add("active");
+langJa.setAttribute("aria-pressed","true");
+langEn.setAttribute("aria-pressed","false");
+langLatin.setAttribute("aria-pressed","false");
+render();
+})();
+</script>
+</body>
+</html>

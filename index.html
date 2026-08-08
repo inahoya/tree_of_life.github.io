@@ -1,0 +1,1940 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>系統樹 v41 — スマホ対応</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;background:#f5f7f8;color:#17212b}
+header{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:10px 14px;background:#fff;border-bottom:1px solid #d7dde2}
+header strong{margin-right:6px}
+button,input,select{font:inherit}
+button,.file-label{min-height:42px;padding:8px 12px;border:1px solid #aeb9c2;border-radius:8px;background:#fff;color:#17212b;cursor:pointer}
+button:hover,.file-label:hover{background:#eef2f5}
+button:disabled{opacity:.42;cursor:default}
+#file{display:none}
+.search-wrap{position:relative;flex:1 1 360px;max-width:650px}
+#search{width:100%;min-height:44px;padding:9px 12px;border:1px solid #9eaab4;border-radius:8px;color:#17212b;background:#fff}
+#results{display:none;position:absolute;left:0;right:0;top:48px;z-index:30;max-height:320px;overflow:auto;background:#fff;border:1px solid #c5ced5;border-radius:8px;box-shadow:0 10px 28px rgba(0,0,0,.14)}
+.result{display:block;width:100%;text-align:left;border:0;border-bottom:1px solid #e7ebee;border-radius:0;background:#fff;padding:10px 11px;cursor:pointer;color:#17212b}
+.result:last-child{border-bottom:0}
+.result:hover,.result:focus{background:#edf2f6}
+.result small{display:block;color:#485864;margin-top:2px}
+#status{font-size:12px;color:#4d5c67}
+.quick-jump{min-height:42px;padding:8px 34px 8px 10px;border:1px solid #aeb9c2;border-radius:8px;background:#fff;color:#17212b;cursor:pointer}
+.lang-switch,.layout-switch,.species-switch{display:inline-flex;border:1px solid #aeb9c2;border-radius:8px;overflow:hidden;background:#fff}
+.lang-switch button,.layout-switch button,.species-switch button{border:0;border-radius:0;min-height:40px;padding:7px 10px;border-right:1px solid #d5dce1;background:#fff}
+.lang-switch button:last-child,.layout-switch button:last-child,.species-switch button:last-child{border-right:0}
+.lang-switch button.active,.layout-switch button.active,.species-switch button.active{background:#344f65;color:#fff;font-weight:800}
+.lang-switch button:not(.active):hover,.layout-switch button:not(.active):hover,.species-switch button:not(.active):hover{background:#eef2f5}
+.tabbar{display:flex;align-items:center;gap:7px;padding:8px 14px;background:#eef2f5;border-bottom:1px solid #d2d9df;overflow-x:auto}
+#tabs{display:flex;gap:6px;align-items:center}
+.tab-item{display:inline-flex;align-items:stretch;border:1px solid #aeb9c2;border-radius:8px;overflow:hidden;background:#f8fafb}
+.tab-item.active{border-color:#344f65;background:#fff;box-shadow:inset 0 -3px 0 #344f65}
+.tab-select,.tab-close{border:0;border-radius:0;background:transparent;min-height:36px}
+.tab-select{padding:6px 12px;font-weight:750}
+.tab-close{padding:6px 9px;color:#53616c;border-left:1px solid #d5dce1}
+.tab-item:not(.active) .tab-select:hover,.tab-close:hover{background:#e7ecef}
+#addTab{min-height:36px;padding:6px 10px;background:#fff}
+main{display:grid;grid-template-columns:minmax(0,1fr) 320px;min-height:760px}
+#stage{background:#fff;min-width:0;overflow:hidden;display:flex;align-items:flex-start;justify-content:center;padding:8px}
+svg{display:block;width:100%;height:auto;aspect-ratio:1/1;max-height:calc(100vw - 360px);min-height:620px;touch-action:none;cursor:grab;user-select:none}
+svg.rows-mode{aspect-ratio:16/9}
+.level-guide{stroke:#d8e0e5;stroke-width:1.2;stroke-dasharray:7 7}
+.level-label{font-size:10px;font-weight:700;fill:#71808a;paint-order:stroke fill;stroke:#fff;stroke-width:3px;stroke-linejoin:round}
+svg.dragging{cursor:grabbing}
+aside{padding:18px;background:#f9fbfc;border-left:1px solid #d8dee4}
+aside h2{font-size:16px;margin:0 0 8px;color:#17212b}
+aside p{font-size:13px;line-height:1.62;color:#44525d}
+#detail{padding:12px;border:1px solid #cfd7dd;border-radius:8px;background:#fff;font-size:13px;line-height:1.65;color:#273640}
+#detail b{color:#17212b}
+#detail a{color:#155e8a;font-weight:650}
+#detail .detail-link{display:inline;min-height:0;padding:0;border:0;background:none;color:#135f8f;font-weight:700;text-decoration:underline;text-underline-offset:2px;cursor:pointer}
+#detail .detail-link:hover{background:none;color:#0b456a}
+.path{margin-top:12px;padding:10px 11px;border:1px solid #d5dde3;border-radius:8px;background:#fff;font-size:12px;line-height:1.7;color:#384954;word-break:break-word}
+.path button{display:inline;min-height:0;padding:0;border:0;background:none;color:#135f8f;font-weight:700;text-decoration:underline;text-underline-offset:2px;cursor:pointer}
+.path button:hover{background:none;color:#0b456a}
+.path .sep{color:#77838c;padding:0 4px}
+.note{padding:10px 11px;border-left:3px solid #6b7d8a;background:#eef3f6;color:#34444f;font-size:12px;line-height:1.55}
+.ring{fill:none;stroke:#d6dde2;stroke-width:1.3}
+.branch{stroke:#aab6bf;stroke-width:1.35;stroke-opacity:.42}
+.branch.active{stroke:#273f52;stroke-width:3;stroke-opacity:1}
+.branch.species-branch{stroke:#222b31;stroke-width:.85;stroke-opacity:.82;stroke-dasharray:4 3}
+.node{stroke:#fff;stroke-width:3;cursor:pointer}
+.node.species{stroke:#1f2a33;stroke-width:2}
+.node.species.priority2{fill:#eef1f3;stroke:#5b6871;stroke-width:1.65}
+.priority2-label{opacity:.86}
+.node.active{stroke:#101820;stroke-width:4}
+.node.species.active{stroke:#101820;stroke-width:4.2}
+.node.target{stroke:#e0ad22;stroke-width:5.5}
+.node.species.target{stroke:#e0ad22;stroke-width:5.5}
+.node-label,.node-rank,.root-label{
+  font-weight:800;text-anchor:middle;dominant-baseline:middle;pointer-events:none;
+  paint-order:stroke fill;
+  stroke-width:3px;
+  stroke-linejoin:round;
+}
+.node-label{font-size:11.5px}
+.species-label{font-size:8.5px}
+.node-rank{font-size:8.5px;font-weight:750;stroke-width:2.5px}
+.species-rank{font-size:6.5px;font-weight:700;stroke-width:2px}
+.root-label{font-size:15px;font-weight:900}
+.collapse{fill:#eef2f4;stroke:#566773;stroke-width:2.2;stroke-dasharray:5 4;cursor:pointer}
+.collapse-group:focus .collapse{stroke:#101820;stroke-width:4}
+@media(hover:hover) and (pointer:fine){.collapse-group:hover .collapse{fill:#e1e8ec}}
+.collapse-main,.collapse-sub{
+  text-anchor:middle;dominant-baseline:middle;paint-order:stroke fill;
+  stroke:#fff;stroke-linejoin:round;fill:#263844;
+}
+.collapse-main{font-size:15px;font-weight:900;stroke-width:4px}
+.collapse-sub{font-size:9px;font-weight:750;stroke-width:3px}
+@media(max-width:900px){
+  main{grid-template-columns:1fr}
+  aside{border-left:0;border-top:1px solid #d8dee4}
+  #stage{padding:2px}
+  svg{max-height:none;min-height:62vh;width:100%}
+}
+@media(max-width:520px){
+  header{gap:5px;padding:7px 8px}
+  button,.file-label,.quick-jump{min-height:38px;padding:6px 9px;font-size:13px}
+  .search-wrap{flex-basis:100%;max-width:none}
+  .tabbar{padding:6px 8px}
+  aside{padding:13px}
+}
+</style>
+</head>
+<body>
+<header>
+  <strong>系統樹 v41 — スマホ対応</strong>
+  <button id="home" type="button">LIFEへ</button>
+  <button id="back" type="button">← 戻る</button>
+  <label class="file-label" for="folder">データフォルダ選択</label>
+  <input id="folder" type="file" webkitdirectory multiple>
+  <label class="file-label" for="file">単一JSON読込（スマホ向け）</label>
+  <input id="file" type="file" accept=".json,application/json">
+  <div class="search-wrap">
+    <input id="search" autocomplete="off" placeholder="検索: カラス属 / Corvus / 鳥綱 / Aves">
+    <div id="results"></div>
+  </div>
+  <select id="quickJump" class="quick-jump" aria-label="主要グループへ">
+    <option value="">主要グループへ…</option>
+    <option value="|bacteria">真正細菌</option>
+    <option value="|archaea">古細菌</option>
+    <option value="|asgardarchaeota">アスガルド古細菌</option>
+    <option value="|eukaryota">真核生物</option>
+    <option value="fungi|fungi">菌界</option>
+    <option value="|discoba">Discoba</option>
+    <option value="|euglenozoa">ユーグレノゾア</option>
+    <option value="|cryptista">Cryptista</option>
+    <option value="|haptista">Haptista</option>
+    <option value="|rhodophyta">紅色植物</option>
+    <option value="|xenacoelomorpha">珍無腸動物</option>
+    <option value="|tardigrada">クマムシ</option>
+    <option value="|metamonada">メタモナダ</option>
+    <option value="|amoebozoa">アメーボゾア</option>
+    <option value="|choanoflagellatea">襟鞭毛虫類</option>
+    <option value="|stramenopiles">ストラメノパイル</option>
+    <option value="|alveolata">アルベオラータ</option>
+    <option value="|sar">SAR</option>
+    <option value="|animalia">動物界</option>
+    <option value="|arthropoda">節足動物門</option>
+    <option value="chelicerata|chelicerata">鋏角類</option>
+    <option value="myriapoda|myriapoda">多足類</option>
+    <option value="pancrustacea|pancrustacea">汎甲殻類</option>
+    <option value="insecta|insecta">昆虫綱</option>
+    <option value="vertebrata|vertebrata">脊椎動物</option>
+    <option value="aves|aves">鳥綱</option>
+    <option value="mammalia|mammalia">哺乳綱</option>
+    <option value="amphibia|amphibia">両生綱</option>
+    <option value="sauropsida|sauropsida">竜弓類</option>
+    <option value="mollusca|mollusca">軟体動物門</option>
+    <option value="echinodermata|echinodermata">棘皮動物門</option>
+    <option value="cnidaria|cnidaria">刺胞動物門</option>
+    <option value="embryophyta|embryophyta">陸上植物</option>
+  </select>
+  <div class="layout-switch" aria-label="配置">
+    <button id="layoutRadial" type="button">円形</button>
+    <button id="layoutRows" type="button">横一列</button>
+  </div>
+  <div class="lang-switch" aria-label="表示言語">
+    <button id="langJa" type="button">日本語</button>
+    <button id="langEn" type="button">English</button>
+    <button id="langLatin" type="button">Latin</button>
+  </div>
+  <div class="species-switch" aria-label="代表種表示">
+    <button id="speciesImportant" type="button">代表種: 重要</button>
+    <button id="speciesAll" type="button">全部</button>
+    <button id="speciesOff" type="button">OFF</button>
+  </div>
+  <span id="status">coreのみ読込</span>
+</header>
+<nav class="tabbar" aria-label="比較タブ">
+  <div id="tabs"></div>
+  <button id="addTab" type="button">＋ 比較タブ</button>
+</nav>
+
+<main>
+<section id="stage">
+  <svg id="tree" viewBox="-500 -500 1000 1000" preserveAspectRatio="xMidYMid meet"
+       role="img" aria-label="主要階級を省略しない円形系統樹"></svg>
+</section>
+
+<aside>
+  <h2>選択中</h2>
+  <div id="detail"></div>
+
+  <h2 style="margin-top:18px">全経路</h2>
+  <div id="path" class="path"></div>
+
+  <h2 style="margin-top:18px">検索</h2>
+<div class="note">ひらがな・カタカナ・半角カナは同一視して検索します。</div>
+
+<h2 style="margin-top:18px">分割ロード</h2>
+  <div class="note">
+    起動時は小さな core だけを保持します。鳥類・哺乳類・両生類・陸上植物・竜弓類は必要時に読み込みます。鳥類は主竜類の中に配置し、検索ではひらがな・カタカナ・半角カナを同一視します。
+    file:// で開く場合は「データフォルダ選択」で、このパッケージの data フォルダを選んでください。
+  </div>
+
+  <h2 style="margin-top:18px">代表種 v1</h2>
+  <div class="note">
+    代表種は419種。今回+65種は日本国内で自然分布・自然出現するものだけに限定し、菌類・軟体動物・刺胞動物・棘皮動物に加えて、海綿・有櫛・環形・半索・鋏角・多足・甲殻類も補強しました。priority 1 は111種、priority 2 は308種。priority 2 は「全部」でのみ表示され、ごく薄い灰色で区別できます。またコケ植物（苔類・蘚類・ツノゴケ類）は科を省略し、目から代表種へ直接つなぎます。
+  </div>
+
+  <h2 style="margin-top:18px">コケ植物の表示</h2>
+  <div class="note">
+    勉強用の簡略化として、苔類・蘚類・ツノゴケ類では科を表示しません。
+    232科を省略し、目までの系統＋代表種で眺められる構成にしています。
+  </div>
+
+  <h2 style="margin-top:18px">菌界＋穴埋め v1</h2>
+  <div class="note">
+    菌界は2024年の19門体系で遅延ロード。さらにCryptista・Haptista・Discoba/Euglenozoa、
+    灰色植物・紅色植物・緑藻側、Xenacoelomorpha・輪形・紐形・緩歩・有爪動物を追加しました。
+    深い関係が不安定な場所は多分岐のままです。
+  </div>
+
+  <h2 style="margin-top:18px">LIFE / 真核生物 v1</h2>
+  <div class="note">
+    LIFE直下に真正細菌・古細菌・真核生物を配置し、古細菌内にアスガルド古細菌を追加。
+    真核側は Metamonada / Amorphea / Diaphoretickes の実用的な部分骨格とし、
+    Amoebozoa・襟鞭毛虫・SAR（Stramenopiles / Alveolata / Rhizaria）を追加しました。
+    真核生物の根と古細菌との関係は研究が進行中なので、深部は過度に固定していません。
+  </div>
+
+  <h2 style="margin-top:18px">節足動物 v2</h2>
+  <div class="note">
+    鋏角類・多足類・汎甲殻類を追加。甲殻類は単系統ではないため、
+    Pancrustacea の中に主要甲殻類系統と Hexapoda → Insecta を配置しています。
+    階層が深くなったので、ヘッダーの「主要グループへ…」から鳥類などへ直接ジャンプできます。
+  </div>
+
+  <h2 style="margin-top:18px">動物界の骨格 v2</h2>
+  <div class="note">
+    海綿・有櫛・扁形・環形・線形・半索動物を追加。
+    前口動物は Spiralia / Ecdysozoa、後口動物は Ambulacraria / Chordata に整理しました。
+    深い系統が議論中の場所や、まだ未実装の小さな門は多分岐・部分系統として残しています。
+  </div>
+
+  <h2 style="margin-top:18px">無脊椎動物 v1</h2>
+  <div class="note">
+    軟体動物は8現生綱まで、棘皮動物は5現生綱＋主要クレード、
+    刺胞動物は主要亜群・綱まで。まず動物界全体の地図を埋める粒度にしています。
+    前口動物・後口動物の枝は現時点で実装済みの門だけを表示する部分系統です。
+  </div>
+
+  <h2 style="margin-top:18px">昆虫 v1</h2>
+  <div class="note">
+    昆虫は現生28目まで。シロアリはゴキブリ目、シラミ類はカジリムシ目に含めています。
+    議論の残る旧翅類・半翅系統の深い分岐は無理に二分しません。
+  </div>
+
+  <h2 style="margin-top:18px">魚類 v1</h2>
+  <div class="note">
+    魚類は今回は目レベルまで。単一の「魚類」ノードは作らず、
+    脊椎動物→円口類／顎口類→軟骨魚類／硬骨魚類→条鰭類／肉鰭類として表示します。
+    四肢動物は肉鰭類の中に接続しています。
+  </div>
+
+  <h2 style="margin-top:18px">配置比較</h2>
+  <div class="note">
+    横一列をデフォルトにしました。円形へはいつでも切り替えられます。横一列は深さと親子関係を追いやすい配置です。
+    横一列ではクリックした円を常に画面中央へ移動します。兄弟が多い場合は左右ドラッグ・ホイールで周囲を確認できます。
+    省略表示でも選択ノードの直上の親は必ず残し、円形・横一列とも系統は下方向へ伸びます。
+  </div>
+
+  <h2 style="margin-top:18px">表示操作</h2>
+  <div class="note">
+    図の上でマウスホイールを回すと拡大・縮小できます。マウスまたはタッチでドラッグすると表示位置を動かせます。深い系統ではリング間隔を保ったまま全体を少し縮小表示します。
+  </div>
+
+  <h2 style="margin-top:18px">ラベル</h2>
+  <div class="note">
+    長い名前も省略せず、複数行に折り返して全文表示します。
+  </div>
+
+  <h2 style="margin-top:18px">配置ルール</h2>
+  <div class="note">
+    12分岐以下かつ約210°以内に収まる場合は、親ノードの近くへ扇状に配置します。
+    それを超える大分岐だけ全周配置へ切り替えます。
+  </div>
+
+  <h2 style="margin-top:18px">スマホで使う</h2>
+  <div class="note">
+    1本指ドラッグで移動、2本指ピンチで拡大・縮小できます。
+    GitHub PagesなどHTTPで公開した場合はJSONを自動読込します。
+    スマホでローカル利用する場合は、ZIPを展開して index.html を開き、
+    「単一JSON読込（スマホ向け）」から同じフォルダの all_in_one.json を選んでください。
+    Androidではフォルダ選択の挙動が端末やブラウザで異なるため、all_in_one.json方式を推奨します。
+  </div>
+
+  <h2 style="margin-top:18px">比較タブ</h2>
+  <div class="note">
+    最大2タブ。2つ目は現在の表示を複製して開き、各タブで別の分類群へ移動できます。
+  </div>
+
+  <h2 style="margin-top:18px">省略規則</h2>
+  <div class="note">
+    界・門・綱・目・科・属は必ず表示します。クレードなど、それ以外の階層が連続した部分だけ「…」に圧縮します。「…」をクリックすると、省略された中で最も近い祖先へ戻れます。
+  </div>
+</aside>
+</main>
+
+<script>
+(() => {
+const EMBEDDED_CORE={"schema":"circular-phylogeny-core/1","root":"life","nodes":[{"id":"life","ja":"LIFE","en":"Life","latin":"","rank":"root","children":["bacteria","archaea","eukaryota"],"wiki":"https://en.wikipedia.org/wiki/Life","color":"#263746","note":"Operational three-way display for navigation. Current two-domain models place the eukaryotic host lineage within or very close to Asgard Archaea; the exact deepest relationship is not forced in this app."},{"id":"bacteria","ja":"真正細菌","en":"Bacteria","latin":"Bacteria","rank":"domain","children":[],"wiki":"https://en.wikipedia.org/wiki/Bacteria","color":"#6B7E54","note":"Bacterial diversity is not expanded yet; GTDB provides a genome-based bacterial taxonomy."},{"id":"plantae","ja":"緑色植物","en":"Green plants","latin":"Chloroplastida","rank":"clade","children":["chlorophyta","streptophyta"],"wiki":"https://en.wikipedia.org/wiki/Special:Search?search=Viridiplantae","color":"#4D7F5A"},{"id":"fungi","ja":"菌界","en":"Fungi","latin":"Fungi","rank":"kingdom","children":[],"wiki":"https://en.wikipedia.org/wiki/Fungus","color":"#8B6C52","branch":"fungi","note":"19 fungal phyla load on demand."},{"id":"animalia","ja":"動物界","en":"Animals","latin":"Animalia","rank":"kingdom","children":["porifera","ctenophora","cnidaria","bilateria"],"wiki":"https://en.wikipedia.org/wiki/Animal","color":"#59769A","note":"Deep relationships among Porifera, Ctenophora, Cnidaria and Bilateria remain debated; v27 shows these four major branches as a polytomy."},{"id":"chordata","ja":"脊索動物門","en":"Chordates","latin":"Chordata","rank":"phylum","children":["vertebrata"],"wiki":"https://en.wikipedia.org/wiki/Chordate","color":"#526F8D"},{"id":"arthropoda","ja":"節足動物門","en":"Arthropods","latin":"Arthropoda","rank":"phylum","children":["chelicerata","mandibulata"],"wiki":"https://en.wikipedia.org/wiki/Arthropod","color":"#8A7050","note":"Modern arthropod scaffold: Chelicerata + Mandibulata; Mandibulata contains Myriapoda + Pancrustacea."},{"id":"mollusca","ja":"軟体動物門","en":"Molluscs","latin":"Mollusca","rank":"phylum","children":[],"wiki":"https://en.wikipedia.org/wiki/Mollusca","color":"#7e6b78","branch":"mollusca"},{"id":"embryophyta","ja":"陸上植物","en":"Land plants","latin":"Embryophyta","rank":"clade","children":[],"branch":"embryophyta","wiki":"https://en.wikipedia.org/wiki/Embryophyte","color":"#47734f"},{"id":"vertebrata","ja":"脊椎動物","en":"Vertebrates","latin":"Vertebrata","rank":"clade","children":[],"branch":"vertebrata","wiki":"https://en.wikipedia.org/wiki/Vertebrate","color":"#4c6872"},{"id":"bilateria","ja":"左右相称動物","en":"Bilaterians","latin":"Bilateria","rank":"clade","children":["xenacoelomorpha","protostomia","deuterostomia"],"wiki":"https://en.wikipedia.org/wiki/Bilateria","color":"#66736c","note":"Xenacoelomorpha is shown separately because its exact position relative to Protostomia and Deuterostomia remains contentious."},{"id":"protostomia","ja":"前口動物","en":"Protostomes","latin":"Protostomia","rank":"clade","children":["spiralia","ecdysozoa"],"wiki":"https://en.wikipedia.org/wiki/Protostome","color":"#716b62","note":"High-level scaffold only; many protostome phyla remain unimplemented."},{"id":"deuterostomia","ja":"後口動物","en":"Deuterostomes","latin":"Deuterostomia","rank":"clade","children":["ambulacraria","chordata"],"wiki":"https://en.wikipedia.org/wiki/Deuterostome","color":"#64717b","note":"Conservative deuterostome scaffold. The deepest deuterostome topology remains debated in phylogenomics."},{"id":"cnidaria","ja":"刺胞動物門","en":"Cnidarians","latin":"Cnidaria","rank":"phylum","children":[],"branch":"cnidaria","wiki":"https://en.wikipedia.org/wiki/Cnidaria","color":"#7d6376"},{"id":"echinodermata","ja":"棘皮動物門","en":"Echinoderms","latin":"Echinodermata","rank":"phylum","children":[],"branch":"echinodermata","wiki":"https://en.wikipedia.org/wiki/Echinoderm","color":"#876c62"},{"id":"spiralia","ja":"らせん卵割動物","en":"Spiralians","latin":"Spiralia","rank":"clade","children":["rotifera","nemertea","platyhelminthes","mollusca","annelida"],"wiki":"https://en.wikipedia.org/wiki/Spiralia","color":"#786b61","note":"Partial Spiralia sampling. Recent phylogenomics still finds many inter-phylum branches extremely short and difficult to resolve, so these phyla are displayed as a polytomy."},{"id":"ecdysozoa","ja":"脱皮動物","en":"Ecdysozoans","latin":"Ecdysozoa","rank":"clade","children":["nematoda","tardigrada","onychophora","arthropoda"],"wiki":"https://en.wikipedia.org/wiki/Ecdysozoa","color":"#706d59","note":"Partial Ecdysozoa scaffold; Tardigrada and Onychophora are added as familiar panarthropod-grade phyla without forcing disputed internal panarthropod topology."},{"id":"ambulacraria","ja":"歩帯動物","en":"Ambulacrarians","latin":"Ambulacraria","rank":"clade","children":["echinodermata","hemichordata"],"wiki":"https://en.wikipedia.org/wiki/Ambulacraria","color":"#687380"},{"id":"porifera","ja":"海綿動物門","en":"Sponges","latin":"Porifera","rank":"phylum","children":[],"branch":"porifera","wiki":"https://en.wikipedia.org/wiki/Special:Search?search=Porifera","color":"#71849a"},{"id":"ctenophora","ja":"有櫛動物門","en":"Comb jellies","latin":"Ctenophora","rank":"phylum","children":[],"branch":"ctenophora","wiki":"https://en.wikipedia.org/wiki/Special:Search?search=Ctenophora","color":"#6d8792"},{"id":"platyhelminthes","ja":"扁形動物門","en":"Flatworms","latin":"Platyhelminthes","rank":"phylum","children":[],"branch":"platyhelminthes","wiki":"https://en.wikipedia.org/wiki/Special:Search?search=Platyhelminthes","color":"#8a745c"},{"id":"annelida","ja":"環形動物門","en":"Annelids","latin":"Annelida","rank":"phylum","children":[],"branch":"annelida","wiki":"https://en.wikipedia.org/wiki/Special:Search?search=Annelida","color":"#7e7057"},{"id":"nematoda","ja":"線形動物門","en":"Roundworms","latin":"Nematoda","rank":"phylum","children":[],"branch":"nematoda","wiki":"https://en.wikipedia.org/wiki/Special:Search?search=Nematoda","color":"#817257"},{"id":"hemichordata","ja":"半索動物門","en":"Hemichordates","latin":"Hemichordata","rank":"phylum","children":[],"branch":"hemichordata","wiki":"https://en.wikipedia.org/wiki/Special:Search?search=Hemichordata","color":"#6e7381"},{"id":"mandibulata","ja":"大顎類","en":"Mandibulates","latin":"Mandibulata","rank":"clade","children":["myriapoda","pancrustacea"],"wiki":"https://en.wikipedia.org/wiki/Special:Search?search=Mandibulata","color":"#687166"},{"id":"chelicerata","ja":"鋏角亜門","en":"Chelicerates","latin":"Chelicerata","rank":"subphylum","children":[],"branch":"chelicerata","wiki":"https://en.wikipedia.org/wiki/Special:Search?search=Chelicerata","color":"#6e687c"},{"id":"myriapoda","ja":"多足亜門","en":"Myriapods","latin":"Myriapoda","rank":"subphylum","children":[],"branch":"myriapoda","wiki":"https://en.wikipedia.org/wiki/Special:Search?search=Myriapoda","color":"#756b55"},{"id":"pancrustacea","ja":"汎甲殻類（甲殻類＋六脚類）","en":"Pancrustaceans","latin":"Pancrustacea","rank":"clade","children":[],"branch":"pancrustacea","wiki":"https://en.wikipedia.org/wiki/Special:Search?search=Pancrustacea","color":"#587487"},{"id":"archaea","ja":"古細菌","en":"Archaea","latin":"Archaea","rank":"domain","children":["asgardarchaeota"],"wiki":"https://en.wikipedia.org/wiki/Special:Search?search=Archaea","color":"#735f7c","note":"Only the requested Asgard lineage is expanded in v29; the rest of archaeal diversity is not yet represented."},{"id":"asgardarchaeota","ja":"アスガルド古細菌","en":"Asgard archaea","latin":"Asgardarchaeota","rank":"clade","children":[],"wiki":"https://en.wikipedia.org/wiki/Special:Search?search=Asgardarchaeota","color":"#826d8a","note":"Asgard archaea are the closest known prokaryotic relatives of eukaryotes in current phylogenomic models."},{"id":"eukaryota","ja":"真核生物","en":"Eukaryotes","latin":"Eukaryota","rank":"domain","children":["metamonada","discoba","amorphea","diaphoretickes"],"wiki":"https://en.wikipedia.org/wiki/Special:Search?search=Eukaryote","color":"#4f7180","note":"Partial high-level scaffold. Metamonada and Discoba are shown separately; the obsolete/unsupported single Excavata supergroup is not used."},{"id":"metamonada","ja":"メタモナダ","en":"Metamonads","latin":"Metamonada","rank":"clade","children":[],"wiki":"https://en.wikipedia.org/wiki/Special:Search?search=Metamonada","color":"#687c84","note":"Kept as an operational high-level group. Recent rooted eukaryote trees may separate Parabasalia, Fornicata and Preaxostyla near the eukaryotic root."},{"id":"amorphea","ja":"アモルフェア","en":"Amorpheans","latin":"Amorphea","rank":"clade","children":["amoebozoa","obazoa"],"wiki":"https://en.wikipedia.org/wiki/Special:Search?search=Amorphea","color":"#687265"},{"id":"amoebozoa","ja":"アメーボゾア","en":"Amoebozoans","latin":"Amoebozoa","rank":"clade","children":["amoebozoa_tubulinea","amoebozoa_discosea","amoebozoa_evosea"],"wiki":"https://en.wikipedia.org/wiki/Special:Search?search=Amoebozoa","color":"#7b806d"},{"id":"amoebozoa_tubulinea","ja":"ツブリネア","en":"Tubulineans","latin":"Tubulinea","rank":"class","children":[],"wiki":"https://en.wikipedia.org/wiki/Special:Search?search=Tubulinea","color":"#8b907c"},{"id":"amoebozoa_discosea","ja":"ディスコセア","en":"Discoseans","latin":"Discosea","rank":"class","children":[],"wiki":"https://en.wikipedia.org/wiki/Special:Search?search=Discosea","color":"#8b907c"},{"id":"amoebozoa_evosea","ja":"エボセア","en":"Evoseans","latin":"Evosea","rank":"clade","children":[],"wiki":"https://en.wikipedia.org/wiki/Special:Search?search=Evosea","color":"#8b907c"},{"id":"obazoa","ja":"オバゾア","en":"Obazoans","latin":"Obazoa","rank":"clade","children":["opisthokonta"],"wiki":"https://en.wikipedia.org/wiki/Special:Search?search=Obazoa","color":"#64705f","note":"Only Opisthokonta is expanded here; Breviatea and Apusomonadida are omitted in v29."},{"id":"opisthokonta","ja":"後方鞭毛生物","en":"Opisthokonts","latin":"Opisthokonta","rank":"clade","children":["holomycota","holozoa"],"wiki":"https://en.wikipedia.org/wiki/Special:Search?search=Opisthokonta","color":"#606d5c"},{"id":"holomycota","ja":"ホロマイコータ","en":"Holomycota","latin":"Holomycota","rank":"clade","children":["fungi"],"wiki":"https://en.wikipedia.org/wiki/Special:Search?search=Holomycota","color":"#786956","note":"Partial coverage: nucleariids and other non-fungal holomycotans are omitted."},{"id":"holozoa","ja":"ホロゾア","en":"Holozoans","latin":"Holozoa","rank":"clade","children":["choanoflagellatea","animalia"],"wiki":"https://en.wikipedia.org/wiki/Special:Search?search=Holozoa","color":"#5f726c","note":"Partial coverage: Filasterea, Ichthyosporea and other holozoan lineages are omitted."},{"id":"choanoflagellatea","ja":"襟鞭毛虫類","en":"Choanoflagellates","latin":"Choanoflagellatea","rank":"class","children":[],"wiki":"https://en.wikipedia.org/wiki/Special:Search?search=Choanoflagellate","color":"#6e837c","note":"Choanoflagellates are among the closest living unicellular relatives of animals."},{"id":"diaphoretickes","ja":"ディアフォレティケス","en":"Diaphoretickes","latin":"Diaphoretickes","rank":"clade","children":["cryptista","haptista","archaeplastida","sar"],"wiki":"https://en.wikipedia.org/wiki/Special:Search?search=Diaphoretickes","color":"#4f7373","note":"Partial Diaphoretickes scaffold including robust Cryptista and Haptista; their exact placement relative to Archaeplastida/SAR can vary among analyses."},{"id":"archaeplastida","ja":"アーケプラスチダ","en":"Archaeplastids","latin":"Archaeplastida","rank":"clade","children":["glaucophyta","rhodophyta","plantae"],"wiki":"https://en.wikipedia.org/wiki/Special:Search?search=Archaeplastida","color":"#4d775c","note":"Glaucophytes, red algae and the green-plant lineage are shown as the three principal Archaeplastida branches."},{"id":"sar","ja":"SAR","en":"SAR supergroup","latin":"SAR","rank":"clade","children":["stramenopiles","alveolata","rhizaria"],"wiki":"https://en.wikipedia.org/wiki/Special:Search?search=SAR%20supergroup","color":"#4c6f78"},{"id":"stramenopiles","ja":"ストラメノパイル","en":"Stramenopiles","latin":"Stramenopiles","rank":"clade","children":["ochrophyta","oomycota"],"wiki":"https://en.wikipedia.org/wiki/Special:Search?search=Stramenopile","color":"#567989","note":"Only two familiar major branches are shown in v29; heterotrophic stramenopile diversity is much larger."},{"id":"ochrophyta","ja":"オクロ植物","en":"Ochrophytes","latin":"Ochrophyta","rank":"clade","children":["bacillariophyta","phaeophyceae"],"wiki":"https://en.wikipedia.org/wiki/Special:Search?search=Ochrophyta","color":"#648898"},{"id":"bacillariophyta","ja":"珪藻類","en":"Diatoms","latin":"Bacillariophyta","rank":"clade","children":[],"wiki":"https://en.wikipedia.org/wiki/Special:Search?search=Diatom","color":"#7497a5"},{"id":"phaeophyceae","ja":"褐藻綱","en":"Brown algae","latin":"Phaeophyceae","rank":"class","children":[],"wiki":"https://en.wikipedia.org/wiki/Special:Search?search=Phaeophyceae","color":"#7497a5"},{"id":"oomycota","ja":"卵菌類","en":"Oomycetes","latin":"Oomycota","rank":"clade","children":[],"wiki":"https://en.wikipedia.org/wiki/Special:Search?search=Oomycete","color":"#648898"},{"id":"alveolata","ja":"アルベオラータ","en":"Alveolates","latin":"Alveolata","rank":"clade","children":["ciliophora","dinoflagellata","apicomplexa"],"wiki":"https://en.wikipedia.org/wiki/Special:Search?search=Alveolate","color":"#675f88"},{"id":"ciliophora","ja":"繊毛虫門","en":"Ciliates","latin":"Ciliophora","rank":"phylum","children":[],"wiki":"https://en.wikipedia.org/wiki/Special:Search?search=Ciliate","color":"#786f99"},{"id":"dinoflagellata","ja":"渦鞭毛藻類","en":"Dinoflagellates","latin":"Dinoflagellata","rank":"clade","children":[],"wiki":"https://en.wikipedia.org/wiki/Special:Search?search=Dinoflagellate","color":"#786f99"},{"id":"apicomplexa","ja":"アピコンプレックス門","en":"Apicomplexans","latin":"Apicomplexa","rank":"phylum","children":[],"wiki":"https://en.wikipedia.org/wiki/Special:Search?search=Apicomplexa","color":"#786f99"},{"id":"rhizaria","ja":"リザリア","en":"Rhizarians","latin":"Rhizaria","rank":"clade","children":["cercozoa","foraminifera","radiolaria"],"wiki":"https://en.wikipedia.org/wiki/Special:Search?search=Rhizaria","color":"#627c7a","note":"Added alongside Stramenopiles and Alveolata so that SAR is not shown as an incomplete two-member group."},{"id":"cercozoa","ja":"ケルコゾア","en":"Cercozoans","latin":"Cercozoa","rank":"clade","children":[],"wiki":"https://en.wikipedia.org/wiki/Special:Search?search=Cercozoa","color":"#738d8a"},{"id":"foraminifera","ja":"有孔虫類","en":"Foraminiferans","latin":"Foraminifera","rank":"clade","children":[],"wiki":"https://en.wikipedia.org/wiki/Special:Search?search=Foraminifera","color":"#738d8a"},{"id":"radiolaria","ja":"放散虫類","en":"Radiolarians","latin":"Radiolaria","rank":"clade","children":[],"wiki":"https://en.wikipedia.org/wiki/Special:Search?search=Radiolaria","color":"#738d8a"},{"id":"discoba","ja":"ディスコバ","en":"Discobans","latin":"Discoba","rank":"clade","children":["jakobida","heterolobosea","euglenozoa"],"wiki":"https://en.wikipedia.org/wiki/Special:Search?search=Discoba","color":"#647b83"},{"id":"jakobida","ja":"ヤコバ類","en":"Jakobids","latin":"Jakobida","rank":"clade","children":[],"wiki":"https://en.wikipedia.org/wiki/Special:Search?search=Jakobida","color":"#748b92"},{"id":"heterolobosea","ja":"ヘテロロボサ","en":"Heteroloboseans","latin":"Heterolobosea","rank":"clade","children":[],"wiki":"https://en.wikipedia.org/wiki/Special:Search?search=Heterolobosea","color":"#748b92"},{"id":"euglenozoa","ja":"ユーグレノゾア","en":"Euglenozoans","latin":"Euglenozoa","rank":"clade","children":["euglenida","kinetoplastea"],"wiki":"https://en.wikipedia.org/wiki/Special:Search?search=Euglenozoa","color":"#70878e"},{"id":"euglenida","ja":"ミドリムシ類","en":"Euglenids","latin":"Euglenida","rank":"class","children":[],"wiki":"https://en.wikipedia.org/wiki/Special:Search?search=Euglenida","color":"#80979d"},{"id":"kinetoplastea","ja":"キネトプラスト類","en":"Kinetoplastids","latin":"Kinetoplastea","rank":"class","children":[],"wiki":"https://en.wikipedia.org/wiki/Special:Search?search=Kinetoplastida","color":"#80979d"},{"id":"cryptista","ja":"クリプチスタ","en":"Cryptists","latin":"Cryptista","rank":"clade","children":["cryptophyceae"],"wiki":"https://en.wikipedia.org/wiki/Special:Search?search=Cryptista","color":"#596f83"},{"id":"cryptophyceae","ja":"クリプト藻綱","en":"Cryptophytes","latin":"Cryptophyceae","rank":"class","children":[],"wiki":"https://en.wikipedia.org/wiki/Special:Search?search=Cryptophyceae","color":"#6a8193"},{"id":"haptista","ja":"ハプティスタ","en":"Haptists","latin":"Haptista","rank":"clade","children":["haptophyta","centroplasthelida"],"wiki":"https://en.wikipedia.org/wiki/Special:Search?search=Haptista","color":"#5d7284"},{"id":"haptophyta","ja":"ハプト藻類","en":"Haptophytes","latin":"Haptophyta","rank":"clade","children":[],"wiki":"https://en.wikipedia.org/wiki/Special:Search?search=Haptophyta","color":"#6e8495"},{"id":"centroplasthelida","ja":"中心粒太陽虫類","en":"Centrohelids","latin":"Centroplasthelida","rank":"clade","children":[],"wiki":"https://en.wikipedia.org/wiki/Special:Search?search=Centrohelid","color":"#6e8495"},{"id":"glaucophyta","ja":"灰色植物門","en":"Glaucophytes","latin":"Glaucophyta","rank":"phylum","children":[],"wiki":"https://en.wikipedia.org/wiki/Special:Search?search=Glaucophyta","color":"#5d806a"},{"id":"rhodophyta","ja":"紅色植物門","en":"Red algae","latin":"Rhodophyta","rank":"phylum","children":[],"wiki":"https://en.wikipedia.org/wiki/Special:Search?search=Rhodophyta","color":"#8a5f66"},{"id":"chlorophyta","ja":"緑藻植物門","en":"Chlorophytes","latin":"Chlorophyta","rank":"phylum","children":[],"wiki":"https://en.wikipedia.org/wiki/Special:Search?search=Chlorophyta","color":"#5d895f"},{"id":"streptophyta","ja":"ストレプト植物","en":"Streptophytes","latin":"Streptophyta","rank":"clade","children":["embryophyta"],"wiki":"https://en.wikipedia.org/wiki/Special:Search?search=Streptophyta","color":"#527d59"},{"id":"xenacoelomorpha","ja":"珍無腸動物門","en":"Xenacoelomorphs","latin":"Xenacoelomorpha","rank":"phylum","children":["acoelomorpha","xenoturbellida"],"wiki":"https://en.wikipedia.org/wiki/Special:Search?search=Xenacoelomorpha","color":"#7e706d","note":"Accepted by WoRMS as a phylum; placement near the base of Bilateria remains actively studied."},{"id":"acoelomorpha","ja":"無腸動物類","en":"Acoelomorphs","latin":"Acoelomorpha","rank":"subphylum","children":[],"wiki":"https://en.wikipedia.org/wiki/Special:Search?search=Acoelomorpha","color":"#8e807d"},{"id":"xenoturbellida","ja":"珍渦虫類","en":"Xenoturbellids","latin":"Xenoturbellida","rank":"clade","children":[],"wiki":"https://en.wikipedia.org/wiki/Special:Search?search=Xenoturbella","color":"#8e807d"},{"id":"rotifera","ja":"輪形動物門","en":"Rotifers","latin":"Rotifera","rank":"phylum","children":[],"wiki":"https://en.wikipedia.org/wiki/Special:Search?search=Rotifer","color":"#827064"},{"id":"nemertea","ja":"紐形動物門","en":"Ribbon worms","latin":"Nemertea","rank":"phylum","children":[],"wiki":"https://en.wikipedia.org/wiki/Special:Search?search=Nemertea","color":"#827064"},{"id":"tardigrada","ja":"緩歩動物門","en":"Tardigrades","latin":"Tardigrada","rank":"phylum","children":[],"wiki":"https://en.wikipedia.org/wiki/Special:Search?search=Tardigrade","color":"#77755f"},{"id":"onychophora","ja":"有爪動物門","en":"Velvet worms","latin":"Onychophora","rank":"phylum","children":[],"wiki":"https://en.wikipedia.org/wiki/Special:Search?search=Onychophora","color":"#77755f"}]};
+const EMBEDDED_MANIFEST={"schema":"circular-phylogeny-manifest/1","version":18,"core":"data/core.json","branches":{"aves":{"root":"aves","label":"鳥類","file":"data/animalia/aves.json","index":"data/animalia/aves.index.json","dependsOn":["sauropsida"]},"embryophyta":{"root":"embryophyta","label":"陸上植物","file":"data/plantae/embryophyta.json","index":"data/plantae/embryophyta.index.json"},"mammalia":{"root":"mammalia","label":"哺乳類","file":"data/animalia/mammalia.json","index":"data/animalia/mammalia.index.json","dependsOn":["vertebrata"]},"amphibia":{"root":"amphibia","label":"両生類","file":"data/animalia/amphibia.json","index":"data/animalia/amphibia.index.json","dependsOn":["vertebrata"]},"sauropsida":{"root":"sauropsida","label":"竜弓類（爬虫類＋鳥類）","file":"data/animalia/sauropsida.json","index":"data/animalia/sauropsida.index.json","dependsOn":["vertebrata"]},"vertebrata":{"root":"vertebrata","label":"脊椎動物（魚類＋四肢動物）","file":"data/animalia/vertebrata.json","index":"data/animalia/vertebrata.index.json"},"insecta":{"root":"insecta","label":"昆虫","file":"data/animalia/insecta.json","index":"data/animalia/insecta.index.json","dependsOn":["pancrustacea"]},"mollusca":{"root":"mollusca","label":"軟体動物","file":"data/animalia/mollusca.json","index":"data/animalia/mollusca.index.json"},"cnidaria":{"root":"cnidaria","label":"刺胞動物","file":"data/animalia/cnidaria.json","index":"data/animalia/cnidaria.index.json"},"echinodermata":{"root":"echinodermata","label":"棘皮動物","file":"data/animalia/echinodermata.json","index":"data/animalia/echinodermata.index.json"},"porifera":{"root":"porifera","label":"海綿動物","file":"data/animalia/porifera.json","index":"data/animalia/porifera.index.json"},"ctenophora":{"root":"ctenophora","label":"有櫛動物","file":"data/animalia/ctenophora.json","index":"data/animalia/ctenophora.index.json"},"platyhelminthes":{"root":"platyhelminthes","label":"扁形動物","file":"data/animalia/platyhelminthes.json","index":"data/animalia/platyhelminthes.index.json"},"annelida":{"root":"annelida","label":"環形動物","file":"data/animalia/annelida.json","index":"data/animalia/annelida.index.json"},"nematoda":{"root":"nematoda","label":"線形動物","file":"data/animalia/nematoda.json","index":"data/animalia/nematoda.index.json"},"hemichordata":{"root":"hemichordata","label":"半索動物","file":"data/animalia/hemichordata.json","index":"data/animalia/hemichordata.index.json"},"chelicerata":{"root":"chelicerata","label":"鋏角類","file":"data/animalia/chelicerata.json","index":"data/animalia/chelicerata.index.json"},"myriapoda":{"root":"myriapoda","label":"多足類","file":"data/animalia/myriapoda.json","index":"data/animalia/myriapoda.index.json"},"pancrustacea":{"root":"pancrustacea","label":"汎甲殻類（甲殻類＋六脚類）","file":"data/animalia/pancrustacea.json","index":"data/animalia/pancrustacea.index.json"},"fungi":{"root":"fungi","label":"菌界","file":"data/fungi/fungi.json","index":"data/fungi/fungi.index.json"}},"representativeSpecies":"data/representative_species.json"};
+
+const svg=document.getElementById("tree");
+const search=document.getElementById("search");
+const quickJump=document.getElementById("quickJump");
+const results=document.getElementById("results");
+const detail=document.getElementById("detail");
+const pathEl=document.getElementById("path");
+const home=document.getElementById("home");
+const back=document.getElementById("back");
+const file=document.getElementById("file");
+const folder=document.getElementById("folder");
+const status=document.getElementById("status");
+const tabsEl=document.getElementById("tabs");
+const addTabButton=document.getElementById("addTab");
+const langJa=document.getElementById("langJa");
+const langEn=document.getElementById("langEn");
+const langLatin=document.getElementById("langLatin");
+const speciesImportant=document.getElementById("speciesImportant");
+const speciesAll=document.getElementById("speciesAll");
+const speciesOff=document.getElementById("speciesOff");
+const layoutRadial=document.getElementById("layoutRadial");
+const layoutRows=document.getElementById("layoutRows");
+
+let data={root:EMBEDDED_CORE.root};
+let manifest=EMBEDDED_MANIFEST;
+let nodes=new Map();
+let parentById=new Map();
+
+let loadedBranches=new Set();
+let branchLoadPromises=new Map();
+let localFiles=[];
+let searchIndexEntries=[];
+let searchIndexesLoaded=false;
+let searchRequestSerial=0;
+
+let representativeSpeciesEntries=[];
+let representativeSpeciesLoaded=false;
+
+let tabs=[
+  {id:1,path:[EMBEDDED_CORE.root],targetId:EMBEDDED_CORE.root,search:""}
+];
+let activeTabIndex=0;
+let nextTabId=2;
+let path=[EMBEDDED_CORE.root];
+let targetId=EMBEDDED_CORE.root;
+
+const KEEP_RANKS=new Set(["domain","kingdom","phylum","class","order","family","genus","ドメイン","界","門","綱","目","科","属"]);
+const FIRST_RADIUS=88;
+const NORMAL_STEP=92;
+const MIN_STEP=72;
+const NODE_R=28;
+const SPECIES_R=18;
+const LOCAL_FAN_MAX_DEG=210;
+const LOCAL_FAN_MAX_CHILDREN=12;
+const LOCAL_GAP_FACTOR=1.35;
+const VIEW_PADDING=64;
+const ROW_FIRST_Y=108;
+const ROW_STEP=104;
+const ROW_GAP=86;
+const ROW_VIEW_PADDING=82;
+const ROW_FOCUS_WIDTH=1120;
+const ROW_FOCUS_HEIGHT=700;
+const SPECIES_PREVIEW_ROW_OFFSET=42;
+const SPECIES_PREVIEW_X_GAP=34;
+const SPECIES_PREVIEW_RADIAL_STEP=58;
+const SPECIES_PREVIEW_ANGLE_GAP=8;
+let baseViewBox={x:-500,y:-500,w:1000,h:1000};
+let currentViewBox={...baseViewBox};
+let displayLanguage="ja";
+let layoutMode="rows";
+let representativeSpeciesMode="important";
+
+let dragState=null;
+let suppressClickUntil=0;
+
+
+
+function displayName(node){
+  if(!node)return "";
+  if(displayLanguage==="en") return node.en||node.latin||node.ja||node.id;
+  if(displayLanguage==="latin") return node.latin||node.en||node.ja||node.id;
+  return node.ja||node.latin||node.en||node.id;
+}
+function setDisplayLanguage(lang){
+  displayLanguage=lang;
+  langJa.classList.toggle("active",lang==="ja");
+  langEn.classList.toggle("active",lang==="en");
+  langLatin.classList.toggle("active",lang==="latin");
+  langJa.setAttribute("aria-pressed",String(lang==="ja"));
+  langEn.setAttribute("aria-pressed",String(lang==="en"));
+  langLatin.setAttribute("aria-pressed",String(lang==="latin"));
+  render();
+}
+
+function setLayoutMode(mode){
+  layoutMode=mode==="rows"?"rows":"radial";
+  layoutRadial.classList.toggle("active",layoutMode==="radial");
+  layoutRows.classList.toggle("active",layoutMode==="rows");
+  layoutRadial.setAttribute("aria-pressed",String(layoutMode==="radial"));
+  layoutRows.setAttribute("aria-pressed",String(layoutMode==="rows"));
+  svg.classList.toggle("rows-mode",layoutMode==="rows");
+  svg.setAttribute(
+    "aria-label",
+    layoutMode==="rows"
+      ?"主要階級を省略しない横一列型系統樹"
+      :"主要階級を省略しない円形系統樹"
+  );
+  render();
+}
+
+function representativeSpeciesVisible(node){
+  if(!node || node.rank!=="species")return true;
+  if(representativeSpeciesMode==="off")return false;
+  if(representativeSpeciesMode==="all")return true;
+  return (Number(node.priority)||1)<=1;
+}
+
+function setRepresentativeSpeciesMode(mode,renderNow=true){
+  representativeSpeciesMode=["important","all","off"].includes(mode)?mode:"important";
+  speciesImportant.classList.toggle("active",representativeSpeciesMode==="important");
+  speciesAll.classList.toggle("active",representativeSpeciesMode==="all");
+  speciesOff.classList.toggle("active",representativeSpeciesMode==="off");
+  speciesImportant.setAttribute("aria-pressed",String(representativeSpeciesMode==="important"));
+  speciesAll.setAttribute("aria-pressed",String(representativeSpeciesMode==="all"));
+  speciesOff.setAttribute("aria-pressed",String(representativeSpeciesMode==="off"));
+  if(renderNow)render();
+}
+
+function currentTab(){
+  return tabs[activeTabIndex];
+}
+function syncActiveState(){
+  const tab=currentTab();
+  if(!tab)return;
+  tab.path=[...path];
+  tab.targetId=targetId;
+  tab.search=search.value;
+}
+function tabLabel(tab,index){
+  const n=nodes.get(tab.targetId);
+  return displayName(n)||`タブ${index+1}`;
+}
+function renderTabs(){
+  syncActiveState();
+  tabsEl.replaceChildren();
+  tabs.forEach((tab,index)=>{
+    const item=document.createElement("div");
+    item.className="tab-item"+(index===activeTabIndex?" active":"");
+
+    const select=document.createElement("button");
+    select.type="button";
+    select.className="tab-select";
+    select.textContent=tabLabel(tab,index);
+    select.title=`比較タブ ${index+1}`;
+    select.setAttribute("aria-current",index===activeTabIndex?"page":"false");
+    select.addEventListener("click",()=>switchTab(index));
+    item.appendChild(select);
+
+    if(tabs.length>1){
+      const close=document.createElement("button");
+      close.type="button";
+      close.className="tab-close";
+      close.textContent="×";
+      close.title="このタブを閉じる";
+      close.setAttribute("aria-label",`${tabLabel(tab,index)}タブを閉じる`);
+      close.addEventListener("click",()=>closeTab(index));
+      item.appendChild(close);
+    }
+    tabsEl.appendChild(item);
+  });
+  addTabButton.disabled=tabs.length>=2;
+  addTabButton.title=tabs.length>=2?"比較タブは2つまでです":"現在の表示を複製して比較タブを追加";
+}
+function switchTab(index){
+  if(index===activeTabIndex||!tabs[index])return;
+  syncActiveState();
+  activeTabIndex=index;
+  const tab=currentTab();
+  path=[...tab.path];
+  targetId=tab.targetId;
+  search.value=tab.search||"";
+  results.style.display="none";
+  render();
+}
+function addComparisonTab(){
+  if(tabs.length>=2)return;
+  syncActiveState();
+  const base=currentTab();
+  tabs.push({
+    id:nextTabId++,
+    path:[...base.path],
+    targetId:base.targetId,
+    search:base.search||""
+  });
+  activeTabIndex=tabs.length-1;
+  path=[...currentTab().path];
+  targetId=currentTab().targetId;
+  search.value=currentTab().search||"";
+  results.style.display="none";
+  render();
+}
+function closeTab(index){
+  if(tabs.length<=1)return;
+  syncActiveState();
+  tabs.splice(index,1);
+  if(activeTabIndex===index){
+    activeTabIndex=Math.max(0,index-1);
+  }else if(activeTabIndex>index){
+    activeTabIndex--;
+  }
+  const tab=currentTab();
+  path=[...tab.path];
+  targetId=tab.targetId;
+  search.value=tab.search||"";
+  results.style.display="none";
+  render();
+}
+
+function normalizePath(p){
+  return String(p||"").replaceAll("\\","/").replace(/^\.?\//,"");
+}
+function findLocalFile(path){
+  const wanted=normalizePath(path);
+  return localFiles.find(f=>{
+    const rel=normalizePath(f.webkitRelativePath||f.name);
+    return rel===wanted || rel.endsWith("/"+wanted);
+  })||null;
+}
+async function loadJsonResource(path){
+  const local=findLocalFile(path);
+  if(local)return JSON.parse(await local.text());
+  if(location.protocol!=="file:"){
+    const response=await fetch(path,{cache:"no-cache"});
+    if(!response.ok)throw new Error(`${path}: HTTP ${response.status}`);
+    return await response.json();
+  }
+  throw new Error("外部JSONを読むには「データフォルダ選択」で data フォルダを選択してください");
+}
+function validateNodeList(payload){
+  if(!payload||!Array.isArray(payload.nodes))throw new Error("nodes が必要です");
+  const seen=new Set();
+  for(const n of payload.nodes){
+    if(!n.id)throw new Error("id のないノードがあります");
+    if(seen.has(n.id))throw new Error("同一ファイル内で id が重複しています: "+n.id);
+    seen.add(n.id);
+    if(!Array.isArray(n.children))n.children=[];
+  }
+}
+function rebuildParentMap(){
+  const parents=new Map();
+  for(const n of nodes.values()){
+    if(!Array.isArray(n.children))n.children=[];
+    for(const cid of n.children){
+      if(!nodes.has(cid))throw new Error(`child が未定義です: ${n.id} -> ${cid}`);
+      if(parents.has(cid))throw new Error(`親が複数あります: ${cid}`);
+      parents.set(cid,n.id);
+    }
+  }
+  if(parents.has(data.root))throw new Error("root は子ノードにできません");
+
+  const visiting=new Set(),visited=new Set();
+  function dfs(id){
+    if(visiting.has(id))throw new Error("循環参照があります: "+id);
+    if(visited.has(id))return;
+    visiting.add(id);
+    const n=nodes.get(id);
+    if(!n)throw new Error("参照ノードがありません: "+id);
+    for(const cid of n.children)dfs(cid);
+    visiting.delete(id);
+    visited.add(id);
+  }
+  dfs(data.root);
+  const unreachable=[...nodes.keys()].filter(id=>!visited.has(id));
+  if(unreachable.length)throw new Error("root から到達できないノード: "+unreachable.slice(0,4).join(", "));
+  parentById=parents;
+}
+function stripRuntimeRepresentativeSpecies(){
+  const repIds=new Set(representativeSpeciesEntries.map(e=>e.id));
+  if(!repIds.size)return;
+  for(const n of nodes.values()){
+    if(Array.isArray(n.children)){
+      n.children=n.children.filter(cid=>!repIds.has(cid));
+    }
+  }
+  for(const id of repIds)nodes.delete(id);
+}
+
+function applyRepresentativeSpecies(){
+  if(!representativeSpeciesLoaded)return;
+  stripRuntimeRepresentativeSpecies();
+
+  for(const entry of representativeSpeciesEntries){
+    const parent=nodes.get(entry.parent);
+    if(!parent)continue;
+    const node={
+      id:entry.id,
+      ja:entry.ja||"",
+      en:entry.en||"",
+      latin:entry.latin||"",
+      rank:"species",
+      children:[],
+      wiki:entry.wiki||"",
+      color:"#FFFFFF",
+      representative:true,
+      priority:entry.priority||1
+    };
+    nodes.set(node.id,node);
+    if(!parent.children.includes(node.id))parent.children.push(node.id);
+  }
+}
+
+async function ensureRepresentativeSpeciesLoaded(){
+  if(representativeSpeciesLoaded)return;
+  const path=manifest.representativeSpecies;
+  if(!path)return;
+  const payload=await loadJsonResource(path);
+  if(!payload||!Array.isArray(payload.species)){
+    throw new Error("representative_species.json に species 配列がありません");
+  }
+  representativeSpeciesEntries=payload.species.map(e=>({...e}));
+  representativeSpeciesLoaded=true;
+  applyRepresentativeSpecies();
+  rebuildParentMap();
+}
+
+function resetToCore(payload){
+  validateNodeList(payload);
+  if(!payload.root)throw new Error("core に root が必要です");
+  nodes=new Map(payload.nodes.map(n=>[n.id,n]));
+  data={root:payload.root};
+  loadedBranches=new Set();
+  branchLoadPromises=new Map();
+  searchIndexEntries=[];
+  searchIndexesLoaded=false;
+  rebuildParentMap();
+  if(representativeSpeciesLoaded){
+    applyRepresentativeSpecies();
+    rebuildParentMap();
+  }
+
+  tabs=[{id:1,path:[data.root],targetId:data.root,search:""}];
+  activeTabIndex=0;
+  nextTabId=2;
+  path=[data.root];
+  targetId=data.root;
+  search.value="";
+}
+function mergeBranch(payload,branchKey){
+  validateNodeList(payload);
+  const meta=manifest.branches?.[branchKey];
+  if(!meta)throw new Error("manifest にない分岐です: "+branchKey);
+  if(payload.root!==meta.root)throw new Error(`branch root 不一致: ${payload.root} / ${meta.root}`);
+
+  for(const n of payload.nodes){
+    if(nodes.has(n.id) && n.id!==payload.root){
+      throw new Error(`分割JSON間で id が重複しています: ${n.id}`);
+    }
+  }
+  for(const n of payload.nodes)nodes.set(n.id,n);
+  rebuildParentMap();
+  if(representativeSpeciesLoaded){
+    applyRepresentativeSpecies();
+    rebuildParentMap();
+  }
+}
+function updateLoadStatus(message=""){
+  const labels=[...loadedBranches].map(k=>manifest.branches?.[k]?.label||k);
+  const suffix=labels.length?` / 読込分岐: ${labels.join(", ")}`:" / 外部分岐未読込";
+  status.textContent=(message?message+" / ":"")+`${nodes.size.toLocaleString()} nodes${suffix}`;
+}
+async function loadBranch(branchKey){
+  if(loadedBranches.has(branchKey))return;
+  if(branchLoadPromises.has(branchKey))return branchLoadPromises.get(branchKey);
+  const meta=manifest.branches?.[branchKey];
+  if(!meta)throw new Error("分岐が見つかりません: "+branchKey);
+
+  const promise=(async()=>{
+    for(const dependency of (meta.dependsOn||[])){
+      await loadBranch(dependency);
+    }
+    updateLoadStatus(`${meta.label||branchKey} 読込中…`);
+    const payload=await loadJsonResource(meta.file);
+    mergeBranch(payload,branchKey);
+    loadedBranches.add(branchKey);
+    updateLoadStatus(`${meta.label||branchKey} 読込完了`);
+  })();
+
+  branchLoadPromises.set(branchKey,promise);
+  try{await promise}
+  finally{branchLoadPromises.delete(branchKey)}
+}
+function branchForNode(id){
+  const n=nodes.get(id);
+  if(n?.branch && !loadedBranches.has(n.branch))return n.branch;
+  for(const [key,meta] of Object.entries(manifest.branches||{})){
+    if(meta.root===id && !loadedBranches.has(key))return key;
+  }
+  return null;
+}
+async function navigateTo(id,branchKey=null){
+  try{
+    const key=nodes.has(id)?null:(branchKey||branchForNode(id));
+    if(key)await loadBranch(key);
+    if(representativeSpeciesLoaded){
+      applyRepresentativeSpecies();
+      rebuildParentMap();
+    }
+    if(!nodes.has(id))throw new Error("ノードが見つかりません: "+id);
+    const targetNode=nodes.get(id);
+    if(targetNode?.representative && !representativeSpeciesVisible(targetNode)){
+      setRepresentativeSpeciesMode("all",false);
+    }
+    setTarget(id);
+  }catch(err){
+    updateLoadStatus("読込エラー: "+err.message);
+  }
+}
+async function ensureSearchIndexes(){
+  if(searchIndexesLoaded)return;
+  const entries=[];
+  for(const [branchKey,meta] of Object.entries(manifest.branches||{})){
+    if(!meta.index)continue;
+    const payload=await loadJsonResource(meta.index);
+    for(const entry of payload.entries||[]){
+      entries.push({...entry,branch:entry.branch||branchKey});
+    }
+  }
+  try{
+    await ensureRepresentativeSpeciesLoaded();
+    for(const entry of representativeSpeciesEntries){
+      entries.push({
+        id:entry.id,
+        ja:entry.ja||"",
+        en:entry.en||"",
+        latin:entry.latin||"",
+        rank:"species",
+        branch:entry.branch||null
+      });
+    }
+  }catch(err){
+    // On file:// before folder selection, branch-index search already fails too.
+    // Preserve the same behavior and let the caller surface the load error.
+    throw err;
+  }
+  searchIndexEntries=entries;
+  searchIndexesLoaded=true;
+}
+
+function ancestorPath(id){
+  const out=[];
+  let cur=id;
+  while(cur){
+    out.push(cur);
+    cur=parentById.get(cur);
+  }
+  return out.reverse();
+}
+function rawChildrenOf(id){return nodes.get(id)?.children||[]}
+function childrenOf(id){
+  const ids=rawChildrenOf(id);
+  return ids.filter(cid=>{
+    const n=nodes.get(cid);
+    return n?.rank!=="species" || representativeSpeciesVisible(n);
+  });
+}
+function isKeepRank(id){return KEEP_RANKS.has(String(nodes.get(id)?.rank||"").toLowerCase())}
+
+function svgEl(tag,attrs={}){
+  const e=document.createElementNS("http://www.w3.org/2000/svg",tag);
+  for(const[k,v]of Object.entries(attrs))e.setAttribute(k,v);
+  return e;
+}
+function polar(r,a){
+  const t=a*Math.PI/180;
+  return{x:r*Math.cos(t),y:r*Math.sin(t)};
+}
+function clamp(v,a,b){return Math.max(a,Math.min(b,v))}
+
+function hexRgb(hex){
+  const m=/^#([0-9a-f]{6})$/i.exec(hex||"");
+  if(!m)return[100,115,125];
+  const n=parseInt(m[1],16);
+  return[n>>16,(n>>8)&255,n&255];
+}
+function contrastText(hex){
+  const [r,g,b]=hexRgb(hex).map(v=>{
+    v/=255;
+    return v<=0.04045?v/12.92:Math.pow((v+0.055)/1.055,2.4);
+  });
+  const lum=.2126*r+.7152*g+.0722*b;
+  return lum>.42?"#101820":"#ffffff";
+}
+function outlineFor(textColor){
+  return textColor==="#ffffff"?"#18232c":"#ffffff";
+}
+
+function buildDisplayLevels(){
+  const selectedIds=path.slice(1);
+  const levels=[];
+  let hidden=[];
+
+  function flushHidden(){
+    if(hidden.length){
+      levels.push({type:"collapse",hiddenIds:[...hidden]});
+      hidden=[];
+    }
+  }
+
+  selectedIds.forEach((id,index)=>{
+    const isLast=index===selectedIds.length-1;
+    const isParentOfSelected=index===selectedIds.length-2;
+    const preserve=
+      isKeepRank(id)||
+      isLast||
+      isParentOfSelected||
+      index===0;
+    if(preserve){
+      flushHidden();
+      levels.push({
+        type:"children",
+        parentId:parentById.get(id),
+        selectedId:id
+      });
+    }else{
+      hidden.push(id);
+    }
+  });
+  flushHidden();
+
+  const current=path[path.length-1];
+  if(childrenOf(current).length){
+    levels.push({type:"children",parentId:current,selectedId:null});
+  }
+  return levels;
+}
+
+function requiredRadiusForNodeCount(count){
+  if(count<=1)return 0;
+  const minCenterDistance=NODE_R*2+8;
+  const s=Math.sin(Math.PI/count);
+  if(s<=0)return 0;
+  return minCenterDistance/(2*s);
+}
+
+function minimumAngularGap(radius){
+  const minCenterDistance=(NODE_R*2+8)*LOCAL_GAP_FACTOR;
+  if(radius<=minCenterDistance/2)return 180;
+  return 2*Math.asin(
+    Math.min(1,minCenterDistance/(2*radius))
+  )*180/Math.PI;
+}
+
+function compactAngles(ids,selectedId,parentAngle,radius){
+  const count=ids.length;
+  if(!count)return [];
+
+  const gap=Math.max(20,minimumAngularGap(radius));
+  const totalSpan=gap*Math.max(0,count-1);
+
+  // When revisiting an already opened ring, keep the selected child exactly
+  // on the radial line from its parent.  Siblings retain JSON order around it.
+  if(selectedId){
+    const selectedIndex=ids.indexOf(selectedId);
+    if(selectedIndex>=0){
+      return ids.map((_,i)=>parentAngle+(i-selectedIndex)*gap);
+    }
+  }
+
+  // A newly opened ring grows around the point that was clicked rather than
+  // spreading across the whole circumference.
+  const first=parentAngle-totalSpan/2;
+  return ids.map((_,i)=>first+i*gap);
+}
+
+function layoutLevels(levels){
+  const rows=[];
+  let previous={x:0,y:0,angle:90};
+  let previousRadius=0;
+
+  levels.forEach((level,index)=>{
+    const radialMinimum=index===0
+      ? FIRST_RADIUS
+      : previousRadius+NORMAL_STEP;
+
+    if(level.type==="collapse"){
+      const radius=radialMinimum;
+      const angle=previous.angle;
+      const p=polar(radius,angle);
+      const selectedPos={...p,angle};
+
+      rows.push({
+        ...level,
+        radius,
+        mode:"collapse",
+        nodes:[{id:"__collapse__",...selectedPos}],
+        selectedPos
+      });
+
+      previous=selectedPos;
+      previousRadius=radius;
+      return;
+    }
+
+    const ids=childrenOf(level.parentId);
+
+    // First estimate whether this sibling set fits comfortably in a local
+    // fan at the ordinary radial distance.
+    const localGap=Math.max(20,minimumAngularGap(radialMinimum));
+    const localSpan=localGap*Math.max(0,ids.length-1);
+    const useLocalFan=
+      ids.length<=LOCAL_FAN_MAX_CHILDREN &&
+      localSpan<=LOCAL_FAN_MAX_DEG;
+
+    let radius;
+    let angles;
+    let mode;
+
+    if(useLocalFan){
+      radius=radialMinimum;
+      angles=compactAngles(
+        ids,
+        level.selectedId,
+        previous.angle,
+        radius
+      );
+      mode="fan";
+    }else{
+      // Large sibling sets use the full circumference.  Expand the ring
+      // until adjacent circles no longer overlap.
+      radius=Math.max(
+        radialMinimum,
+        requiredRadiusForNodeCount(ids.length)
+      );
+      const angularStep=ids.length ? 360/ids.length : 360;
+
+      let startAngle=previous.angle-angularStep/2;
+      if(level.selectedId){
+        const selectedIndex=ids.indexOf(level.selectedId);
+        if(selectedIndex>=0){
+          startAngle=previous.angle-angularStep*(selectedIndex+.5);
+        }
+      }
+
+      angles=ids.map((_,i)=>startAngle+angularStep*(i+.5));
+      mode="full";
+    }
+
+    const items=ids.map((id,i)=>({
+      id,
+      angle:angles[i],
+      ...polar(radius,angles[i])
+    }));
+
+    const selected=items.find(x=>x.id===level.selectedId)||null;
+    rows.push({
+      ...level,
+      radius,
+      mode,
+      nodes:items,
+      selectedPos:selected
+    });
+
+    if(selected){
+      previous=selected;
+    }
+    previousRadius=radius;
+  });
+
+  return rows;
+}
+
+
+
+function layoutLevelsRows(levels){
+  const rows=[];
+  let previous={x:0,y:0};
+  levels.forEach((level,index)=>{
+    const y=ROW_FIRST_Y+index*ROW_STEP;
+
+    if(level.type==="collapse"){
+      const selectedPos={x:previous.x,y};
+      rows.push({
+        ...level,
+        mode:"rows",
+        nodes:[{id:"__collapse__",...selectedPos}],
+        selectedPos,
+        y
+      });
+      previous=selectedPos;
+      return;
+    }
+
+    const ids=childrenOf(level.parentId);
+    let selectedIndex=level.selectedId ? ids.indexOf(level.selectedId) : -1;
+    let startX;
+
+    if(selectedIndex>=0){
+      // Keep the active lineage vertically aligned with its parent.
+      startX=previous.x-selectedIndex*ROW_GAP;
+    }else{
+      // A newly opened sibling row grows symmetrically around its parent.
+      startX=previous.x-(Math.max(0,ids.length-1)*ROW_GAP)/2;
+    }
+
+    const items=ids.map((id,i)=>({
+      id,
+      x:startX+i*ROW_GAP,
+      y
+    }));
+
+    const selected=items.find(x=>x.id===level.selectedId)||null;
+    rows.push({
+      ...level,
+      mode:"rows",
+      nodes:items,
+      selectedPos:selected,
+      y
+    });
+
+    if(selected)previous=selected;
+  });
+  return rows;
+}
+
+
+function speciesChildrenOf(id){
+  return rawChildrenOf(id).filter(cid=>{
+    const n=nodes.get(cid);
+    return n && n.rank==="species" && representativeSpeciesVisible(n);
+  });
+}
+
+function buildPreviewRows(layout){
+  const previews=[];
+  for(const row of layout){
+    if(row.type==="collapse")continue;
+    if(row.selectedId!==null)continue;
+
+    // Usual preview: species attached to family.
+    // Extra preview: if species are attached directly to an order (e.g. current
+    // insect/fish datasets), show them while that order's immediate parent
+    // clade/class is selected.  We do not recursively pull species from deeper
+    // descendants, so this applies only to direct order -> species edges.
+    const previewParents=row.nodes.filter(item=>{
+      const n=nodes.get(item.id);
+      if(!n || n.rank==="species")return false;
+      return speciesChildrenOf(item.id).length>0;
+    });
+    if(!previewParents.length)continue;
+
+    const items=[];
+    if(layoutMode==="rows"){
+      for(const parentItem of previewParents){
+        const speciesIds=speciesChildrenOf(parentItem.id);
+        const startX=parentItem.x-((speciesIds.length-1)*SPECIES_PREVIEW_X_GAP)/2;
+        speciesIds.forEach((sid,index)=>{
+          items.push({
+            id:sid,
+            parentId:parentItem.id,
+            x:startX+index*SPECIES_PREVIEW_X_GAP,
+            y:row.y+SPECIES_PREVIEW_ROW_OFFSET
+          });
+        });
+      }
+      if(items.length){
+        previews.push({mode:"rows", items});
+      }
+    }else{
+      const radius=row.radius+SPECIES_PREVIEW_RADIAL_STEP;
+      for(const parentItem of previewParents){
+        const speciesIds=speciesChildrenOf(parentItem.id);
+        const first=parentItem.angle-((speciesIds.length-1)*SPECIES_PREVIEW_ANGLE_GAP)/2;
+        speciesIds.forEach((sid,index)=>{
+          const angle=first+index*SPECIES_PREVIEW_ANGLE_GAP;
+          items.push({
+            id:sid,
+            parentId:parentItem.id,
+            angle,
+            ...polar(radius,angle)
+          });
+        });
+      }
+      if(items.length){
+        previews.push({mode:"radial", radius, items});
+      }
+    }
+  }
+  return previews;
+}
+
+function rowLayoutExtent(layout,previewRows){
+  const points=[{x:0,y:0}];
+  for(const row of layout)points.push(...row.nodes);
+  for(const prow of previewRows||[])points.push(...prow.items);
+  const minX=Math.min(...points.map(p=>p.x))-NODE_R-ROW_VIEW_PADDING;
+  const maxX=Math.max(...points.map(p=>p.x))+NODE_R+ROW_VIEW_PADDING;
+  const minY=Math.min(...points.map(p=>p.y))-NODE_R-ROW_VIEW_PADDING;
+  const maxY=Math.max(...points.map(p=>p.y))+NODE_R+ROW_VIEW_PADDING;
+  return {
+    x:minX,
+    y:minY,
+    w:Math.max(700,maxX-minX),
+    h:Math.max(430,maxY-minY)
+  };
+}
+
+function rowTargetPosition(layout,id){
+  if(id===data.root)return {x:0,y:0};
+
+  for(const row of layout){
+    const found=row.nodes.find(item=>item.id===id);
+    if(found)return {x:found.x,y:found.y};
+  }
+
+  // Fallback: deepest selected node on the active lineage.
+  for(let i=layout.length-1;i>=0;i--){
+    if(layout[i].selectedPos)return {
+      x:layout[i].selectedPos.x,
+      y:layout[i].selectedPos.y
+    };
+  }
+  return {x:0,y:0};
+}
+
+
+
+function setFitViewBox(layout,previewRows){
+  if(layoutMode==="rows"){
+    const focus=rowTargetPosition(layout,targetId);
+    baseViewBox={
+      x:focus.x-ROW_FOCUS_WIDTH/2,
+      y:focus.y-ROW_FOCUS_HEIGHT/2,
+      w:ROW_FOCUS_WIDTH,
+      h:ROW_FOCUS_HEIGHT
+    };
+  }else{
+    const rowOuter=layout.length ? layout[layout.length-1].radius : FIRST_RADIUS;
+    const previewOuter=(previewRows||[]).reduce((m,row)=>Math.max(m,row.radius||0),0);
+    const outer=Math.max(rowOuter,previewOuter);
+    const extent=Math.max(500,outer+NODE_R+VIEW_PADDING);
+    baseViewBox={x:-extent,y:-extent,w:extent*2,h:extent*2};
+  }
+  currentViewBox={...baseViewBox};
+  applyViewBox();
+}
+function applyViewBox(){
+  svg.setAttribute("viewBox",
+    `${currentViewBox.x} ${currentViewBox.y} ${currentViewBox.w} ${currentViewBox.h}`);
+}
+function zoomAtClientPoint(clientX,clientY,deltaY){
+  const rect=svg.getBoundingClientRect();
+  if(!rect.width||!rect.height)return;
+
+  const px=(clientX-rect.left)/rect.width;
+  const py=(clientY-rect.top)/rect.height;
+  const anchorX=currentViewBox.x+px*currentViewBox.w;
+  const anchorY=currentViewBox.y+py*currentViewBox.h;
+
+  const factor=Math.exp(-deltaY*0.0012);
+  const minW=baseViewBox.w/5;
+  const maxW=baseViewBox.w*1.6;
+  const newW=clamp(currentViewBox.w/factor,minW,maxW);
+  const newH=newW*(baseViewBox.h/baseViewBox.w);
+
+  currentViewBox={
+    x:anchorX-px*newW,
+    y:anchorY-py*newH,
+    w:newW,
+    h:newH
+  };
+  applyViewBox();
+}
+
+function zoomAtClientPointFactor(clientX,clientY,factor){
+  const rect=svg.getBoundingClientRect();
+  if(!rect.width||!rect.height||!Number.isFinite(factor)||factor<=0)return;
+
+  const px=(clientX-rect.left)/rect.width;
+  const py=(clientY-rect.top)/rect.height;
+  const anchorX=currentViewBox.x+px*currentViewBox.w;
+  const anchorY=currentViewBox.y+py*currentViewBox.h;
+
+  const minW=baseViewBox.w/5;
+  const maxW=baseViewBox.w*1.6;
+  const newW=clamp(currentViewBox.w/factor,minW,maxW);
+  const newH=newW*(baseViewBox.h/baseViewBox.w);
+
+  currentViewBox={
+    x:anchorX-px*newW,
+    y:anchorY-py*newH,
+    w:newW,
+    h:newH
+  };
+  applyViewBox();
+}
+
+
+function panByClientDelta(dx,dy){
+  const rect=svg.getBoundingClientRect();
+  if(!rect.width||!rect.height)return;
+  currentViewBox.x-=dx*(currentViewBox.w/rect.width);
+  currentViewBox.y-=dy*(currentViewBox.h/rect.height);
+  applyViewBox();
+}
+
+function splitLongToken(token,maxChars){
+  const parts=[];
+  let rest=token;
+  while(rest.length>maxChars){
+    parts.push(rest.slice(0,maxChars));
+    rest=rest.slice(maxChars);
+  }
+  if(rest)parts.push(rest);
+  return parts;
+}
+
+function splitLabel(text){
+  const s=String(text||"").trim();
+  if(!s)return[""];
+
+  if(displayLanguage==="ja"){
+    const width=7;
+    const lines=[];
+    for(let i=0;i<s.length;i+=width){
+      lines.push(s.slice(i,i+width));
+    }
+    return lines;
+  }
+
+  const maxChars=13;
+  const words=s.split(/\s+/).filter(Boolean);
+  const lines=[];
+  let current="";
+
+  for(const rawWord of words){
+    const chunks=rawWord.length>maxChars
+      ? splitLongToken(rawWord,maxChars)
+      : [rawWord];
+
+    for(const word of chunks){
+      if(!current){
+        current=word;
+      }else if((current+" "+word).length<=maxChars){
+        current+=" "+word;
+      }else{
+        lines.push(current);
+        current=word;
+      }
+    }
+  }
+  if(current)lines.push(current);
+  return lines.length?lines:[s];
+}
+
+function appendText(g,n,x,y,fill){
+  const stroke=outlineFor(fill);
+  const lines=splitLabel(displayName(n));
+  const isSpecies=n.rank==="species";
+  const lineHeight=isSpecies?10:13;
+  const rankGap=isSpecies?6:11;
+  const totalTextHeight=(lines.length-1)*lineHeight;
+  const startY=y-totalTextHeight/2-(isSpecies?2:3);
+
+  lines.forEach((line,index)=>{
+    const t=svgEl("text",{
+      x,
+      y:startY+index*lineHeight,
+      class:isSpecies?(n.priority===2?"node-label species-label priority2-label":"node-label species-label"):"node-label",
+      fill,
+      style:`stroke:${stroke}`
+    });
+    t.textContent=line;
+    g.appendChild(t);
+  });
+
+  const rank=svgEl("text",{
+    x,
+    y:startY+(lines.length-1)*lineHeight+rankGap+8,
+    class:isSpecies?(n.priority===2?"node-rank species-rank priority2-label":"node-rank species-rank"):"node-rank",
+    fill,
+    style:`stroke:${stroke}`
+  });
+  rank.textContent=n.rank||"";
+  g.appendChild(rank);
+}
+
+function setTarget(id){
+  targetId=id;
+  path=ancestorPath(id);
+  syncActiveState();
+  render();
+}
+
+function showDetail(id){
+  const n=nodes.get(id);
+  if(!n)return;
+  detail.replaceChildren();
+
+  function plainRow(label,value){
+    const row=document.createElement("div");
+    const b=document.createElement("b");
+    b.textContent=label+": ";
+    row.appendChild(b);
+    row.appendChild(document.createTextNode(value||"—"));
+    detail.appendChild(row);
+  }
+  function nodeLink(nodeId){
+    const n2=nodes.get(nodeId);
+    const b=document.createElement("button");
+    b.type="button";
+    b.className="detail-link";
+    b.textContent=displayName(n2)||nodeId;
+    b.title=`${displayName(n2)||nodeId}へ移動`;
+    b.addEventListener("click",()=>navigateTo(nodeId));
+    return b;
+  }
+
+  plainRow("日本語",n.ja);
+  plainRow("English",n.en);
+  plainRow("Latin",n.latin);
+  plainRow("階層",n.rank);
+  if(n.rank==="species" && n.representative){
+    plainRow("代表種",n.priority===1?"重要 (priority 1)":"追加 (priority 2)");
+  }
+  if(n.branch)plainRow("データ",loadedBranches.has(n.branch)?"外部JSON読込済み":"外部JSON（クリック時に読込）");
+
+  const pid=parentById.get(id);
+  const parentRow=document.createElement("div");
+  const parentLabel=document.createElement("b");
+  parentLabel.textContent="親: ";
+  parentRow.appendChild(parentLabel);
+  if(pid) parentRow.appendChild(nodeLink(pid));
+  else parentRow.appendChild(document.createTextNode("—"));
+  detail.appendChild(parentRow);
+
+  const childRow=document.createElement("div");
+  const childLabel=document.createElement("b");
+  childLabel.textContent="子: ";
+  childRow.appendChild(childLabel);
+  const childIds=n.children||[];
+  if(childIds.length){
+    childIds.forEach((cid,index)=>{
+      if(index) childRow.appendChild(document.createTextNode(" / "));
+      childRow.appendChild(nodeLink(cid));
+    });
+  }else{
+    childRow.appendChild(document.createTextNode("—"));
+  }
+  detail.appendChild(childRow);
+
+  if(n.wiki){
+    const row=document.createElement("div");
+    const a=document.createElement("a");
+    a.href=n.wiki;
+    a.target="_blank";
+    a.rel="noopener noreferrer";
+    a.textContent="Wikipediaを開く ↗";
+    row.appendChild(a);
+    detail.appendChild(row);
+  }
+
+  pathEl.replaceChildren();
+  const full=ancestorPath(id);
+  full.forEach((nodeId,index)=>{
+    if(index){
+      const sep=document.createElement("span");
+      sep.className="sep";
+      sep.textContent="›";
+      pathEl.appendChild(sep);
+    }
+    const n2=nodes.get(nodeId);
+    const b=document.createElement("button");
+    b.type="button";
+    b.textContent=displayName(n2)||nodeId;
+    b.title=`${displayName(n2)||nodeId}へ移動`;
+    b.addEventListener("click",()=>navigateTo(nodeId));
+    pathEl.appendChild(b);
+  });
+}
+
+function render(){
+  svg.replaceChildren();
+  if(!path.length)path=[data.root];
+
+  const levels=buildDisplayLevels();
+  const layout=layoutMode==="rows"
+    ? layoutLevelsRows(levels)
+    : layoutLevels(levels);
+  const previewRows=buildPreviewRows(layout);
+  setFitViewBox(layout,previewRows);
+
+  if(layoutMode==="radial"){
+    for(const row of layout){
+      svg.appendChild(svgEl("circle",{cx:0,cy:0,r:row.radius,class:"ring"}));
+    }
+  }else{
+    const ext=rowLayoutExtent(layout,previewRows);
+    for(let i=0;i<layout.length;i++){
+      const row=layout[i];
+      const y=row.y;
+      svg.appendChild(svgEl("line",{
+        x1:ext.x+ROW_VIEW_PADDING/2,
+        y1:y,
+        x2:ext.x+ext.w-ROW_VIEW_PADDING/2,
+        y2:y,
+        class:"level-guide"
+      }));
+      const label=svgEl("text",{
+        x:ext.x+ROW_VIEW_PADDING/2,
+        y:y-34,
+        class:"level-label"
+      });
+      label.textContent=`階層 ${i+1}`;
+      svg.appendChild(label);
+    }
+  }
+
+  let previous={x:0,y:0};
+  for(const row of layout){
+    if(row.type==="collapse"){
+      const item=row.nodes[0];
+      svg.appendChild(svgEl("line",{x1:previous.x,y1:previous.y,x2:item.x,y2:item.y,class:"branch active"}));
+      previous=item;
+      continue;
+    }
+    for(const item of row.nodes){
+      const childNode=nodes.get(item.id);
+      const isSpeciesEdge=childNode?.rank==="species";
+      svg.appendChild(svgEl("line",{
+        x1:previous.x,y1:previous.y,x2:item.x,y2:item.y,
+        class:isSpeciesEdge
+          ?"branch species-branch"
+          :"branch"+(item.id===row.selectedId?" active":"")
+      }));
+    }
+    if(row.selectedPos)previous=row.selectedPos;
+  }
+
+  const root=nodes.get(data.root);
+  const rootFill=root.color||"#263746";
+  const rootTextColor=contrastText(rootFill);
+  svg.appendChild(svgEl("circle",{cx:0,cy:0,r:38,fill:rootFill,stroke:"#fff","stroke-width":3}));
+  const rt=svgEl("text",{x:0,y:0,class:"root-label",fill:rootTextColor,style:`stroke:${outlineFor(rootTextColor)}`});
+  rt.textContent=displayName(root)||"LIFE";
+  svg.appendChild(rt);
+
+  for(const row of layout){
+    if(row.type==="collapse"){
+      const item=row.nodes[0];
+      const returnId=row.hiddenIds[row.hiddenIds.length-1];
+      const returnNode=nodes.get(returnId);
+      const g=svgEl("g",{
+        class:"collapse-group",
+        tabindex:"0",
+        role:"button",
+        "aria-label":`${row.hiddenIds.length}階層省略。${displayName(returnNode)||returnId}へ戻る`
+      });
+      const circle=svgEl("circle",{cx:item.x,cy:item.y,r:NODE_R,class:"collapse"});
+      g.appendChild(circle);
+      const title=svgEl("title");
+      title.textContent=`クリックで ${displayName(returnNode)||returnId} へ戻る`;
+      g.appendChild(title);
+      const main=svgEl("text",{x:item.x,y:item.y-5,class:"collapse-main"});
+      main.textContent="…";g.appendChild(main);
+      const sub=svgEl("text",{x:item.x,y:item.y+14,class:"collapse-sub"});
+      sub.textContent=`${row.hiddenIds.length}階層`;g.appendChild(sub);
+
+      const act=()=>{
+        if(performance.now()<suppressClickUntil)return;
+        setTarget(returnId);
+      };
+      g.addEventListener("click",act);
+      g.addEventListener("keydown",e=>{
+        if(e.key==="Enter"||e.key===" "){e.preventDefault();act()}
+      });
+      svg.appendChild(g);
+      continue;
+    }
+
+    for(const item of row.nodes){
+      const n=nodes.get(item.id);
+      const fill=n.color||"#687b89";
+      const textColor=contrastText(fill);
+      const active=item.id===row.selectedId;
+      const target=item.id===targetId;
+      const g=svgEl("g",{tabindex:"0",role:"button","aria-label":`${displayName(n)||n.id}を選択`});
+      g.appendChild(svgEl("circle",{
+        cx:item.x,cy:item.y,r:n.rank==="species"?SPECIES_R:NODE_R,fill,
+        class:"node"+(n.rank==="species"?" species":"")+(n.rank==="species"&&n.priority===2?" priority2":"")+(active?" active":"")+(target?" target":"")
+      }));
+      appendText(g,n,item.x,item.y,textColor);
+
+      const act=()=>{
+        if(performance.now()<suppressClickUntil)return;
+        navigateTo(item.id);
+      };
+      g.addEventListener("click",act);
+      g.addEventListener("keydown",e=>{
+        if(e.key==="Enter"||e.key===" "){e.preventDefault();act()}
+      });
+      svg.appendChild(g);
+    }
+  }
+
+
+  for(const prow of previewRows){
+    for(const item of prow.items){
+      const parentItem = (() => {
+        for(const row of layout){
+          const hit = row.nodes.find(x=>x.id===item.parentId);
+          if(hit)return hit;
+        }
+        return null;
+      })();
+      if(!parentItem)continue;
+
+      svg.appendChild(svgEl("line",{
+        x1:parentItem.x,y1:parentItem.y,x2:item.x,y2:item.y,
+        class:"branch species-branch"
+      }));
+
+      const n=nodes.get(item.id);
+      const fill=n.color||"#ffffff";
+      const textColor=contrastText(fill);
+      const active=item.id===targetId;
+      const g=svgEl("g",{tabindex:"0",role:"button","aria-label":`${displayName(n)||n.id}を選択`});
+      g.appendChild(svgEl("circle",{
+        cx:item.x,cy:item.y,r:SPECIES_R,fill,
+        class:"node species"+(n.priority===2?" priority2":"")+(active?" target":"")
+      }));
+      appendText(g,n,item.x,item.y,textColor);
+
+      const act=()=>{
+        if(performance.now()<suppressClickUntil)return;
+        navigateTo(item.id);
+      };
+      g.addEventListener("click",act);
+      g.addEventListener("keydown",e=>{
+        if(e.key==="Enter"||e.key===" "){e.preventDefault();act()}
+      });
+      svg.appendChild(g);
+    }
+  }
+
+  back.disabled=path.length<=1;
+  syncActiveState();
+  renderTabs();
+  showDetail(targetId||data.root);
+}
+
+function normalizeSearchText(value){
+  return String(value||"")
+    .normalize("NFKC")
+    .replace(/[\u30A1-\u30F6]/g,ch=>
+      String.fromCharCode(ch.charCodeAt(0)-0x60)
+    )
+    .toLowerCase()
+    .replace(/\s+/g," ")
+    .trim();
+}
+function score(n,q){
+  const s=normalizeSearchText(q);
+  const vals=[n.id,n.ja,n.en,n.latin,n.rank].map(normalizeSearchText);
+  if(vals.some(v=>v===s))return 0;
+  if(vals.some(v=>v.startsWith(s)))return 1;
+  if(vals.some(v=>v.includes(s)))return 2;
+  return 99;
+}
+async function updateResults(){
+  const serial=++searchRequestSerial;
+  const q=search.value.trim();
+  results.replaceChildren();
+  if(!q){results.style.display="none";return}
+
+  let externalIndexError=null;
+  try{await ensureSearchIndexes()}
+  catch(err){externalIndexError=err}
+  if(serial!==searchRequestSerial)return;
+
+  const candidates=new Map();
+  for(const n of nodes.values()){
+    candidates.set(n.id,{n,loaded:true,branch:n.branch||null});
+  }
+  for(const entry of searchIndexEntries){
+    if(!candidates.has(entry.id)){
+      candidates.set(entry.id,{n:entry,loaded:false,branch:entry.branch||null});
+    }
+  }
+
+  const hits=[...candidates.values()]
+    .map(x=>({...x,s:score(x.n,q)}))
+    .filter(x=>x.s<99)
+    .sort((a,b)=>a.s-b.s||(a.n.ja||"").localeCompare(b.n.ja||"","ja"))
+    .slice(0,15);
+
+  if(!hits.length){
+    if(externalIndexError){
+      const msg=document.createElement("div");
+      msg.className="result";
+      msg.textContent="未読込データの検索にはデータフォルダ選択が必要です";
+      results.appendChild(msg);
+      results.style.display="block";
+    }else{
+      results.style.display="none";
+    }
+    return;
+  }
+
+  for(const hit of hits){
+    const n=hit.n;
+    const b=document.createElement("button");
+    b.type="button";
+    b.className="result";
+    b.textContent=displayName(n);
+
+    const sm=document.createElement("small");
+    const prefix=hit.loaded?"":"未読込 · ";
+    sm.textContent=prefix+[n.latin,n.en,n.rank,n.id].filter(Boolean).join(" · ");
+    b.appendChild(sm);
+
+    b.addEventListener("click",async()=>{
+      results.style.display="none";
+      await navigateTo(n.id,hit.branch);
+      const actual=nodes.get(n.id)||n;
+      search.value=displayName(actual);
+      syncActiveState();
+    });
+    results.appendChild(b);
+  }
+  results.style.display="block";
+}
+
+search.addEventListener("input",()=>{
+  syncActiveState();
+  void updateResults();
+});
+search.addEventListener("focus",()=>void updateResults());
+document.addEventListener("click",e=>{
+  if(!e.target.closest(".search-wrap"))results.style.display="none";
+});
+addTabButton.addEventListener("click",addComparisonTab);
+langJa.addEventListener("click",()=>setDisplayLanguage("ja"));
+langEn.addEventListener("click",()=>setDisplayLanguage("en"));
+langLatin.addEventListener("click",()=>setDisplayLanguage("latin"));
+layoutRadial.addEventListener("click",()=>setLayoutMode("radial"));
+layoutRows.addEventListener("click",()=>setLayoutMode("rows"));
+speciesImportant.addEventListener("click",()=>setRepresentativeSpeciesMode("important"));
+speciesAll.addEventListener("click",()=>setRepresentativeSpeciesMode("all"));
+speciesOff.addEventListener("click",()=>setRepresentativeSpeciesMode("off"));
+quickJump.addEventListener("change",async()=>{
+  const value=quickJump.value;
+  if(!value)return;
+  const [branch,id]=value.split("|");
+  quickJump.value="";
+  await navigateTo(id,branch||null);
+});
+
+svg.addEventListener("wheel",e=>{
+  e.preventDefault();
+  zoomAtClientPoint(e.clientX,e.clientY,e.deltaY);
+},{passive:false});
+
+const activePointers=new Map();
+let pinchState=null;
+
+function pointerMidpoint(a,b){
+  return {x:(a.x+b.x)/2,y:(a.y+b.y)/2};
+}
+function pointerDistance(a,b){
+  return Math.hypot(a.x-b.x,a.y-b.y);
+}
+function beginPinch(){
+  if(activePointers.size<2)return;
+  const pts=[...activePointers.values()].slice(0,2);
+  const mid=pointerMidpoint(pts[0],pts[1]);
+  pinchState={
+    lastDistance:Math.max(1,pointerDistance(pts[0],pts[1])),
+    lastMidX:mid.x,
+    lastMidY:mid.y
+  };
+  dragState=null;
+  svg.classList.add("dragging");
+}
+function continueSinglePointerDrag(pointerId,p){
+  if(!dragState||dragState.pointerId!==pointerId){
+    dragState={
+      pointerId,
+      lastX:p.x,
+      lastY:p.y,
+      startX:p.x,
+      startY:p.y,
+      moved:false,
+      captured:true
+    };
+    return;
+  }
+
+  const totalDistance=Math.hypot(
+    p.x-dragState.startX,
+    p.y-dragState.startY
+  );
+
+  if(!dragState.moved && totalDistance>5){
+    dragState.moved=true;
+    svg.classList.add("dragging");
+  }
+
+  if(dragState.moved){
+    panByClientDelta(p.x-dragState.lastX,p.y-dragState.lastY);
+  }
+  dragState.lastX=p.x;
+  dragState.lastY=p.y;
+}
+
+svg.addEventListener("pointerdown",e=>{
+  if(e.pointerType==="mouse" && e.button!==0)return;
+
+  activePointers.set(e.pointerId,{x:e.clientX,y:e.clientY});
+  try{svg.setPointerCapture(e.pointerId)}catch(_){}
+
+  if(activePointers.size>=2){
+    beginPinch();
+  }else{
+    dragState={
+      pointerId:e.pointerId,
+      lastX:e.clientX,
+      lastY:e.clientY,
+      startX:e.clientX,
+      startY:e.clientY,
+      moved:false,
+      captured:true
+    };
+  }
+});
+
+svg.addEventListener("pointermove",e=>{
+  if(!activePointers.has(e.pointerId))return;
+  activePointers.set(e.pointerId,{x:e.clientX,y:e.clientY});
+
+  if(activePointers.size>=2){
+    if(!pinchState)beginPinch();
+    const pts=[...activePointers.values()].slice(0,2);
+    const mid=pointerMidpoint(pts[0],pts[1]);
+    const distance=Math.max(1,pointerDistance(pts[0],pts[1]));
+
+    // Move the midpoint like a two-finger pan.
+    panByClientDelta(
+      mid.x-pinchState.lastMidX,
+      mid.y-pinchState.lastMidY
+    );
+
+    // Distance ratio gives natural pinch zoom.
+    zoomAtClientPointFactor(
+      mid.x,
+      mid.y,
+      distance/pinchState.lastDistance
+    );
+
+    pinchState.lastDistance=distance;
+    pinchState.lastMidX=mid.x;
+    pinchState.lastMidY=mid.y;
+    suppressClickUntil=performance.now()+300;
+    return;
+  }
+
+  const p=activePointers.get(e.pointerId);
+  continueSinglePointerDrag(e.pointerId,p);
+});
+
+function endPointer(e){
+  if(!activePointers.has(e.pointerId))return;
+
+  const hadPinch=!!pinchState || activePointers.size>=2;
+  const wasMoved=!!dragState?.moved;
+
+  activePointers.delete(e.pointerId);
+  try{
+    if(svg.hasPointerCapture(e.pointerId))svg.releasePointerCapture(e.pointerId);
+  }catch(_){}
+
+  if(activePointers.size>=2){
+    beginPinch();
+    return;
+  }
+
+  pinchState=null;
+
+  if(activePointers.size===1){
+    // Continue smoothly as a one-finger pan after lifting one pinch finger.
+    const [pointerId,p]=[...activePointers.entries()][0];
+    dragState={
+      pointerId,
+      lastX:p.x,
+      lastY:p.y,
+      startX:p.x,
+      startY:p.y,
+      moved:true,
+      captured:true
+    };
+    svg.classList.add("dragging");
+  }else{
+    dragState=null;
+    svg.classList.remove("dragging");
+  }
+
+  if(hadPinch||wasMoved){
+    suppressClickUntil=performance.now()+300;
+  }
+}
+
+svg.addEventListener("pointerup",endPointer);
+svg.addEventListener("pointercancel",endPointer);
+
+home.addEventListener("click",()=>{
+  path=[data.root];
+  targetId=data.root;
+  search.value="";
+  syncActiveState();
+  render();
+});
+back.addEventListener("click",()=>{
+  if(path.length>1){
+    path.pop();
+    targetId=path[path.length-1];
+    syncActiveState();
+    render();
+  }
+});
+
+folder.addEventListener("change",async()=>{
+  localFiles=[...(folder.files||[])];
+  if(!localFiles.length)return;
+
+  try{
+    manifest=await loadJsonResource("data/manifest.json");
+    const externalCore=await loadJsonResource(manifest.core||"data/core.json");
+    representativeSpeciesEntries=[];
+    representativeSpeciesLoaded=false;
+    resetToCore(externalCore);
+    await ensureRepresentativeSpeciesLoaded();
+    updateLoadStatus(`データフォルダ登録済み / 代表種 ${representativeSpeciesEntries.length}種`);
+    render();
+  }catch(err){
+    updateLoadStatus("フォルダ読込エラー: "+err.message);
+  }
+});
+
+file.addEventListener("change",async()=>{
+  const f=file.files?.[0];
+  if(!f)return;
+
+  try{
+    const parsed=JSON.parse(await f.text());
+    validateNodeList(parsed);
+    if(!parsed.root)throw new Error("root が必要です");
+
+    manifest={schema:"standalone",version:1,branches:{}};
+    representativeSpeciesEntries=[];
+    representativeSpeciesLoaded=false;
+    localFiles=[];
+    nodes=new Map(parsed.nodes.map(n=>[n.id,n]));
+    data={root:parsed.root};
+    loadedBranches=new Set();
+    searchIndexEntries=[];
+    searchIndexesLoaded=true;
+    rebuildParentMap();
+
+    tabs=[{id:1,path:[data.root],targetId:data.root,search:""}];
+    activeTabIndex=0;
+    nextTabId=2;
+    path=[data.root];
+    targetId=data.root;
+    search.value="";
+    updateLoadStatus(`単一JSON読込済み: ${f.name} / ${nodes.size.toLocaleString()} nodes`);
+    render();
+  }catch(err){
+    status.textContent="JSONエラー: "+err.message;
+  }finally{
+    file.value="";
+  }
+});
+
+async function boot(){
+  let core=EMBEDDED_CORE;
+  manifest=EMBEDDED_MANIFEST;
+
+  if(location.protocol!=="file:"){
+    try{
+      manifest=await loadJsonResource("data/manifest.json");
+      core=await loadJsonResource(manifest.core||"data/core.json");
+    }catch(err){
+      console.warn("外部 core/manifest の読込に失敗。埋込fallbackを使用します。",err);
+      manifest=EMBEDDED_MANIFEST;
+      core=EMBEDDED_CORE;
+    }
+  }
+
+  resetToCore(core);
+  if(location.protocol!=="file:"){
+    try{
+      await ensureRepresentativeSpeciesLoaded();
+    }catch(err){
+      console.warn("代表種JSONの読込に失敗しました。",err);
+    }
+  }
+  displayLanguage="ja";
+  layoutMode="rows";
+  representativeSpeciesMode="important";
+  layoutRows.classList.add("active");
+  layoutRows.setAttribute("aria-pressed","true");
+  layoutRadial.setAttribute("aria-pressed","false");
+  svg.classList.add("rows-mode");
+  langJa.classList.add("active");
+  langJa.setAttribute("aria-pressed","true");
+  langEn.setAttribute("aria-pressed","false");
+  langLatin.setAttribute("aria-pressed","false");
+  speciesImportant.classList.add("active");
+  speciesImportant.setAttribute("aria-pressed","true");
+  speciesAll.setAttribute("aria-pressed","false");
+  speciesOff.setAttribute("aria-pressed","false");
+
+  updateLoadStatus(
+    location.protocol==="file:"
+      ?"coreのみ読込（外部分岐・代表種はフォルダ選択後）"
+      :`core読込済み / 代表種 ${representativeSpeciesEntries.length}種`
+  );
+  render();
+}
+
+void boot();
+})();
+</script>
+</body>
+</html>

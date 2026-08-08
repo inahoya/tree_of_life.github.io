@@ -1,0 +1,143 @@
+{
+  "schema": "circular-phylogeny-manifest/1",
+  "version": 18,
+  "core": "data/core.json",
+  "branches": {
+    "aves": {
+      "root": "aves",
+      "label": "鳥類",
+      "file": "data/animalia/aves.json",
+      "index": "data/animalia/aves.index.json",
+      "dependsOn": [
+        "sauropsida"
+      ]
+    },
+    "embryophyta": {
+      "root": "embryophyta",
+      "label": "陸上植物",
+      "file": "data/plantae/embryophyta.json",
+      "index": "data/plantae/embryophyta.index.json"
+    },
+    "mammalia": {
+      "root": "mammalia",
+      "label": "哺乳類",
+      "file": "data/animalia/mammalia.json",
+      "index": "data/animalia/mammalia.index.json",
+      "dependsOn": [
+        "vertebrata"
+      ]
+    },
+    "amphibia": {
+      "root": "amphibia",
+      "label": "両生類",
+      "file": "data/animalia/amphibia.json",
+      "index": "data/animalia/amphibia.index.json",
+      "dependsOn": [
+        "vertebrata"
+      ]
+    },
+    "sauropsida": {
+      "root": "sauropsida",
+      "label": "竜弓類（爬虫類＋鳥類）",
+      "file": "data/animalia/sauropsida.json",
+      "index": "data/animalia/sauropsida.index.json",
+      "dependsOn": [
+        "vertebrata"
+      ]
+    },
+    "vertebrata": {
+      "root": "vertebrata",
+      "label": "脊椎動物（魚類＋四肢動物）",
+      "file": "data/animalia/vertebrata.json",
+      "index": "data/animalia/vertebrata.index.json"
+    },
+    "insecta": {
+      "root": "insecta",
+      "label": "昆虫",
+      "file": "data/animalia/insecta.json",
+      "index": "data/animalia/insecta.index.json",
+      "dependsOn": [
+        "pancrustacea"
+      ]
+    },
+    "mollusca": {
+      "root": "mollusca",
+      "label": "軟体動物",
+      "file": "data/animalia/mollusca.json",
+      "index": "data/animalia/mollusca.index.json"
+    },
+    "cnidaria": {
+      "root": "cnidaria",
+      "label": "刺胞動物",
+      "file": "data/animalia/cnidaria.json",
+      "index": "data/animalia/cnidaria.index.json"
+    },
+    "echinodermata": {
+      "root": "echinodermata",
+      "label": "棘皮動物",
+      "file": "data/animalia/echinodermata.json",
+      "index": "data/animalia/echinodermata.index.json"
+    },
+    "porifera": {
+      "root": "porifera",
+      "label": "海綿動物",
+      "file": "data/animalia/porifera.json",
+      "index": "data/animalia/porifera.index.json"
+    },
+    "ctenophora": {
+      "root": "ctenophora",
+      "label": "有櫛動物",
+      "file": "data/animalia/ctenophora.json",
+      "index": "data/animalia/ctenophora.index.json"
+    },
+    "platyhelminthes": {
+      "root": "platyhelminthes",
+      "label": "扁形動物",
+      "file": "data/animalia/platyhelminthes.json",
+      "index": "data/animalia/platyhelminthes.index.json"
+    },
+    "annelida": {
+      "root": "annelida",
+      "label": "環形動物",
+      "file": "data/animalia/annelida.json",
+      "index": "data/animalia/annelida.index.json"
+    },
+    "nematoda": {
+      "root": "nematoda",
+      "label": "線形動物",
+      "file": "data/animalia/nematoda.json",
+      "index": "data/animalia/nematoda.index.json"
+    },
+    "hemichordata": {
+      "root": "hemichordata",
+      "label": "半索動物",
+      "file": "data/animalia/hemichordata.json",
+      "index": "data/animalia/hemichordata.index.json"
+    },
+    "chelicerata": {
+      "root": "chelicerata",
+      "label": "鋏角類",
+      "file": "data/animalia/chelicerata.json",
+      "index": "data/animalia/chelicerata.index.json"
+    },
+    "myriapoda": {
+      "root": "myriapoda",
+      "label": "多足類",
+      "file": "data/animalia/myriapoda.json",
+      "index": "data/animalia/myriapoda.index.json"
+    },
+    "pancrustacea": {
+      "root": "pancrustacea",
+      "label": "汎甲殻類（甲殻類＋六脚類）",
+      "file": "data/animalia/pancrustacea.json",
+      "index": "data/animalia/pancrustacea.index.json"
+    },
+    "fungi": {
+      "root": "fungi",
+      "label": "菌界",
+      "file": "data/fungi/fungi.json",
+      "index": "data/fungi/fungi.index.json"
+    }
+  },
+  "representativeSpecies": "data/representative_species.json"
+}
