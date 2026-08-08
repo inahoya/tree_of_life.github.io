@@ -33764,7 +33764,7 @@
     },
     {
       "id": "rep_cygnus_columbianus",
-      "ja": "",
+      "ja": "コハクチョウ",
       "en": "Tundra Swan",
       "latin": "Cygnus columbianus",
       "rank": "species",
@@ -33774,7 +33774,7 @@
     },
     {
       "id": "rep_branta_bernicla",
-      "ja": "",
+      "ja": "コクガン",
       "en": "Brant Goose",
       "latin": "Branta bernicla",
       "rank": "species",
@@ -33784,7 +33784,7 @@
     },
     {
       "id": "rep_branta_hutchinsii",
-      "ja": "",
+      "ja": "シジュウカラガン",
       "en": "Cackling Goose",
       "latin": "Branta hutchinsii",
       "rank": "species",
@@ -33794,7 +33794,7 @@
     },
     {
       "id": "rep_anser_fabalis",
-      "ja": "",
+      "ja": "ヒシクイ",
       "en": "Taiga Bean Goose",
       "latin": "Anser fabalis",
       "rank": "species",
@@ -33804,7 +33804,7 @@
     },
     {
       "id": "rep_coturnix_japonica",
-      "ja": "",
+      "ja": "ウズラ",
       "en": "Japanese Quail",
       "latin": "Coturnix japonica",
       "rank": "species",
@@ -33814,7 +33814,7 @@
     },
     {
       "id": "rep_syrmaticus_soemmerringii",
-      "ja": "",
+      "ja": "ヤマドリ",
       "en": "Copper Pheasant",
       "latin": "Syrmaticus soemmerringii",
       "rank": "species",
@@ -33824,7 +33824,7 @@
     },
     {
       "id": "rep_tetrastes_bonasia",
-      "ja": "",
+      "ja": "エゾライチョウ",
       "en": "Hazel Grouse",
       "latin": "Tetrastes bonasia",
       "rank": "species",
@@ -33834,7 +33834,7 @@
     },
     {
       "id": "rep_lagopus_muta",
-      "ja": "",
+      "ja": "ライチョウ",
       "en": "Rock Ptarmigan",
       "latin": "Lagopus muta",
       "rank": "species",
@@ -33844,7 +33844,7 @@
     },
     {
       "id": "rep_tachybaptus_ruficollis",
-      "ja": "",
+      "ja": "カイツブリ",
       "en": "Little Grebe",
       "latin": "Tachybaptus ruficollis",
       "rank": "species",
@@ -33854,7 +33854,7 @@
     },
     {
       "id": "rep_podiceps_grisegena",
-      "ja": "",
+      "ja": "アカエリカイツブリ",
       "en": "Red-necked Grebe",
       "latin": "Podiceps grisegena",
       "rank": "species",
@@ -33864,7 +33864,7 @@
     },
     {
       "id": "rep_podiceps_cristatus",
-      "ja": "",
+      "ja": "カンムリカイツブリ",
       "en": "Great Crested Grebe",
       "latin": "Podiceps cristatus",
       "rank": "species",
@@ -33874,7 +33874,7 @@
     },
     {
       "id": "rep_podiceps_nigricollis",
-      "ja": "",
+      "ja": "ハジロカイツブリ",
       "en": "Black-necked Grebe",
       "latin": "Podiceps nigricollis",
       "rank": "species",
@@ -33884,7 +33884,7 @@
     },
     {
       "id": "rep_streptopelia_decaocto",
-      "ja": "",
+      "ja": "シラコバト",
       "en": "Eurasian Collared Dove",
       "latin": "Streptopelia decaocto",
       "rank": "species",
@@ -33894,7 +33894,7 @@
     },
     {
       "id": "rep_treron_sieboldii",
-      "ja": "",
+      "ja": "アオバト",
       "en": "White-bellied Green Pigeon",
       "latin": "Treron sieboldii",
       "rank": "species",
@@ -33904,7 +33904,7 @@
     },
     {
       "id": "rep_treron_formosae",
-      "ja": "",
+      "ja": "ズアカアオバト",
       "en": "Whistling Green Pigeon",
       "latin": "Treron formosae",
       "rank": "species",
@@ -33914,7 +33914,7 @@
     },
     {
       "id": "rep_chalcophaps_indica",
-      "ja": "",
+      "ja": "キンバト",
       "en": "Common Emerald Dove",
       "latin": "Chalcophaps indica",
       "rank": "species",
@@ -33924,7 +33924,7 @@
     },
     {
       "id": "rep_caprimulgus_jotaka",
-      "ja": "",
+      "ja": "ヨタカ",
       "en": "Grey Nightjar",
       "latin": "Caprimulgus jotaka",
       "rank": "species",
@@ -33934,7 +33934,7 @@
     },
     {
       "id": "rep_hirundapus_caudacutus",
-      "ja": "",
+      "ja": "ハリオアマツバメ",
       "en": "White-throated Needletail",
       "latin": "Hirundapus caudacutus",
       "rank": "species",
@@ -33944,7 +33944,7 @@
     },
     {
       "id": "rep_apus_nipalensis",
-      "ja": "",
+      "ja": "ヒメアマツバメ",
       "en": "House Swift",
       "latin": "Apus nipalensis",
       "rank": "species",
@@ -33954,7 +33954,7 @@
     },
     {
       "id": "rep_hierococcyx_hyperythrus",
-      "ja": "",
+      "ja": "ジュウイチ",
       "en": "Northern Hawk-Cuckoo",
       "latin": "Hierococcyx hyperythrus",
       "rank": "species",
@@ -33964,7 +33964,7 @@
     },
     {
       "id": "rep_cuculus_optatus",
-      "ja": "",
+      "ja": "ツツドリ",
       "en": "Oriental Cuckoo",
       "latin": "Cuculus optatus",
       "rank": "species",
@@ -33974,7 +33974,7 @@
     },
     {
       "id": "rep_rallina_eurizonoides",
-      "ja": "",
+      "ja": "オオクイナ",
       "en": "Slaty-legged Crake",
       "latin": "Rallina eurizonoides",
       "rank": "species",
@@ -33984,7 +33984,7 @@
     },
     {
       "id": "rep_rallus_indicus",
-      "ja": "",
+      "ja": "クイナ",
       "en": "Brown-cheeked Rail",
       "latin": "Rallus indicus",
       "rank": "species",
@@ -33994,7 +33994,7 @@
     },
     {
       "id": "rep_zapornia_fusca",
-      "ja": "",
+      "ja": "ヒクイナ",
       "en": "Ruddy-breasted Crake",
       "latin": "Zapornia fusca",
       "rank": "species",
@@ -34004,7 +34004,7 @@
     },
     {
       "id": "rep_amaurornis_phoenicurus",
-      "ja": "",
+      "ja": "シロハラクイナ",
       "en": "White-breasted Waterhen",
       "latin": "Amaurornis phoenicurus",
       "rank": "species",
@@ -34014,7 +34014,7 @@
     },
     {
       "id": "rep_antigone_vipio",
-      "ja": "",
+      "ja": "マナヅル",
       "en": "White-naped Crane",
       "latin": "Antigone vipio",
       "rank": "species",
@@ -34024,7 +34024,7 @@
     },
     {
       "id": "rep_grus_grus",
-      "ja": "",
+      "ja": "クロヅル",
       "en": "Common Crane",
       "latin": "Grus grus",
       "rank": "species",
@@ -34034,7 +34034,7 @@
     },
     {
       "id": "rep_grus_monacha",
-      "ja": "",
+      "ja": "ナベヅル",
       "en": "Hooded Crane",
       "latin": "Grus monacha",
       "rank": "species",
@@ -34044,7 +34044,7 @@
     },
     {
       "id": "rep_gavia_stellata",
-      "ja": "",
+      "ja": "アビ",
       "en": "Red-throated Loon",
       "latin": "Gavia stellata",
       "rank": "species",
@@ -34054,7 +34054,7 @@
     },
     {
       "id": "rep_gavia_arctica",
-      "ja": "",
+      "ja": "オオハム",
       "en": "Black-throated Loon",
       "latin": "Gavia arctica",
       "rank": "species",
@@ -34064,7 +34064,7 @@
     },
     {
       "id": "rep_gavia_pacifica",
-      "ja": "",
+      "ja": "シロエリオオハム",
       "en": "Pacific Loon",
       "latin": "Gavia pacifica",
       "rank": "species",
@@ -34074,7 +34074,7 @@
     },
     {
       "id": "rep_phoebastria_immutabilis",
-      "ja": "",
+      "ja": "コアホウドリ",
       "en": "Laysan Albatross",
       "latin": "Phoebastria immutabilis",
       "rank": "species",
@@ -34084,7 +34084,7 @@
     },
     {
       "id": "rep_phoebastria_nigripes",
-      "ja": "",
+      "ja": "クロアシアホウドリ",
       "en": "Black-footed Albatross",
       "latin": "Phoebastria nigripes",
       "rank": "species",
@@ -34094,7 +34094,7 @@
     },
     {
       "id": "rep_phoebastria_albatrus",
-      "ja": "",
+      "ja": "アホウドリ",
       "en": "Short-tailed Albatross",
       "latin": "Phoebastria albatrus",
       "rank": "species",
@@ -34104,7 +34104,7 @@
     },
     {
       "id": "rep_hydrobates_matsudairae",
-      "ja": "",
+      "ja": "クロウミツバメ",
       "en": "Matsudaira's Storm Petrel",
       "latin": "Hydrobates matsudairae",
       "rank": "species",
@@ -34114,7 +34114,7 @@
     },
     {
       "id": "rep_hydrobates_leucorhous",
-      "ja": "",
+      "ja": "コシジロウミツバメ",
       "en": "Leach's Storm Petrel",
       "latin": "Hydrobates leucorhous",
       "rank": "species",
@@ -34124,7 +34124,7 @@
     },
     {
       "id": "rep_hydrobates_monorhis",
-      "ja": "",
+      "ja": "ヒメクロウミツバメ",
       "en": "Swinhoe's Storm Petrel",
       "latin": "Hydrobates monorhis",
       "rank": "species",
@@ -34134,7 +34134,7 @@
     },
     {
       "id": "rep_ardenna_pacifica",
-      "ja": "",
+      "ja": "オナガミズナギドリ",
       "en": "Wedge-tailed Shearwater",
       "latin": "Ardenna pacifica",
       "rank": "species",
@@ -34144,7 +34144,7 @@
     },
     {
       "id": "rep_ardenna_tenuirostris",
-      "ja": "",
+      "ja": "ハシボソミズナギドリ",
       "en": "Short-tailed Shearwater",
       "latin": "Ardenna tenuirostris",
       "rank": "species",
@@ -34154,7 +34154,7 @@
     },
     {
       "id": "rep_ardenna_grisea",
-      "ja": "",
+      "ja": "ハイイロミズナギドリ",
       "en": "Sooty Shearwater",
       "latin": "Ardenna grisea",
       "rank": "species",
@@ -34164,7 +34164,7 @@
     },
     {
       "id": "rep_calonectris_leucomelas",
-      "ja": "",
+      "ja": "オオミズナギドリ",
       "en": "Streaked Shearwater",
       "latin": "Calonectris leucomelas",
       "rank": "species",
@@ -34174,7 +34174,7 @@
     },
     {
       "id": "rep_ciconia_boyciana",
-      "ja": "",
+      "ja": "コウノトリ",
       "en": "Oriental Stork",
       "latin": "Ciconia boyciana",
       "rank": "species",
@@ -34184,7 +34184,7 @@
     },
     {
       "id": "rep_botaurus_stellaris",
-      "ja": "",
+      "ja": "サンカノゴイ",
       "en": "Eurasian Bittern",
       "latin": "Botaurus stellaris",
       "rank": "species",
@@ -34194,7 +34194,7 @@
     },
     {
       "id": "rep_gorsachius_goisagi",
-      "ja": "",
+      "ja": "ミゾゴイ",
       "en": "Japanese Night Heron",
       "latin": "Gorsachius goisagi",
       "rank": "species",
@@ -34204,7 +34204,7 @@
     },
     {
       "id": "rep_butorides_striata",
-      "ja": "",
+      "ja": "ササゴイ",
       "en": "Striated Heron",
       "latin": "Butorides striata",
       "rank": "species",
@@ -34214,7 +34214,7 @@
     },
     {
       "id": "rep_ardeola_bacchus",
-      "ja": "",
+      "ja": "アカガシラサギ",
       "en": "Chinese Pond Heron",
       "latin": "Ardeola bacchus",
       "rank": "species",
@@ -34224,7 +34224,7 @@
     },
     {
       "id": "rep_platalea_leucorodia",
-      "ja": "",
+      "ja": "ヘラサギ",
       "en": "Eurasian Spoonbill",
       "latin": "Platalea leucorodia",
       "rank": "species",
@@ -34234,7 +34234,7 @@
     },
     {
       "id": "rep_platalea_minor",
-      "ja": "",
+      "ja": "クロツラヘラサギ",
       "en": "Black-faced Spoonbill",
       "latin": "Platalea minor",
       "rank": "species",
@@ -34244,7 +34244,7 @@
     },
     {
       "id": "rep_nipponia_nippon",
-      "ja": "",
+      "ja": "トキ",
       "en": "Crested Ibis",
       "latin": "Nipponia nippon",
       "rank": "species",
@@ -34254,7 +34254,7 @@
     },
     {
       "id": "rep_sula_sula",
-      "ja": "",
+      "ja": "アカアシカツオドリ",
       "en": "Red-footed Booby",
       "latin": "Sula sula",
       "rank": "species",
@@ -34264,7 +34264,7 @@
     },
     {
       "id": "rep_sula_leucogaster",
-      "ja": "",
+      "ja": "カツオドリ",
       "en": "Brown Booby",
       "latin": "Sula leucogaster",
       "rank": "species",
@@ -34274,7 +34274,7 @@
     },
     {
       "id": "rep_sula_dactylatra",
-      "ja": "",
+      "ja": "アオツラカツオドリ",
       "en": "Masked Booby",
       "latin": "Sula dactylatra",
       "rank": "species",
@@ -34284,7 +34284,7 @@
     },
     {
       "id": "rep_urile_pelagicus",
-      "ja": "",
+      "ja": "ヒメウ",
       "en": "Pelagic Cormorant",
       "latin": "Urile pelagicus",
       "rank": "species",
@@ -34294,7 +34294,7 @@
     },
     {
       "id": "rep_urile_urile",
-      "ja": "",
+      "ja": "チシマウガラス",
       "en": "Red-faced Cormorant",
       "latin": "Urile urile",
       "rank": "species",
@@ -34304,7 +34304,7 @@
     },
     {
       "id": "rep_phalacrocorax_capillatus",
-      "ja": "",
+      "ja": "ウミウ",
       "en": "Japanese Cormorant",
       "latin": "Phalacrocorax capillatus",
       "rank": "species",
@@ -34314,7 +34314,7 @@
     },
     {
       "id": "rep_pluvialis_squatarola",
-      "ja": "",
+      "ja": "ダイゼン",
       "en": "Grey Plover",
       "latin": "Pluvialis squatarola",
       "rank": "species",
@@ -34324,7 +34324,7 @@
     },
     {
       "id": "rep_pluvialis_fulva",
-      "ja": "",
+      "ja": "ムナグロ",
       "en": "Pacific Golden Plover",
       "latin": "Pluvialis fulva",
       "rank": "species",
@@ -34334,7 +34334,7 @@
     },
     {
       "id": "rep_anarhynchus_alexandrinus",
-      "ja": "",
+      "ja": "シロチドリ",
       "en": "Kentish Plover",
       "latin": "Anarhynchus alexandrinus",
       "rank": "species",
@@ -34344,7 +34344,7 @@
     },
     {
       "id": "rep_vanellus_cinereus",
-      "ja": "",
+      "ja": "ケリ",
       "en": "Grey-headed Lapwing",
       "latin": "Vanellus cinereus",
       "rank": "species",
@@ -34354,7 +34354,7 @@
     },
     {
       "id": "rep_rostratula_benghalensis",
-      "ja": "",
+      "ja": "タマシギ",
       "en": "Greater Painted-snipe",
       "latin": "Rostratula benghalensis",
       "rank": "species",
@@ -34364,7 +34364,7 @@
     },
     {
       "id": "rep_numenius_phaeopus",
-      "ja": "",
+      "ja": "チュウシャクシギ",
       "en": "Eurasian Whimbrel",
       "latin": "Numenius phaeopus",
       "rank": "species",
@@ -34374,7 +34374,7 @@
     },
     {
       "id": "rep_numenius_madagascariensis",
-      "ja": "",
+      "ja": "ホウロクシギ",
       "en": "Far Eastern Curlew",
       "latin": "Numenius madagascariensis",
       "rank": "species",
@@ -34384,7 +34384,7 @@
     },
     {
       "id": "rep_limosa_lapponica",
-      "ja": "",
+      "ja": "オオソリハシシギ",
       "en": "Bar-tailed Godwit",
       "latin": "Limosa lapponica",
       "rank": "species",
@@ -34394,7 +34394,7 @@
     },
     {
       "id": "rep_arenaria_interpres",
-      "ja": "",
+      "ja": "キョウジョシギ",
       "en": "Ruddy Turnstone",
       "latin": "Arenaria interpres",
       "rank": "species",
@@ -34404,7 +34404,7 @@
     },
     {
       "id": "rep_pandion_haliaetus",
-      "ja": "",
+      "ja": "ミサゴ",
       "en": "Osprey",
       "latin": "Pandion haliaetus",
       "rank": "species",
@@ -34414,7 +34414,7 @@
     },
     {
       "id": "rep_pernis_ptilorhynchus",
-      "ja": "",
+      "ja": "ハチクマ",
       "en": "Crested Honey Buzzard",
       "latin": "Pernis ptilorhynchus",
       "rank": "species",
@@ -34424,7 +34424,7 @@
     },
     {
       "id": "rep_spilornis_cheela",
-      "ja": "",
+      "ja": "カンムリワシ",
       "en": "Crested Serpent Eagle",
       "latin": "Spilornis cheela",
       "rank": "species",
@@ -34434,7 +34434,7 @@
     },
     {
       "id": "rep_nisaetus_nipalensis",
-      "ja": "",
+      "ja": "クマタカ",
       "en": "Mountain Hawk-Eagle",
       "latin": "Nisaetus nipalensis",
       "rank": "species",
@@ -34444,7 +34444,7 @@
     },
     {
       "id": "rep_circus_spilonotus",
-      "ja": "",
+      "ja": "チュウヒ",
       "en": "Eastern Marsh Harrier",
       "latin": "Circus spilonotus",
       "rank": "species",
@@ -34454,7 +34454,7 @@
     },
     {
       "id": "rep_ninox_japonica",
-      "ja": "",
+      "ja": "アオバズク",
       "en": "Northern Boobook",
       "latin": "Ninox japonica",
       "rank": "species",
@@ -34464,7 +34464,7 @@
     },
     {
       "id": "rep_otus_sunia",
-      "ja": "",
+      "ja": "コノハズク",
       "en": "Oriental Scops Owl",
       "latin": "Otus sunia",
       "rank": "species",
@@ -34474,7 +34474,7 @@
     },
     {
       "id": "rep_otus_elegans",
-      "ja": "",
+      "ja": "リュウキュウコノハズク",
       "en": "Ryukyu Scops Owl",
       "latin": "Otus elegans",
       "rank": "species",
@@ -34484,7 +34484,7 @@
     },
     {
       "id": "rep_asio_flammeus",
-      "ja": "",
+      "ja": "コミミズク",
       "en": "Short-eared Owl",
       "latin": "Asio flammeus",
       "rank": "species",
@@ -34494,7 +34494,7 @@
     },
     {
       "id": "rep_jynx_torquilla",
-      "ja": "",
+      "ja": "アリスイ",
       "en": "Eurasian Wryneck",
       "latin": "Jynx torquilla",
       "rank": "species",
@@ -34504,7 +34504,7 @@
     },
     {
       "id": "rep_dryocopus_martius",
-      "ja": "",
+      "ja": "クマゲラ",
       "en": "Black Woodpecker",
       "latin": "Dryocopus martius",
       "rank": "species",
@@ -34514,7 +34514,7 @@
     },
     {
       "id": "rep_dendrocopos_leucotos",
-      "ja": "",
+      "ja": "オオアカゲラ",
       "en": "White-backed Woodpecker",
       "latin": "Dendrocopos leucotos",
       "rank": "species",
@@ -34524,7 +34524,7 @@
     },
     {
       "id": "rep_dendrocopos_major",
-      "ja": "",
+      "ja": "アカゲラ",
       "en": "Great Spotted Woodpecker",
       "latin": "Dendrocopos major",
       "rank": "species",
@@ -34534,7 +34534,7 @@
     },
     {
       "id": "rep_pitta_nympha",
-      "ja": "",
+      "ja": "ヤイロチョウ",
       "en": "Fairy Pitta",
       "latin": "Pitta nympha",
       "rank": "species",
@@ -34544,7 +34544,7 @@
     },
     {
       "id": "rep_pericrocotus_divaricatus",
-      "ja": "",
+      "ja": "サンショウクイ",
       "en": "Ashy Minivet",
       "latin": "Pericrocotus divaricatus",
       "rank": "species",
@@ -34554,7 +34554,7 @@
     },
     {
       "id": "rep_pericrocotus_tegimae",
-      "ja": "",
+      "ja": "リュウキュウサンショウクイ",
       "en": "Ryukyu Minivet",
       "latin": "Pericrocotus tegimae",
       "rank": "species",
@@ -34564,7 +34564,7 @@
     },
     {
       "id": "rep_oriolus_chinensis",
-      "ja": "",
+      "ja": "コウライウグイス",
       "en": "Black-naped Oriole",
       "latin": "Oriolus chinensis",
       "rank": "species",
@@ -34574,7 +34574,7 @@
     },
     {
       "id": "rep_lanius_tigrinus",
-      "ja": "",
+      "ja": "チゴモズ",
       "en": "Tiger Shrike",
       "latin": "Lanius tigrinus",
       "rank": "species",
@@ -34584,7 +34584,7 @@
     },
     {
       "id": "rep_lanius_bucephalus",
-      "ja": "",
+      "ja": "モズ",
       "en": "Bull-headed Shrike",
       "latin": "Lanius bucephalus",
       "rank": "species",
@@ -34594,7 +34594,7 @@
     },
     {
       "id": "rep_lanius_cristatus",
-      "ja": "",
+      "ja": "アカモズ",
       "en": "Brown Shrike",
       "latin": "Lanius cristatus",
       "rank": "species",
@@ -34604,7 +34604,7 @@
     },
     {
       "id": "rep_garrulus_glandarius",
-      "ja": "",
+      "ja": "カケス",
       "en": "Eurasian Jay",
       "latin": "Garrulus glandarius",
       "rank": "species",
@@ -34614,7 +34614,7 @@
     },
     {
       "id": "rep_garrulus_lidthi",
-      "ja": "",
+      "ja": "ルリカケス",
       "en": "Lidth's Jay",
       "latin": "Garrulus lidthi",
       "rank": "species",
@@ -34624,7 +34624,7 @@
     },
     {
       "id": "rep_pica_serica",
-      "ja": "",
+      "ja": "カササギ",
       "en": "Oriental Magpie",
       "latin": "Pica serica",
       "rank": "species",
@@ -34634,7 +34634,7 @@
     },
     {
       "id": "rep_nucifraga_caryocatactes",
-      "ja": "",
+      "ja": "ホシガラス",
       "en": "Northern Nutcracker",
       "latin": "Nucifraga caryocatactes",
       "rank": "species",
@@ -34644,7 +34644,7 @@
     },
     {
       "id": "rep_terpsiphone_atrocaudata",
-      "ja": "",
+      "ja": "サンコウチョウ",
       "en": "Black Paradise Flycatcher",
       "latin": "Terpsiphone atrocaudata",
       "rank": "species",
@@ -34654,7 +34654,7 @@
     },
     {
       "id": "rep_prunella_collaris",
-      "ja": "",
+      "ja": "イワヒバリ",
       "en": "Alpine Accentor",
       "latin": "Prunella collaris",
       "rank": "species",
@@ -34664,7 +34664,7 @@
     },
     {
       "id": "rep_prunella_rubida",
-      "ja": "",
+      "ja": "カヤクグリ",
       "en": "Japanese Accentor",
       "latin": "Prunella rubida",
       "rank": "species",
@@ -34674,7 +34674,7 @@
     },
     {
       "id": "rep_passer_cinnamomeus",
-      "ja": "",
+      "ja": "ニュウナイスズメ",
       "en": "Russet Sparrow",
       "latin": "Passer cinnamomeus",
       "rank": "species",
@@ -34684,7 +34684,7 @@
     },
     {
       "id": "rep_anthus_hodgsoni",
-      "ja": "",
+      "ja": "ビンズイ",
       "en": "Olive-backed Pipit",
       "latin": "Anthus hodgsoni",
       "rank": "species",
@@ -34694,7 +34694,7 @@
     },
     {
       "id": "rep_anthus_cervinus",
-      "ja": "",
+      "ja": "ムネアカタヒバリ",
       "en": "Red-throated Pipit",
       "latin": "Anthus cervinus",
       "rank": "species",
@@ -34704,7 +34704,7 @@
     },
     {
       "id": "rep_anthus_rubescens",
-      "ja": "",
+      "ja": "タヒバリ",
       "en": "American Pipit",
       "latin": "Anthus rubescens",
       "rank": "species",
@@ -34714,7 +34714,7 @@
     },
     {
       "id": "rep_motacilla_cinerea",
-      "ja": "",
+      "ja": "キセキレイ",
       "en": "Grey Wagtail",
       "latin": "Motacilla cinerea",
       "rank": "species",
@@ -34724,7 +34724,7 @@
     },
     {
       "id": "rep_fringilla_montifringilla",
-      "ja": "",
+      "ja": "アトリ",
       "en": "Brambling",
       "latin": "Fringilla montifringilla",
       "rank": "species",
@@ -34734,7 +34734,7 @@
     },
     {
       "id": "rep_eophona_migratoria",
-      "ja": "",
+      "ja": "コイカル",
       "en": "Chinese Grosbeak",
       "latin": "Eophona migratoria",
       "rank": "species",
@@ -34744,7 +34744,7 @@
     },
     {
       "id": "rep_pyrrhula_pyrrhula",
-      "ja": "",
+      "ja": "ウソ",
       "en": "Eurasian Bullfinch",
       "latin": "Pyrrhula pyrrhula",
       "rank": "species",
@@ -34754,7 +34754,7 @@
     },
     {
       "id": "rep_acanthis_flammea",
-      "ja": "",
+      "ja": "ベニヒワ",
       "en": "Redpoll",
       "latin": "Acanthis flammea",
       "rank": "species",
