@@ -1,8 +1,8 @@
 {
   "schema": "circular-phylogeny-standalone/1",
-  "version": 46,
+  "version": 47,
   "root": "life",
-  "note": "Expanded v46 from v45 Editable: 289 curated Japanese species added across plants, mammals, fishes, insects, other animals, fungi, and algae. Compatible with v44-style standalone loading.",
+  "note": "Expanded v47 from v46: 87 exam-scope animal and plant species added after filtering collective, higher-rank, infraspecific, hybrid, and unresolved names. Compatible with v44-style standalone loading.",
   "nodes": [
     {
       "id": "life",
@@ -1684,7 +1684,9 @@
       "en": "",
       "latin": "Gasterosteoidei",
       "rank": "suborder",
-      "children": [],
+      "children": [
+        "rep_pungitius_sinensis"
+      ],
       "wiki": "https://en.wikipedia.org/wiki/Special:Search?search=Gasterosteoidei",
       "color": "#4b7180",
       "source_ids": [
@@ -1816,7 +1818,8 @@
         "rep_engraulis_japonicus",
         "rep_konosirus_punctatus",
         "rep_clupea_pallasii",
-        "rep_sardinella_zunasi"
+        "rep_sardinella_zunasi",
+        "rep_spratelloides_gracilis"
       ],
       "wiki": "https://en.wikipedia.org/wiki/Special:Search?search=Clupeiformes",
       "color": "#477b8d",
@@ -1874,7 +1877,10 @@
         "rep_tribolodon_hakonensis",
         "rep_pungtungia_herzi",
         "rep_cobitis_biwae",
-        "rep_lefua_echigonia"
+        "rep_lefua_echigonia",
+        "rep_acheilognathus_longipinnis",
+        "rep_tanakia_lanceolata",
+        "rep_acheilognathus_melanogaster"
       ],
       "wiki": "https://en.wikipedia.org/wiki/Special:Search?search=Cypriniformes",
       "color": "#477b8d",
@@ -1994,7 +2000,8 @@
       "children": [
         "rep_oncorhynchus_keta",
         "rep_salvelinus_leucomaenis",
-        "rep_oncorhynchus_masou"
+        "rep_oncorhynchus_masou",
+        "rep_parahucho_perryi"
       ],
       "wiki": "https://en.wikipedia.org/wiki/Special:Search?search=Salmoniformes",
       "color": "#477b8d",
@@ -2011,7 +2018,9 @@
       "rank": "order",
       "children": [
         "rep_plecoglossus_altivelis",
-        "rep_hypomesus_nipponensis"
+        "rep_hypomesus_nipponensis",
+        "rep_spirinchus_lanceolatus",
+        "rep_salangichthys_microdon"
       ],
       "wiki": "https://en.wikipedia.org/wiki/Special:Search?search=Osmeriformes",
       "color": "#477b8d",
@@ -2582,7 +2591,8 @@
       "children": [
         "rep_takifugu_rubripes",
         "rep_stephanolepis_cirrhifer",
-        "rep_diodon_holocanthus"
+        "rep_diodon_holocanthus",
+        "rep_mola_mola"
       ],
       "wiki": "https://en.wikipedia.org/wiki/Special:Search?search=Tetraodontiformes",
       "color": "#477b8d",
@@ -11099,7 +11109,8 @@
       "latin": "Araceae",
       "rank": "family",
       "children": [
-        "rep_lysichiton_camtschatcensis"
+        "rep_lysichiton_camtschatcensis",
+        "rep_arisaema_serratum"
       ],
       "wiki": "https://en.wikipedia.org/wiki/Araceae",
       "color": "#6f9b65",
@@ -11424,7 +11435,9 @@
       "en": "",
       "latin": "Apiaceae",
       "rank": "family",
-      "children": [],
+      "children": [
+        "rep_oenanthe_javanica"
+      ],
       "wiki": "https://en.wikipedia.org/wiki/Apiaceae",
       "color": "#6f9b65",
       "source_ids": [
@@ -11557,7 +11570,9 @@
       "en": "",
       "latin": "Arecaceae",
       "rank": "family",
-      "children": [],
+      "children": [
+        "rep_trachycarpus_fortunei"
+      ],
       "wiki": "https://en.wikipedia.org/wiki/Arecaceae",
       "color": "#6f9b65",
       "source_ids": [
@@ -11587,7 +11602,9 @@
       "latin": "Orchidaceae",
       "rank": "family",
       "children": [
-        "rep_cymbidium_goeringii"
+        "rep_cymbidium_goeringii",
+        "rep_calanthe_discolor",
+        "rep_pecteilis_radiata"
       ],
       "wiki": "https://en.wikipedia.org/wiki/Orchidaceae",
       "color": "#6f9b65",
@@ -11706,7 +11723,8 @@
       "latin": "Iridaceae",
       "rank": "family",
       "children": [
-        "rep_iris_ensata"
+        "rep_iris_ensata",
+        "rep_iris_sanguinea"
       ],
       "wiki": "https://en.wikipedia.org/wiki/Iridaceae",
       "color": "#6f9b65",
@@ -11749,7 +11767,8 @@
       "children": [
         "rep_allium_fistulosum",
         "rep_narcissus_tazetta",
-        "rep_lycoris_radiata"
+        "rep_lycoris_radiata",
+        "rep_allium_macrostemon"
       ],
       "wiki": "https://en.wikipedia.org/wiki/Amaryllidaceae",
       "color": "#6f9b65",
@@ -11763,7 +11782,9 @@
       "en": "",
       "latin": "Asparagaceae",
       "rank": "family",
-      "children": [],
+      "children": [
+        "rep_liriope_muscari"
+      ],
       "wiki": "https://en.wikipedia.org/wiki/Asparagaceae",
       "color": "#6f9b65",
       "source_ids": [
@@ -11818,7 +11839,8 @@
       "latin": "Campanulaceae",
       "rank": "family",
       "children": [
-        "rep_platycodon_grandiflorus"
+        "rep_platycodon_grandiflorus",
+        "rep_campanula_punctata"
       ],
       "wiki": "https://en.wikipedia.org/wiki/Campanulaceae",
       "color": "#6f9b65",
@@ -11897,7 +11919,9 @@
       "en": "",
       "latin": "Menyanthaceae",
       "rank": "family",
-      "children": [],
+      "children": [
+        "rep_menyanthes_trifoliata"
+      ],
       "wiki": "https://en.wikipedia.org/wiki/Menyanthaceae",
       "color": "#6f9b65",
       "source_ids": [
@@ -11944,7 +11968,13 @@
         "rep_solidago_altissima",
         "rep_erigeron_annuus",
         "rep_erigeron_philadelphicus",
-        "rep_sonchus_oleraceus"
+        "rep_sonchus_oleraceus",
+        "rep_arctium_lappa",
+        "rep_pseudognaphalium_affine",
+        "rep_lapsanastrum_apogonoides",
+        "rep_helianthus_annuus",
+        "rep_cirsium_japonicum",
+        "rep_cosmos_bipinnatus"
       ],
       "wiki": "https://en.wikipedia.org/wiki/Asteraceae",
       "color": "#6f9b65",
@@ -12318,7 +12348,9 @@
       "latin": "Brassicaceae",
       "rank": "family",
       "children": [
-        "rep_capsella_bursa_pastoris"
+        "rep_capsella_bursa_pastoris",
+        "rep_eutrema_japonicum",
+        "rep_raphanus_sativus"
       ],
       "wiki": "https://en.wikipedia.org/wiki/Brassicaceae",
       "color": "#6f9b65",
@@ -12531,7 +12563,9 @@
       "en": "",
       "latin": "Droseraceae",
       "rank": "family",
-      "children": [],
+      "children": [
+        "rep_drosera_rotundifolia"
+      ],
       "wiki": "https://en.wikipedia.org/wiki/Droseraceae",
       "color": "#6f9b65",
       "source_ids": [
@@ -13297,7 +13331,8 @@
       "latin": "Cornaceae",
       "rank": "family",
       "children": [
-        "rep_cornus_kousa"
+        "rep_cornus_kousa",
+        "rep_cornus_florida"
       ],
       "wiki": "https://en.wikipedia.org/wiki/Cornaceae",
       "color": "#6f9b65",
@@ -13497,7 +13532,8 @@
       "latin": "Cucurbitaceae",
       "rank": "family",
       "children": [
-        "rep_trichosanthes_cucumeroides"
+        "rep_trichosanthes_cucumeroides",
+        "rep_luffa_aegyptiaca"
       ],
       "wiki": "https://en.wikipedia.org/wiki/Cucurbitaceae",
       "color": "#6f9b65",
@@ -13706,7 +13742,8 @@
       "latin": "Balsaminaceae",
       "rank": "family",
       "children": [
-        "rep_impatiens_textorii"
+        "rep_impatiens_textorii",
+        "rep_impatiens_balsamina"
       ],
       "wiki": "https://en.wikipedia.org/wiki/Balsaminaceae",
       "color": "#6f9b65",
@@ -13995,7 +14032,9 @@
       "children": [
         "rep_rhododendron_kaempferi",
         "rep_pieris_japonica",
-        "rep_enkianthus_perulatus"
+        "rep_enkianthus_perulatus",
+        "rep_vaccinium_oxycoccos",
+        "rep_monotropastrum_humile"
       ],
       "wiki": "https://en.wikipedia.org/wiki/Ericaceae",
       "color": "#6f9b65",
@@ -14091,7 +14130,8 @@
         "rep_wisteria_floribunda",
         "rep_lespedeza_bicolor",
         "rep_pueraria_lobata",
-        "rep_vicia_sativa"
+        "rep_vicia_sativa",
+        "rep_entada_phaseoloides"
       ],
       "wiki": "https://en.wikipedia.org/wiki/Fabaceae",
       "color": "#6f9b65",
@@ -14171,7 +14211,9 @@
         "rep_quercus_myrsinifolia",
         "rep_quercus_glauca",
         "rep_quercus_acuta",
-        "rep_fagus_japonica"
+        "rep_fagus_japonica",
+        "rep_quercus_crispula",
+        "rep_quercus_phillyreoides"
       ],
       "wiki": "https://en.wikipedia.org/wiki/Fagaceae",
       "color": "#6f9b65",
@@ -14201,7 +14243,8 @@
       "latin": "Juglandaceae",
       "rank": "family",
       "children": [
-        "rep_juglans_mandshurica"
+        "rep_juglans_mandshurica",
+        "rep_pterocarya_rhoifolia"
       ],
       "wiki": "https://en.wikipedia.org/wiki/Juglandaceae",
       "color": "#6f9b65",
@@ -14293,7 +14336,9 @@
       "en": "",
       "latin": "Garryaceae",
       "rank": "family",
-      "children": [],
+      "children": [
+        "rep_aucuba_japonica"
+      ],
       "wiki": "https://en.wikipedia.org/wiki/Garryaceae",
       "color": "#6f9b65",
       "source_ids": [
@@ -14688,7 +14733,8 @@
       "rank": "family",
       "children": [
         "rep_plantago_asiatica",
-        "rep_veronica_persica"
+        "rep_veronica_persica",
+        "rep_lagotis_glauca"
       ],
       "wiki": "https://en.wikipedia.org/wiki/Plantaginaceae",
       "color": "#6f9b65",
@@ -14807,7 +14853,8 @@
       "latin": "Lentibulariaceae",
       "rank": "family",
       "children": [
-        "rep_utricularia_japonica"
+        "rep_utricularia_japonica",
+        "rep_pinguicula_macroceras"
       ],
       "wiki": "https://en.wikipedia.org/wiki/Lentibulariaceae",
       "color": "#6f9b65",
@@ -14918,7 +14965,9 @@
       "en": "",
       "latin": "Orobanchaceae",
       "rank": "family",
-      "children": [],
+      "children": [
+        "rep_aeginetia_indica"
+      ],
       "wiki": "https://en.wikipedia.org/wiki/Orobanchaceae",
       "color": "#6f9b65",
       "source_ids": [
@@ -15112,7 +15161,9 @@
       "en": "",
       "latin": "Melanthiaceae",
       "rank": "family",
-      "children": [],
+      "children": [
+        "rep_veratrum_stamineum"
+      ],
       "wiki": "https://en.wikipedia.org/wiki/Melanthiaceae",
       "color": "#6f9b65",
       "source_ids": [
@@ -15206,7 +15257,9 @@
       "children": [
         "rep_lilium_auratum",
         "rep_tricyrtis_hirta",
-        "rep_erythronium_japonicum"
+        "rep_erythronium_japonicum",
+        "rep_lilium_lancifolium",
+        "rep_tulipa_gesneriana"
       ],
       "wiki": "https://en.wikipedia.org/wiki/Liliaceae",
       "color": "#6f9b65",
@@ -15384,7 +15437,9 @@
       "en": "",
       "latin": "Rhizophoraceae",
       "rank": "family",
-      "children": [],
+      "children": [
+        "rep_bruguiera_gymnorhiza"
+      ],
       "wiki": "https://en.wikipedia.org/wiki/Rhizophoraceae",
       "color": "#6f9b65",
       "source_ids": [
@@ -15908,7 +15963,10 @@
       "en": "",
       "latin": "Malvaceae",
       "rank": "family",
-      "children": [],
+      "children": [
+        "rep_firmiana_simplex",
+        "rep_hibiscus_syriacus"
+      ],
       "wiki": "https://en.wikipedia.org/wiki/Malvaceae",
       "color": "#6f9b65",
       "source_ids": [
@@ -15934,7 +15992,9 @@
       "en": "",
       "latin": "Thymelaeaceae",
       "rank": "family",
-      "children": [],
+      "children": [
+        "rep_daphne_odora"
+      ],
       "wiki": "https://en.wikipedia.org/wiki/Thymelaeaceae",
       "color": "#6f9b65",
       "source_ids": [
@@ -16218,7 +16278,8 @@
       "latin": "Nymphaeaceae",
       "rank": "family",
       "children": [
-        "rep_nymphaea_tetragona"
+        "rep_nymphaea_tetragona",
+        "rep_nuphar_japonica"
       ],
       "wiki": "https://en.wikipedia.org/wiki/Nymphaeaceae",
       "color": "#6f9b65",
@@ -16695,7 +16756,9 @@
       "en": "",
       "latin": "Cyperaceae",
       "rank": "family",
-      "children": [],
+      "children": [
+        "rep_cyperus_microiria"
+      ],
       "wiki": "https://en.wikipedia.org/wiki/Cyperaceae",
       "color": "#6f9b65",
       "source_ids": [
@@ -16763,7 +16826,10 @@
       "children": [
         "rep_oryza_sativa",
         "rep_miscanthus_sinensis",
-        "rep_phragmites_australis"
+        "rep_phragmites_australis",
+        "rep_phyllostachys_edulis",
+        "rep_zea_mays",
+        "rep_triticum_aestivum"
       ],
       "wiki": "https://en.wikipedia.org/wiki/Poaceae",
       "color": "#6f9b65",
@@ -16833,7 +16899,9 @@
       "en": "",
       "latin": "Platanaceae",
       "rank": "family",
-      "children": [],
+      "children": [
+        "rep_platanus_orientalis"
+      ],
       "wiki": "https://en.wikipedia.org/wiki/Platanaceae",
       "color": "#6f9b65",
       "source_ids": [
@@ -16891,7 +16959,8 @@
       "latin": "Papaveraceae",
       "rank": "family",
       "children": [
-        "rep_corydalis_incisa"
+        "rep_corydalis_incisa",
+        "rep_dicentra_peregrina"
       ],
       "wiki": "https://en.wikipedia.org/wiki/Papaveraceae",
       "color": "#6f9b65",
@@ -16962,7 +17031,8 @@
       "children": [
         "rep_ranunculus_japonicus",
         "rep_anemone_flaccida",
-        "rep_aconitum_japonicum"
+        "rep_aconitum_japonicum",
+        "rep_glaucidium_palmatum"
       ],
       "wiki": "https://en.wikipedia.org/wiki/Ranunculaceae",
       "color": "#6f9b65",
@@ -17003,7 +17073,11 @@
         "rep_prunus_itosakura",
         "rep_pyrus_pyrifolia",
         "rep_rubus_palmatus",
-        "rep_chaenomeles_speciosa"
+        "rep_chaenomeles_speciosa",
+        "rep_eriobotrya_japonica",
+        "rep_spiraea_thunbergii",
+        "rep_malus_domestica",
+        "rep_potentilla_hebiichigo"
       ],
       "wiki": "https://en.wikipedia.org/wiki/Rosaceae",
       "color": "#6f9b65",
@@ -17102,7 +17176,8 @@
       "rank": "family",
       "children": [
         "rep_morus_australis",
-        "rep_ficus_erecta"
+        "rep_ficus_erecta",
+        "rep_ficus_carica"
       ],
       "wiki": "https://en.wikipedia.org/wiki/Moraceae",
       "color": "#6f9b65",
@@ -17335,7 +17410,8 @@
       "children": [
         "rep_acer_palmatum",
         "rep_acer_pictum",
-        "rep_aesculus_turbinata"
+        "rep_aesculus_turbinata",
+        "rep_acer_buergerianum"
       ],
       "wiki": "https://en.wikipedia.org/wiki/Sapindaceae",
       "color": "#6f9b65",
@@ -17538,7 +17614,9 @@
       "en": "",
       "latin": "Crassulaceae",
       "rank": "family",
-      "children": [],
+      "children": [
+        "rep_kalanchoe_daigremontiana"
+      ],
       "wiki": "https://en.wikipedia.org/wiki/Crassulaceae",
       "color": "#6f9b65",
       "source_ids": [
@@ -17646,7 +17724,8 @@
       "latin": "Convolvulaceae",
       "rank": "family",
       "children": [
-        "rep_calystegia_japonica"
+        "rep_calystegia_japonica",
+        "rep_ipomoea_batatas"
       ],
       "wiki": "https://en.wikipedia.org/wiki/Convolvulaceae",
       "color": "#6f9b65",
@@ -17660,7 +17739,9 @@
       "en": "",
       "latin": "Solanaceae",
       "rank": "family",
-      "children": [],
+      "children": [
+        "rep_solanum_tuberosum"
+      ],
       "wiki": "https://en.wikipedia.org/wiki/Solanaceae",
       "color": "#6f9b65",
       "source_ids": [
@@ -17788,7 +17869,8 @@
       "latin": "Vitaceae",
       "rank": "family",
       "children": [
-        "rep_cayratia_japonica"
+        "rep_cayratia_japonica",
+        "rep_causonis_japonica"
       ],
       "wiki": "https://en.wikipedia.org/wiki/Vitaceae",
       "color": "#6f9b65",
@@ -17856,7 +17938,9 @@
       "en": "",
       "latin": "Musaceae",
       "rank": "family",
-      "children": [],
+      "children": [
+        "rep_musa_basjoo"
+      ],
       "wiki": "https://en.wikipedia.org/wiki/Musaceae",
       "color": "#6f9b65",
       "source_ids": [
@@ -17908,7 +17992,9 @@
       "en": "",
       "latin": "Zingiberaceae",
       "rank": "family",
-      "children": [],
+      "children": [
+        "rep_zingiber_officinale"
+      ],
       "wiki": "https://en.wikipedia.org/wiki/Zingiberaceae",
       "color": "#6f9b65",
       "source_ids": [
@@ -18548,7 +18634,9 @@
       "en": "",
       "latin": "Gleicheniaceae",
       "rank": "family",
-      "children": [],
+      "children": [
+        "rep_diplopterygium_glaucum"
+      ],
       "wiki": "https://en.wikipedia.org/wiki/Gleicheniaceae",
       "color": "#559587",
       "source_ids": [
@@ -19159,7 +19247,9 @@
       "en": "",
       "latin": "Polypodiaceae",
       "rank": "family",
-      "children": [],
+      "children": [
+        "rep_lepisorus_thunbergianus"
+      ],
       "wiki": "https://en.wikipedia.org/wiki/Polypodiaceae",
       "color": "#559587",
       "source_ids": [
@@ -22512,7 +22602,8 @@
         "rep_petaurista_leucogenys",
         "rep_sciurus_lis",
         "rep_pteromys_volans",
-        "rep_sciurus_vulgaris"
+        "rep_sciurus_vulgaris",
+        "rep_tamias_sibiricus"
       ],
       "wiki": "https://en.wikipedia.org/wiki/Special:Search?search=Sciuridae",
       "color": "#9a8069",
@@ -22669,7 +22760,8 @@
       "rank": "family",
       "children": [
         "rep_craseomys_andersoni",
-        "rep_craseomys_rufocanus"
+        "rep_craseomys_rufocanus",
+        "rep_microtus_montebelli"
       ],
       "wiki": "https://en.wikipedia.org/wiki/Special:Search?search=Cricetidae",
       "color": "#9a8069",
@@ -23518,7 +23610,9 @@
       "en": "",
       "latin": "Equidae",
       "rank": "family",
-      "children": [],
+      "children": [
+        "rep_equus_caballus"
+      ],
       "wiki": "https://en.wikipedia.org/wiki/Special:Search?search=Equidae",
       "color": "#9a8069",
       "source_ids": [
@@ -23761,7 +23855,8 @@
       "latin": "Bovidae",
       "rank": "family",
       "children": [
-        "rep_capricornis_crispus"
+        "rep_capricornis_crispus",
+        "rep_bos_taurus"
       ],
       "wiki": "https://en.wikipedia.org/wiki/Special:Search?search=Bovidae",
       "color": "#9a8069",
@@ -26080,7 +26175,9 @@
         "rep_macrobrachium_nipponense",
         "rep_procambarus_clarkii",
         "rep_portunus_trituberculatus",
-        "rep_eriocheir_japonica"
+        "rep_eriocheir_japonica",
+        "rep_erimacrus_isenbeckii",
+        "rep_pagurus_filholi"
       ],
       "wiki": "https://en.wikipedia.org/wiki/Special:Search?search=Decapoda",
       "color": "#7697a8",
@@ -26271,7 +26368,9 @@
       "en": "Diplostracans including water fleas",
       "latin": "Diplostraca",
       "rank": "order",
-      "children": [],
+      "children": [
+        "rep_daphnia_pulex"
+      ],
       "wiki": "https://en.wikipedia.org/wiki/Special:Search?search=Diplostraca",
       "color": "#7396a7",
       "source_ids": [
@@ -26518,7 +26617,9 @@
         "rep_oxya_japonica",
         "rep_atractomorpha_lata",
         "rep_euconocephalus_thunbergii",
-        "rep_gryllotalpa_orientalis"
+        "rep_gryllotalpa_orientalis",
+        "rep_truljalia_hibinonis",
+        "rep_oecanthus_longicauda"
       ],
       "wiki": "https://en.wikipedia.org/wiki/Special:Search?search=Orthoptera",
       "color": "#927944",
@@ -26702,7 +26803,8 @@
         "rep_vespa_analis",
         "rep_polistes_jokahamae",
         "rep_camponotus_japonicus",
-        "rep_formica_japonica"
+        "rep_formica_japonica",
+        "rep_apis_mellifera"
       ],
       "wiki": "https://en.wikipedia.org/wiki/Special:Search?search=Hymenoptera",
       "color": "#927944",
@@ -26734,7 +26836,8 @@
         "rep_anomala_cuprea",
         "rep_geotrupes_laevistriatus",
         "rep_carabus_insulicola",
-        "rep_damaster_blaptoides"
+        "rep_damaster_blaptoides",
+        "rep_sitophilus_zeamais"
       ],
       "wiki": "https://en.wikipedia.org/wiki/Special:Search?search=Coleoptera",
       "color": "#927944",
@@ -26845,7 +26948,11 @@
         "rep_idea_leuconoe",
         "rep_actias_aliena",
         "rep_bombyx_mori",
-        "rep_hyphantria_cunea"
+        "rep_hyphantria_cunea",
+        "rep_cephonodes_hylas",
+        "rep_euproctis_pseudoconspersa",
+        "rep_antheraea_yamamai",
+        "rep_neozephyrus_japonicus"
       ],
       "wiki": "https://en.wikipedia.org/wiki/Special:Search?search=Lepidoptera",
       "color": "#927944",
@@ -27317,7 +27424,8 @@
         "rep_semisulcospira_libertina",
         "rep_haliotis_discus",
         "rep_cellana_nigrolineata",
-        "rep_batillaria_multiformis"
+        "rep_batillaria_multiformis",
+        "rep_radix_plicatula"
       ],
       "wiki": "https://en.wikipedia.org/wiki/Special:Search?search=Gastropoda",
       "color": "#947f90",
@@ -27408,7 +27516,8 @@
         "rep_anthopleura_japonica",
         "rep_tubastraea_coccinea",
         "rep_heteractis_magnifica",
-        "rep_acropora_hyacinthus"
+        "rep_acropora_hyacinthus",
+        "rep_actinia_equina"
       ],
       "wiki": "https://en.wikipedia.org/wiki/Special:Search?search=Hexacorallia",
       "color": "#94788c",
@@ -38580,6 +38689,1050 @@
       "rank": "species",
       "children": [],
       "wiki": "https://ja.wikipedia.org/wiki/Special:Search?search=%E3%83%9F%E3%83%89%E3%83%AA%E3%83%A0%E3%82%B7",
+      "color": "#FFFFFF",
+      "representative": true,
+      "priority": 2
+    },
+    {
+      "id": "rep_bos_taurus",
+      "ja": "ウシ",
+      "en": "",
+      "latin": "Bos taurus",
+      "rank": "species",
+      "children": [],
+      "wiki": "https://ja.wikipedia.org/wiki/Special:Search?search=%E3%82%A6%E3%82%B7",
+      "color": "#FFFFFF",
+      "representative": true,
+      "priority": 2
+    },
+    {
+      "id": "rep_equus_caballus",
+      "ja": "ウマ",
+      "en": "",
+      "latin": "Equus caballus",
+      "rank": "species",
+      "children": [],
+      "wiki": "https://ja.wikipedia.org/wiki/Special:Search?search=%E3%82%A6%E3%83%9E",
+      "color": "#FFFFFF",
+      "representative": true,
+      "priority": 2
+    },
+    {
+      "id": "rep_microtus_montebelli",
+      "ja": "ハタネズミ",
+      "en": "",
+      "latin": "Microtus montebelli",
+      "rank": "species",
+      "children": [],
+      "wiki": "https://ja.wikipedia.org/wiki/Special:Search?search=%E3%83%8F%E3%82%BF%E3%83%8D%E3%82%BA%E3%83%9F",
+      "color": "#FFFFFF",
+      "representative": true,
+      "priority": 2
+    },
+    {
+      "id": "rep_tamias_sibiricus",
+      "ja": "シマリス",
+      "en": "",
+      "latin": "Tamias sibiricus",
+      "rank": "species",
+      "children": [],
+      "wiki": "https://ja.wikipedia.org/wiki/Special:Search?search=%E3%82%B7%E3%83%9E%E3%83%AA%E3%82%B9",
+      "color": "#FFFFFF",
+      "representative": true,
+      "priority": 2
+    },
+    {
+      "id": "rep_acheilognathus_longipinnis",
+      "ja": "イタセンパラ",
+      "en": "",
+      "latin": "Acheilognathus longipinnis",
+      "rank": "species",
+      "children": [],
+      "wiki": "https://ja.wikipedia.org/wiki/Special:Search?search=%E3%82%A4%E3%82%BF%E3%82%BB%E3%83%B3%E3%83%91%E3%83%A9",
+      "color": "#FFFFFF",
+      "representative": true,
+      "priority": 2
+    },
+    {
+      "id": "rep_parahucho_perryi",
+      "ja": "イトウ",
+      "en": "",
+      "latin": "Parahucho perryi",
+      "rank": "species",
+      "children": [],
+      "wiki": "https://ja.wikipedia.org/wiki/Special:Search?search=%E3%82%A4%E3%83%88%E3%82%A6",
+      "color": "#FFFFFF",
+      "representative": true,
+      "priority": 2
+    },
+    {
+      "id": "rep_pungitius_sinensis",
+      "ja": "トミヨ",
+      "en": "",
+      "latin": "Pungitius sinensis",
+      "rank": "species",
+      "children": [],
+      "wiki": "https://ja.wikipedia.org/wiki/Special:Search?search=%E3%83%88%E3%83%9F%E3%83%A8",
+      "color": "#FFFFFF",
+      "representative": true,
+      "priority": 2
+    },
+    {
+      "id": "rep_spirinchus_lanceolatus",
+      "ja": "シシャモ",
+      "en": "",
+      "latin": "Spirinchus lanceolatus",
+      "rank": "species",
+      "children": [],
+      "wiki": "https://ja.wikipedia.org/wiki/Special:Search?search=%E3%82%B7%E3%82%B7%E3%83%A3%E3%83%A2",
+      "color": "#FFFFFF",
+      "representative": true,
+      "priority": 2
+    },
+    {
+      "id": "rep_salangichthys_microdon",
+      "ja": "シラウオ",
+      "en": "",
+      "latin": "Salangichthys microdon",
+      "rank": "species",
+      "children": [],
+      "wiki": "https://ja.wikipedia.org/wiki/Special:Search?search=%E3%82%B7%E3%83%A9%E3%82%A6%E3%82%AA",
+      "color": "#FFFFFF",
+      "representative": true,
+      "priority": 2
+    },
+    {
+      "id": "rep_tanakia_lanceolata",
+      "ja": "ヤリタナゴ",
+      "en": "",
+      "latin": "Tanakia lanceolata",
+      "rank": "species",
+      "children": [],
+      "wiki": "https://ja.wikipedia.org/wiki/Special:Search?search=%E3%83%A4%E3%83%AA%E3%82%BF%E3%83%8A%E3%82%B4",
+      "color": "#FFFFFF",
+      "representative": true,
+      "priority": 2
+    },
+    {
+      "id": "rep_mola_mola",
+      "ja": "マンボウ",
+      "en": "",
+      "latin": "Mola mola",
+      "rank": "species",
+      "children": [],
+      "wiki": "https://ja.wikipedia.org/wiki/Special:Search?search=%E3%83%9E%E3%83%B3%E3%83%9C%E3%82%A6",
+      "color": "#FFFFFF",
+      "representative": true,
+      "priority": 2
+    },
+    {
+      "id": "rep_acheilognathus_melanogaster",
+      "ja": "タナゴ",
+      "en": "",
+      "latin": "Acheilognathus melanogaster",
+      "rank": "species",
+      "children": [],
+      "wiki": "https://ja.wikipedia.org/wiki/Special:Search?search=%E3%82%BF%E3%83%8A%E3%82%B4",
+      "color": "#FFFFFF",
+      "representative": true,
+      "priority": 2
+    },
+    {
+      "id": "rep_apis_mellifera",
+      "ja": "セイヨウミツバチ",
+      "en": "",
+      "latin": "Apis mellifera",
+      "rank": "species",
+      "children": [],
+      "wiki": "https://ja.wikipedia.org/wiki/Special:Search?search=%E3%82%BB%E3%82%A4%E3%83%A8%E3%82%A6%E3%83%9F%E3%83%84%E3%83%90%E3%83%81",
+      "color": "#FFFFFF",
+      "representative": true,
+      "priority": 2
+    },
+    {
+      "id": "rep_sitophilus_zeamais",
+      "ja": "コクゾウムシ",
+      "en": "",
+      "latin": "Sitophilus zeamais",
+      "rank": "species",
+      "children": [],
+      "wiki": "https://ja.wikipedia.org/wiki/Special:Search?search=%E3%82%B3%E3%82%AF%E3%82%BE%E3%82%A6%E3%83%A0%E3%82%B7",
+      "color": "#FFFFFF",
+      "representative": true,
+      "priority": 2
+    },
+    {
+      "id": "rep_cephonodes_hylas",
+      "ja": "オオスカシバ",
+      "en": "",
+      "latin": "Cephonodes hylas",
+      "rank": "species",
+      "children": [],
+      "wiki": "https://ja.wikipedia.org/wiki/Special:Search?search=%E3%82%AA%E3%82%AA%E3%82%B9%E3%82%AB%E3%82%B7%E3%83%90",
+      "color": "#FFFFFF",
+      "representative": true,
+      "priority": 2
+    },
+    {
+      "id": "rep_euproctis_pseudoconspersa",
+      "ja": "チャドクガ",
+      "en": "",
+      "latin": "Euproctis pseudoconspersa",
+      "rank": "species",
+      "children": [],
+      "wiki": "https://ja.wikipedia.org/wiki/Special:Search?search=%E3%83%81%E3%83%A3%E3%83%89%E3%82%AF%E3%82%AC",
+      "color": "#FFFFFF",
+      "representative": true,
+      "priority": 2
+    },
+    {
+      "id": "rep_antheraea_yamamai",
+      "ja": "ヤママユ",
+      "en": "",
+      "latin": "Antheraea yamamai",
+      "rank": "species",
+      "children": [],
+      "wiki": "https://ja.wikipedia.org/wiki/Special:Search?search=%E3%83%A4%E3%83%9E%E3%83%9E%E3%83%A6",
+      "color": "#FFFFFF",
+      "representative": true,
+      "priority": 2
+    },
+    {
+      "id": "rep_truljalia_hibinonis",
+      "ja": "アオマツムシ",
+      "en": "",
+      "latin": "Truljalia hibinonis",
+      "rank": "species",
+      "children": [],
+      "wiki": "https://ja.wikipedia.org/wiki/Special:Search?search=%E3%82%A2%E3%82%AA%E3%83%9E%E3%83%84%E3%83%A0%E3%82%B7",
+      "color": "#FFFFFF",
+      "representative": true,
+      "priority": 2
+    },
+    {
+      "id": "rep_oecanthus_longicauda",
+      "ja": "カンタン",
+      "en": "",
+      "latin": "Oecanthus longicauda",
+      "rank": "species",
+      "children": [],
+      "wiki": "https://ja.wikipedia.org/wiki/Special:Search?search=%E3%82%AB%E3%83%B3%E3%82%BF%E3%83%B3",
+      "color": "#FFFFFF",
+      "representative": true,
+      "priority": 2
+    },
+    {
+      "id": "rep_neozephyrus_japonicus",
+      "ja": "ミドリシジミ",
+      "en": "",
+      "latin": "Neozephyrus japonicus",
+      "rank": "species",
+      "children": [],
+      "wiki": "https://ja.wikipedia.org/wiki/Special:Search?search=%E3%83%9F%E3%83%89%E3%83%AA%E3%82%B7%E3%82%B8%E3%83%9F",
+      "color": "#FFFFFF",
+      "representative": true,
+      "priority": 2
+    },
+    {
+      "id": "rep_daphnia_pulex",
+      "ja": "ミジンコ",
+      "en": "",
+      "latin": "Daphnia pulex",
+      "rank": "species",
+      "children": [],
+      "wiki": "https://ja.wikipedia.org/wiki/Special:Search?search=%E3%83%9F%E3%82%B8%E3%83%B3%E3%82%B3",
+      "color": "#FFFFFF",
+      "representative": true,
+      "priority": 2
+    },
+    {
+      "id": "rep_radix_plicatula",
+      "ja": "モノアラガイ",
+      "en": "",
+      "latin": "Radix plicatula",
+      "rank": "species",
+      "children": [],
+      "wiki": "https://ja.wikipedia.org/wiki/Special:Search?search=%E3%83%A2%E3%83%8E%E3%82%A2%E3%83%A9%E3%82%AC%E3%82%A4",
+      "color": "#FFFFFF",
+      "representative": true,
+      "priority": 2
+    },
+    {
+      "id": "rep_erimacrus_isenbeckii",
+      "ja": "ケガニ",
+      "en": "",
+      "latin": "Erimacrus isenbeckii",
+      "rank": "species",
+      "children": [],
+      "wiki": "https://ja.wikipedia.org/wiki/Special:Search?search=%E3%82%B1%E3%82%AC%E3%83%8B",
+      "color": "#FFFFFF",
+      "representative": true,
+      "priority": 2
+    },
+    {
+      "id": "rep_pagurus_filholi",
+      "ja": "ホンヤドカリ",
+      "en": "",
+      "latin": "Pagurus filholi",
+      "rank": "species",
+      "children": [],
+      "wiki": "https://ja.wikipedia.org/wiki/Special:Search?search=%E3%83%9B%E3%83%B3%E3%83%A4%E3%83%89%E3%82%AB%E3%83%AA",
+      "color": "#FFFFFF",
+      "representative": true,
+      "priority": 2
+    },
+    {
+      "id": "rep_actinia_equina",
+      "ja": "ウメボシイソギンチャク",
+      "en": "",
+      "latin": "Actinia equina",
+      "rank": "species",
+      "children": [],
+      "wiki": "https://ja.wikipedia.org/wiki/Special:Search?search=%E3%82%A6%E3%83%A1%E3%83%9C%E3%82%B7%E3%82%A4%E3%82%BD%E3%82%AE%E3%83%B3%E3%83%81%E3%83%A3%E3%82%AF",
+      "color": "#FFFFFF",
+      "representative": true,
+      "priority": 2
+    },
+    {
+      "id": "rep_spratelloides_gracilis",
+      "ja": "キビナゴ",
+      "en": "",
+      "latin": "Spratelloides gracilis",
+      "rank": "species",
+      "children": [],
+      "wiki": "https://ja.wikipedia.org/wiki/Special:Search?search=%E3%82%AD%E3%83%93%E3%83%8A%E3%82%B4",
+      "color": "#FFFFFF",
+      "representative": true,
+      "priority": 2
+    },
+    {
+      "id": "rep_lepisorus_thunbergianus",
+      "ja": "ノキシノブ",
+      "en": "",
+      "latin": "Lepisorus thunbergianus",
+      "rank": "species",
+      "children": [],
+      "wiki": "https://ja.wikipedia.org/wiki/Special:Search?search=%E3%83%8E%E3%82%AD%E3%82%B7%E3%83%8E%E3%83%96",
+      "color": "#FFFFFF",
+      "representative": true,
+      "priority": 2
+    },
+    {
+      "id": "rep_allium_macrostemon",
+      "ja": "ノビル",
+      "en": "",
+      "latin": "Allium macrostemon",
+      "rank": "species",
+      "children": [],
+      "wiki": "https://ja.wikipedia.org/wiki/Special:Search?search=%E3%83%8E%E3%83%93%E3%83%AB",
+      "color": "#FFFFFF",
+      "representative": true,
+      "priority": 2
+    },
+    {
+      "id": "rep_iris_sanguinea",
+      "ja": "アヤメ",
+      "en": "",
+      "latin": "Iris sanguinea",
+      "rank": "species",
+      "children": [],
+      "wiki": "https://ja.wikipedia.org/wiki/Special:Search?search=%E3%82%A2%E3%83%A4%E3%83%A1",
+      "color": "#FFFFFF",
+      "representative": true,
+      "priority": 2
+    },
+    {
+      "id": "rep_calanthe_discolor",
+      "ja": "エビネ",
+      "en": "",
+      "latin": "Calanthe discolor",
+      "rank": "species",
+      "children": [],
+      "wiki": "https://ja.wikipedia.org/wiki/Special:Search?search=%E3%82%A8%E3%83%93%E3%83%8D",
+      "color": "#FFFFFF",
+      "representative": true,
+      "priority": 2
+    },
+    {
+      "id": "rep_pecteilis_radiata",
+      "ja": "サギソウ",
+      "en": "",
+      "latin": "Pecteilis radiata",
+      "rank": "species",
+      "children": [],
+      "wiki": "https://ja.wikipedia.org/wiki/Special:Search?search=%E3%82%B5%E3%82%AE%E3%82%BD%E3%82%A6",
+      "color": "#FFFFFF",
+      "representative": true,
+      "priority": 2
+    },
+    {
+      "id": "rep_eutrema_japonicum",
+      "ja": "ワサビ",
+      "en": "",
+      "latin": "Eutrema japonicum",
+      "rank": "species",
+      "children": [],
+      "wiki": "https://ja.wikipedia.org/wiki/Special:Search?search=%E3%83%AF%E3%82%B5%E3%83%93",
+      "color": "#FFFFFF",
+      "representative": true,
+      "priority": 2
+    },
+    {
+      "id": "rep_arctium_lappa",
+      "ja": "ゴボウ",
+      "en": "",
+      "latin": "Arctium lappa",
+      "rank": "species",
+      "children": [],
+      "wiki": "https://ja.wikipedia.org/wiki/Special:Search?search=%E3%82%B4%E3%83%9C%E3%82%A6",
+      "color": "#FFFFFF",
+      "representative": true,
+      "priority": 2
+    },
+    {
+      "id": "rep_zingiber_officinale",
+      "ja": "ショウガ",
+      "en": "",
+      "latin": "Zingiber officinale",
+      "rank": "species",
+      "children": [],
+      "wiki": "https://ja.wikipedia.org/wiki/Special:Search?search=%E3%82%B7%E3%83%A7%E3%82%A6%E3%82%AC",
+      "color": "#FFFFFF",
+      "representative": true,
+      "priority": 2
+    },
+    {
+      "id": "rep_raphanus_sativus",
+      "ja": "ダイコン",
+      "en": "",
+      "latin": "Raphanus sativus",
+      "rank": "species",
+      "children": [],
+      "wiki": "https://ja.wikipedia.org/wiki/Special:Search?search=%E3%83%80%E3%82%A4%E3%82%B3%E3%83%B3",
+      "color": "#FFFFFF",
+      "representative": true,
+      "priority": 2
+    },
+    {
+      "id": "rep_ficus_carica",
+      "ja": "イチジク",
+      "en": "",
+      "latin": "Ficus carica",
+      "rank": "species",
+      "children": [],
+      "wiki": "https://ja.wikipedia.org/wiki/Special:Search?search=%E3%82%A4%E3%83%81%E3%82%B8%E3%82%AF",
+      "color": "#FFFFFF",
+      "representative": true,
+      "priority": 2
+    },
+    {
+      "id": "rep_eriobotrya_japonica",
+      "ja": "ビワ",
+      "en": "",
+      "latin": "Eriobotrya japonica",
+      "rank": "species",
+      "children": [],
+      "wiki": "https://ja.wikipedia.org/wiki/Special:Search?search=%E3%83%93%E3%83%AF",
+      "color": "#FFFFFF",
+      "representative": true,
+      "priority": 2
+    },
+    {
+      "id": "rep_phyllostachys_edulis",
+      "ja": "モウソウチク",
+      "en": "",
+      "latin": "Phyllostachys edulis",
+      "rank": "species",
+      "children": [],
+      "wiki": "https://ja.wikipedia.org/wiki/Special:Search?search=%E3%83%A2%E3%82%A6%E3%82%BD%E3%82%A6%E3%83%81%E3%82%AF",
+      "color": "#FFFFFF",
+      "representative": true,
+      "priority": 2
+    },
+    {
+      "id": "rep_cyperus_microiria",
+      "ja": "カヤツリグサ",
+      "en": "",
+      "latin": "Cyperus microiria",
+      "rank": "species",
+      "children": [],
+      "wiki": "https://ja.wikipedia.org/wiki/Special:Search?search=%E3%82%AB%E3%83%A4%E3%83%84%E3%83%AA%E3%82%B0%E3%82%B5",
+      "color": "#FFFFFF",
+      "representative": true,
+      "priority": 2
+    },
+    {
+      "id": "rep_trachycarpus_fortunei",
+      "ja": "シュロ",
+      "en": "",
+      "latin": "Trachycarpus fortunei",
+      "rank": "species",
+      "children": [],
+      "wiki": "https://ja.wikipedia.org/wiki/Special:Search?search=%E3%82%B7%E3%83%A5%E3%83%AD",
+      "color": "#FFFFFF",
+      "representative": true,
+      "priority": 2
+    },
+    {
+      "id": "rep_musa_basjoo",
+      "ja": "バショウ",
+      "en": "",
+      "latin": "Musa basjoo",
+      "rank": "species",
+      "children": [],
+      "wiki": "https://ja.wikipedia.org/wiki/Special:Search?search=%E3%83%90%E3%82%B7%E3%83%A7%E3%82%A6",
+      "color": "#FFFFFF",
+      "representative": true,
+      "priority": 2
+    },
+    {
+      "id": "rep_pterocarya_rhoifolia",
+      "ja": "サワグルミ",
+      "en": "",
+      "latin": "Pterocarya rhoifolia",
+      "rank": "species",
+      "children": [],
+      "wiki": "https://ja.wikipedia.org/wiki/Special:Search?search=%E3%82%B5%E3%83%AF%E3%82%B0%E3%83%AB%E3%83%9F",
+      "color": "#FFFFFF",
+      "representative": true,
+      "priority": 2
+    },
+    {
+      "id": "rep_oenanthe_javanica",
+      "ja": "セリ",
+      "en": "",
+      "latin": "Oenanthe javanica",
+      "rank": "species",
+      "children": [],
+      "wiki": "https://ja.wikipedia.org/wiki/Special:Search?search=%E3%82%BB%E3%83%AA",
+      "color": "#FFFFFF",
+      "representative": true,
+      "priority": 2
+    },
+    {
+      "id": "rep_pseudognaphalium_affine",
+      "ja": "ハハコグサ",
+      "en": "",
+      "latin": "Pseudognaphalium affine",
+      "rank": "species",
+      "children": [],
+      "wiki": "https://ja.wikipedia.org/wiki/Special:Search?search=%E3%83%8F%E3%83%8F%E3%82%B3%E3%82%B0%E3%82%B5",
+      "color": "#FFFFFF",
+      "representative": true,
+      "priority": 2
+    },
+    {
+      "id": "rep_lapsanastrum_apogonoides",
+      "ja": "コオニタビラコ",
+      "en": "",
+      "latin": "Lapsanastrum apogonoides",
+      "rank": "species",
+      "children": [],
+      "wiki": "https://ja.wikipedia.org/wiki/Special:Search?search=%E3%82%B3%E3%82%AA%E3%83%8B%E3%82%BF%E3%83%93%E3%83%A9%E3%82%B3",
+      "color": "#FFFFFF",
+      "representative": true,
+      "priority": 2
+    },
+    {
+      "id": "rep_firmiana_simplex",
+      "ja": "アオギリ",
+      "en": "",
+      "latin": "Firmiana simplex",
+      "rank": "species",
+      "children": [],
+      "wiki": "https://ja.wikipedia.org/wiki/Special:Search?search=%E3%82%A2%E3%82%AA%E3%82%AE%E3%83%AA",
+      "color": "#FFFFFF",
+      "representative": true,
+      "priority": 2
+    },
+    {
+      "id": "rep_hibiscus_syriacus",
+      "ja": "ムクゲ",
+      "en": "",
+      "latin": "Hibiscus syriacus",
+      "rank": "species",
+      "children": [],
+      "wiki": "https://ja.wikipedia.org/wiki/Special:Search?search=%E3%83%A0%E3%82%AF%E3%82%B2",
+      "color": "#FFFFFF",
+      "representative": true,
+      "priority": 2
+    },
+    {
+      "id": "rep_aucuba_japonica",
+      "ja": "アオキ",
+      "en": "",
+      "latin": "Aucuba japonica",
+      "rank": "species",
+      "children": [],
+      "wiki": "https://ja.wikipedia.org/wiki/Special:Search?search=%E3%82%A2%E3%82%AA%E3%82%AD",
+      "color": "#FFFFFF",
+      "representative": true,
+      "priority": 2
+    },
+    {
+      "id": "rep_spiraea_thunbergii",
+      "ja": "ユキヤナギ",
+      "en": "",
+      "latin": "Spiraea thunbergii",
+      "rank": "species",
+      "children": [],
+      "wiki": "https://ja.wikipedia.org/wiki/Special:Search?search=%E3%83%A6%E3%82%AD%E3%83%A4%E3%83%8A%E3%82%AE",
+      "color": "#FFFFFF",
+      "representative": true,
+      "priority": 2
+    },
+    {
+      "id": "rep_helianthus_annuus",
+      "ja": "ヒマワリ",
+      "en": "",
+      "latin": "Helianthus annuus",
+      "rank": "species",
+      "children": [],
+      "wiki": "https://ja.wikipedia.org/wiki/Special:Search?search=%E3%83%92%E3%83%9E%E3%83%AF%E3%83%AA",
+      "color": "#FFFFFF",
+      "representative": true,
+      "priority": 2
+    },
+    {
+      "id": "rep_cirsium_japonicum",
+      "ja": "ノアザミ",
+      "en": "",
+      "latin": "Cirsium japonicum",
+      "rank": "species",
+      "children": [],
+      "wiki": "https://ja.wikipedia.org/wiki/Special:Search?search=%E3%83%8E%E3%82%A2%E3%82%B6%E3%83%9F",
+      "color": "#FFFFFF",
+      "representative": true,
+      "priority": 2
+    },
+    {
+      "id": "rep_zea_mays",
+      "ja": "トウモロコシ",
+      "en": "",
+      "latin": "Zea mays",
+      "rank": "species",
+      "children": [],
+      "wiki": "https://ja.wikipedia.org/wiki/Special:Search?search=%E3%83%88%E3%82%A6%E3%83%A2%E3%83%AD%E3%82%B3%E3%82%B7",
+      "color": "#FFFFFF",
+      "representative": true,
+      "priority": 2
+    },
+    {
+      "id": "rep_platanus_orientalis",
+      "ja": "スズカケノキ",
+      "en": "",
+      "latin": "Platanus orientalis",
+      "rank": "species",
+      "children": [],
+      "wiki": "https://ja.wikipedia.org/wiki/Special:Search?search=%E3%82%B9%E3%82%BA%E3%82%AB%E3%82%B1%E3%83%8E%E3%82%AD",
+      "color": "#FFFFFF",
+      "representative": true,
+      "priority": 2
+    },
+    {
+      "id": "rep_acer_buergerianum",
+      "ja": "トウカエデ",
+      "en": "",
+      "latin": "Acer buergerianum",
+      "rank": "species",
+      "children": [],
+      "wiki": "https://ja.wikipedia.org/wiki/Special:Search?search=%E3%83%88%E3%82%A6%E3%82%AB%E3%82%A8%E3%83%87",
+      "color": "#FFFFFF",
+      "representative": true,
+      "priority": 2
+    },
+    {
+      "id": "rep_cornus_florida",
+      "ja": "ハナミズキ",
+      "en": "",
+      "latin": "Cornus florida",
+      "rank": "species",
+      "children": [],
+      "wiki": "https://ja.wikipedia.org/wiki/Special:Search?search=%E3%83%8F%E3%83%8A%E3%83%9F%E3%82%BA%E3%82%AD",
+      "color": "#FFFFFF",
+      "representative": true,
+      "priority": 2
+    },
+    {
+      "id": "rep_arisaema_serratum",
+      "ja": "マムシグサ",
+      "en": "",
+      "latin": "Arisaema serratum",
+      "rank": "species",
+      "children": [],
+      "wiki": "https://ja.wikipedia.org/wiki/Special:Search?search=%E3%83%9E%E3%83%A0%E3%82%B7%E3%82%B0%E3%82%B5",
+      "color": "#FFFFFF",
+      "representative": true,
+      "priority": 2
+    },
+    {
+      "id": "rep_ipomoea_batatas",
+      "ja": "サツマイモ",
+      "en": "",
+      "latin": "Ipomoea batatas",
+      "rank": "species",
+      "children": [],
+      "wiki": "https://ja.wikipedia.org/wiki/Special:Search?search=%E3%82%B5%E3%83%84%E3%83%9E%E3%82%A4%E3%83%A2",
+      "color": "#FFFFFF",
+      "representative": true,
+      "priority": 2
+    },
+    {
+      "id": "rep_solanum_tuberosum",
+      "ja": "ジャガイモ",
+      "en": "",
+      "latin": "Solanum tuberosum",
+      "rank": "species",
+      "children": [],
+      "wiki": "https://ja.wikipedia.org/wiki/Special:Search?search=%E3%82%B8%E3%83%A3%E3%82%AC%E3%82%A4%E3%83%A2",
+      "color": "#FFFFFF",
+      "representative": true,
+      "priority": 2
+    },
+    {
+      "id": "rep_lagotis_glauca",
+      "ja": "ウルップソウ",
+      "en": "",
+      "latin": "Lagotis glauca",
+      "rank": "species",
+      "children": [],
+      "wiki": "https://ja.wikipedia.org/wiki/Special:Search?search=%E3%82%A6%E3%83%AB%E3%83%83%E3%83%97%E3%82%BD%E3%82%A6",
+      "color": "#FFFFFF",
+      "representative": true,
+      "priority": 2
+    },
+    {
+      "id": "rep_dicentra_peregrina",
+      "ja": "コマクサ",
+      "en": "",
+      "latin": "Dicentra peregrina",
+      "rank": "species",
+      "children": [],
+      "wiki": "https://ja.wikipedia.org/wiki/Special:Search?search=%E3%82%B3%E3%83%9E%E3%82%AF%E3%82%B5",
+      "color": "#FFFFFF",
+      "representative": true,
+      "priority": 2
+    },
+    {
+      "id": "rep_veratrum_stamineum",
+      "ja": "コバイケイソウ",
+      "en": "",
+      "latin": "Veratrum stamineum",
+      "rank": "species",
+      "children": [],
+      "wiki": "https://ja.wikipedia.org/wiki/Special:Search?search=%E3%82%B3%E3%83%90%E3%82%A4%E3%82%B1%E3%82%A4%E3%82%BD%E3%82%A6",
+      "color": "#FFFFFF",
+      "representative": true,
+      "priority": 2
+    },
+    {
+      "id": "rep_menyanthes_trifoliata",
+      "ja": "ミツガシワ",
+      "en": "",
+      "latin": "Menyanthes trifoliata",
+      "rank": "species",
+      "children": [],
+      "wiki": "https://ja.wikipedia.org/wiki/Special:Search?search=%E3%83%9F%E3%83%84%E3%82%AC%E3%82%B7%E3%83%AF",
+      "color": "#FFFFFF",
+      "representative": true,
+      "priority": 2
+    },
+    {
+      "id": "rep_glaucidium_palmatum",
+      "ja": "シラネアオイ",
+      "en": "",
+      "latin": "Glaucidium palmatum",
+      "rank": "species",
+      "children": [],
+      "wiki": "https://ja.wikipedia.org/wiki/Special:Search?search=%E3%82%B7%E3%83%A9%E3%83%8D%E3%82%A2%E3%82%AA%E3%82%A4",
+      "color": "#FFFFFF",
+      "representative": true,
+      "priority": 2
+    },
+    {
+      "id": "rep_vaccinium_oxycoccos",
+      "ja": "ツルコケモモ",
+      "en": "",
+      "latin": "Vaccinium oxycoccos",
+      "rank": "species",
+      "children": [],
+      "wiki": "https://ja.wikipedia.org/wiki/Special:Search?search=%E3%83%84%E3%83%AB%E3%82%B3%E3%82%B1%E3%83%A2%E3%83%A2",
+      "color": "#FFFFFF",
+      "representative": true,
+      "priority": 2
+    },
+    {
+      "id": "rep_pinguicula_macroceras",
+      "ja": "ムシトリスミレ",
+      "en": "",
+      "latin": "Pinguicula macroceras",
+      "rank": "species",
+      "children": [],
+      "wiki": "https://ja.wikipedia.org/wiki/Special:Search?search=%E3%83%A0%E3%82%B7%E3%83%88%E3%83%AA%E3%82%B9%E3%83%9F%E3%83%AC",
+      "color": "#FFFFFF",
+      "representative": true,
+      "priority": 2
+    },
+    {
+      "id": "rep_quercus_crispula",
+      "ja": "ミズナラ",
+      "en": "",
+      "latin": "Quercus crispula",
+      "rank": "species",
+      "children": [],
+      "wiki": "https://ja.wikipedia.org/wiki/Special:Search?search=%E3%83%9F%E3%82%BA%E3%83%8A%E3%83%A9",
+      "color": "#FFFFFF",
+      "representative": true,
+      "priority": 2
+    },
+    {
+      "id": "rep_nuphar_japonica",
+      "ja": "コウホネ",
+      "en": "",
+      "latin": "Nuphar japonica",
+      "rank": "species",
+      "children": [],
+      "wiki": "https://ja.wikipedia.org/wiki/Special:Search?search=%E3%82%B3%E3%82%A6%E3%83%9B%E3%83%8D",
+      "color": "#FFFFFF",
+      "representative": true,
+      "priority": 2
+    },
+    {
+      "id": "rep_impatiens_balsamina",
+      "ja": "ホウセンカ",
+      "en": "",
+      "latin": "Impatiens balsamina",
+      "rank": "species",
+      "children": [],
+      "wiki": "https://ja.wikipedia.org/wiki/Special:Search?search=%E3%83%9B%E3%82%A6%E3%82%BB%E3%83%B3%E3%82%AB",
+      "color": "#FFFFFF",
+      "representative": true,
+      "priority": 2
+    },
+    {
+      "id": "rep_quercus_phillyreoides",
+      "ja": "ウバメガシ",
+      "en": "",
+      "latin": "Quercus phillyreoides",
+      "rank": "species",
+      "children": [],
+      "wiki": "https://ja.wikipedia.org/wiki/Special:Search?search=%E3%82%A6%E3%83%90%E3%83%A1%E3%82%AC%E3%82%B7",
+      "color": "#FFFFFF",
+      "representative": true,
+      "priority": 2
+    },
+    {
+      "id": "rep_bruguiera_gymnorhiza",
+      "ja": "オヒルギ",
+      "en": "",
+      "latin": "Bruguiera gymnorhiza",
+      "rank": "species",
+      "children": [],
+      "wiki": "https://ja.wikipedia.org/wiki/Special:Search?search=%E3%82%AA%E3%83%92%E3%83%AB%E3%82%AE",
+      "color": "#FFFFFF",
+      "representative": true,
+      "priority": 2
+    },
+    {
+      "id": "rep_entada_phaseoloides",
+      "ja": "モダマ",
+      "en": "",
+      "latin": "Entada phaseoloides",
+      "rank": "species",
+      "children": [],
+      "wiki": "https://ja.wikipedia.org/wiki/Special:Search?search=%E3%83%A2%E3%83%80%E3%83%9E",
+      "color": "#FFFFFF",
+      "representative": true,
+      "priority": 2
+    },
+    {
+      "id": "rep_lilium_lancifolium",
+      "ja": "オニユリ",
+      "en": "",
+      "latin": "Lilium lancifolium",
+      "rank": "species",
+      "children": [],
+      "wiki": "https://ja.wikipedia.org/wiki/Special:Search?search=%E3%82%AA%E3%83%8B%E3%83%A6%E3%83%AA",
+      "color": "#FFFFFF",
+      "representative": true,
+      "priority": 2
+    },
+    {
+      "id": "rep_kalanchoe_daigremontiana",
+      "ja": "コダカラベンケイ",
+      "en": "",
+      "latin": "Kalanchoe daigremontiana",
+      "rank": "species",
+      "children": [],
+      "wiki": "https://ja.wikipedia.org/wiki/Special:Search?search=%E3%82%B3%E3%83%80%E3%82%AB%E3%83%A9%E3%83%99%E3%83%B3%E3%82%B1%E3%82%A4",
+      "color": "#FFFFFF",
+      "representative": true,
+      "priority": 2
+    },
+    {
+      "id": "rep_tulipa_gesneriana",
+      "ja": "チューリップ",
+      "en": "",
+      "latin": "Tulipa gesneriana",
+      "rank": "species",
+      "children": [],
+      "wiki": "https://ja.wikipedia.org/wiki/Special:Search?search=%E3%83%81%E3%83%A5%E3%83%BC%E3%83%AA%E3%83%83%E3%83%97",
+      "color": "#FFFFFF",
+      "representative": true,
+      "priority": 2
+    },
+    {
+      "id": "rep_malus_domestica",
+      "ja": "リンゴ",
+      "en": "",
+      "latin": "Malus domestica",
+      "rank": "species",
+      "children": [],
+      "wiki": "https://ja.wikipedia.org/wiki/Special:Search?search=%E3%83%AA%E3%83%B3%E3%82%B4",
+      "color": "#FFFFFF",
+      "representative": true,
+      "priority": 2
+    },
+    {
+      "id": "rep_triticum_aestivum",
+      "ja": "コムギ",
+      "en": "",
+      "latin": "Triticum aestivum",
+      "rank": "species",
+      "children": [],
+      "wiki": "https://ja.wikipedia.org/wiki/Special:Search?search=%E3%82%B3%E3%83%A0%E3%82%AE",
+      "color": "#FFFFFF",
+      "representative": true,
+      "priority": 2
+    },
+    {
+      "id": "rep_luffa_aegyptiaca",
+      "ja": "ヘチマ",
+      "en": "",
+      "latin": "Luffa aegyptiaca",
+      "rank": "species",
+      "children": [],
+      "wiki": "https://ja.wikipedia.org/wiki/Special:Search?search=%E3%83%98%E3%83%81%E3%83%9E",
+      "color": "#FFFFFF",
+      "representative": true,
+      "priority": 2
+    },
+    {
+      "id": "rep_potentilla_hebiichigo",
+      "ja": "ヘビイチゴ",
+      "en": "",
+      "latin": "Potentilla hebiichigo",
+      "rank": "species",
+      "children": [],
+      "wiki": "https://ja.wikipedia.org/wiki/Special:Search?search=%E3%83%98%E3%83%93%E3%82%A4%E3%83%81%E3%82%B4",
+      "color": "#FFFFFF",
+      "representative": true,
+      "priority": 2
+    },
+    {
+      "id": "rep_campanula_punctata",
+      "ja": "ホタルブクロ",
+      "en": "",
+      "latin": "Campanula punctata",
+      "rank": "species",
+      "children": [],
+      "wiki": "https://ja.wikipedia.org/wiki/Special:Search?search=%E3%83%9B%E3%82%BF%E3%83%AB%E3%83%96%E3%82%AF%E3%83%AD",
+      "color": "#FFFFFF",
+      "representative": true,
+      "priority": 2
+    },
+    {
+      "id": "rep_liriope_muscari",
+      "ja": "ヤブラン",
+      "en": "",
+      "latin": "Liriope muscari",
+      "rank": "species",
+      "children": [],
+      "wiki": "https://ja.wikipedia.org/wiki/Special:Search?search=%E3%83%A4%E3%83%96%E3%83%A9%E3%83%B3",
+      "color": "#FFFFFF",
+      "representative": true,
+      "priority": 2
+    },
+    {
+      "id": "rep_daphne_odora",
+      "ja": "ジンチョウゲ",
+      "en": "",
+      "latin": "Daphne odora",
+      "rank": "species",
+      "children": [],
+      "wiki": "https://ja.wikipedia.org/wiki/Special:Search?search=%E3%82%B8%E3%83%B3%E3%83%81%E3%83%A7%E3%82%A6%E3%82%B2",
+      "color": "#FFFFFF",
+      "representative": true,
+      "priority": 2
+    },
+    {
+      "id": "rep_cosmos_bipinnatus",
+      "ja": "コスモス",
+      "en": "",
+      "latin": "Cosmos bipinnatus",
+      "rank": "species",
+      "children": [],
+      "wiki": "https://ja.wikipedia.org/wiki/Special:Search?search=%E3%82%B3%E3%82%B9%E3%83%A2%E3%82%B9",
+      "color": "#FFFFFF",
+      "representative": true,
+      "priority": 2
+    },
+    {
+      "id": "rep_monotropastrum_humile",
+      "ja": "ギンリョウソウ",
+      "en": "",
+      "latin": "Monotropastrum humile",
+      "rank": "species",
+      "children": [],
+      "wiki": "https://ja.wikipedia.org/wiki/Special:Search?search=%E3%82%AE%E3%83%B3%E3%83%AA%E3%83%A7%E3%82%A6%E3%82%BD%E3%82%A6",
+      "color": "#FFFFFF",
+      "representative": true,
+      "priority": 2
+    },
+    {
+      "id": "rep_causonis_japonica",
+      "ja": "ヤブカラシ",
+      "en": "",
+      "latin": "Causonis japonica",
+      "rank": "species",
+      "children": [],
+      "wiki": "https://ja.wikipedia.org/wiki/Special:Search?search=%E3%83%A4%E3%83%96%E3%82%AB%E3%83%A9%E3%82%B7",
+      "color": "#FFFFFF",
+      "representative": true,
+      "priority": 2
+    },
+    {
+      "id": "rep_diplopterygium_glaucum",
+      "ja": "ウラジロ",
+      "en": "",
+      "latin": "Diplopterygium glaucum",
+      "rank": "species",
+      "children": [],
+      "wiki": "https://ja.wikipedia.org/wiki/Special:Search?search=%E3%82%A6%E3%83%A9%E3%82%B8%E3%83%AD",
+      "color": "#FFFFFF",
+      "representative": true,
+      "priority": 2
+    },
+    {
+      "id": "rep_aeginetia_indica",
+      "ja": "ナンバンギセル",
+      "en": "",
+      "latin": "Aeginetia indica",
+      "rank": "species",
+      "children": [],
+      "wiki": "https://ja.wikipedia.org/wiki/Special:Search?search=%E3%83%8A%E3%83%B3%E3%83%90%E3%83%B3%E3%82%AE%E3%82%BB%E3%83%AB",
+      "color": "#FFFFFF",
+      "representative": true,
+      "priority": 2
+    },
+    {
+      "id": "rep_drosera_rotundifolia",
+      "ja": "モウセンゴケ",
+      "en": "",
+      "latin": "Drosera rotundifolia",
+      "rank": "species",
+      "children": [],
+      "wiki": "https://ja.wikipedia.org/wiki/Special:Search?search=%E3%83%A2%E3%82%A6%E3%82%BB%E3%83%B3%E3%82%B4%E3%82%B1",
       "color": "#FFFFFF",
       "representative": true,
       "priority": 2
